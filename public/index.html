@@ -56,7 +56,7 @@
       <a href="#how">How it works</a>
       <a href="#film">When it matters</a>
       <a href="#receipt">The receipt</a>
-      <a href="#roadmap">Roadmap</a>
+      <a href="/roadmap/">Roadmap</a>
       <a href="https://github.com/rferrari/boar-app">GitHub</a>
     </div>
   </nav>
@@ -316,40 +316,41 @@
     </div>
   </section>
 
-  <!-- 6. roadmap -->
+  <!-- 6. roadmap, in short (the full one lives at /roadmap/) -->
   <section class="section section-roadmap" id="roadmap" aria-labelledby="roadmap-title">
     <div class="wrap">
       <header class="section-head reveal">
         <p class="kicker">Roadmap</p>
         <h2 id="roadmap-title">First the roots. Then what grows from them.</h2>
-        <p class="section-lede">A direction, not a schedule. The first job is making the everyday app excellent, tested by the people who use it. After that, BOAR grows into a library that the community fills and shares, one pack at a time.</p>
+        <p class="section-lede">A direction, not a schedule. First, make the everyday app excellent, tested by the people who use it. Then BOAR grows into a library that the community fills and shares, one pack at a time.</p>
       </header>
       <ol class="path">
         <li class="phase phase-now reveal" style="--i: 0">
           <div class="phase-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 38c10-3 26-3 36 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 36c-5-2-7-7-5-12 4 1 7 4 7 9M24 36c1-6 5-10 11-10-1 5-5 9-11 10" fill="var(--g-fill)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M24 38v5M18 40l-2 4M30 40l2 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
           <p class="phase-when">Phase 1 · <span>Here today</span></p>
           <h3>Roots</h3>
-          <ul class="phase-list"><li><strong>Local offline engine</strong><span>Hybrid search (SQLite FTS5 plus on-device embeddings) and llama.cpp running on the phone through llama.rn.</span></li><li><strong>Your own knowledge base</strong><span>Import .txt, .md, .csv and .json documents; BOAR chunks and embeds them on the device into collections you can switch on and off.</span></li><li><strong>Model browser</strong><span>Search and download curated or Hugging Face GGUF models inside the app.</span></li><li><strong>Portable collections</strong><span>Export and share your knowledge packs as JSON, without device-specific embedding vectors baked in.</span></li></ul>
+          <p class="phase-sum"><strong>Works now on Android:</strong> a model and a searchable library on your phone, your own documents, and any GGUF model you choose.</p>
         </li>
         <li class="phase phase-next reveal" style="--i: 1">
           <div class="phase-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 40c10-3 26-3 36 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 39V20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 24c-8 0-12-5-12-11 7 0 12 4 12 11zM24 20c1-7 6-11 13-11 0 7-5 11-13 11z" fill="var(--g-fill)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
           <p class="phase-when">Phase 2 · <span>Next</span></p>
           <h3>First shoots</h3>
-          <ul class="phase-list"><li><strong>iOS</strong><span>In progress: the same offline pipeline, on iPhone.</span></li><li><strong>Offline voice</strong><span>Speak your question and hear the answer, with lightweight speech-to-text and text-to-speech that run on the device.</span></li><li><strong>Packs for places</strong><span>Ready-made packs to download before a trip: a city’s food, transit and maps.</span></li></ul>
+          <p class="phase-sum"><strong>iOS is in progress.</strong> Then offline voice, and packs for places you can download before a trip.</p>
         </li>
         <li class="phase phase-later reveal" style="--i: 2">
           <div class="phase-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 42c10-3 26-3 36 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 41V12M24 30l-8-7M24 22l8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 23c-6 1-10-2-11-7 5-1 10 2 11 7zM32 16c2-6 7-8 11-7-1 5-6 8-11 7zM24 12c-3-4-2-8 0-10 2 2 3 6 0 10z" fill="var(--g-fill)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
           <p class="phase-when">Phase 3 · <span>After that</span></p>
           <h3>Branches</h3>
-          <ul class="phase-list"><li><strong>A shared pack library</strong><span>An offline-first marketplace to browse, preview and download knowledge packs curated by the community.</span></li><li><strong>Private memory</strong><span>Optional local encryption for your imported documents and conversation history.</span></li><li><strong>The right model for each task</strong><span>Switch models per task or per question without restarting the session.</span></li></ul>
+          <p class="phase-sum"><strong>Packs people share:</strong> a library of community knowledge packs to browse and download, and private, encrypted memory.</p>
         </li>
         <li class="phase phase-later reveal" style="--i: 3">
           <div class="phase-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M3 43c12-3 30-3 42 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="17" r="11" fill="var(--g-fill)" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="27" r="6" fill="var(--g-fill)" stroke="currentColor" stroke-width="2"/><circle cx="38" cy="27" r="6" fill="var(--g-fill)" stroke="currentColor" stroke-width="2"/><path d="M24 42V24M10 42v-9M38 42v-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
           <p class="phase-when">Phase 4 · <span>Further out</span></p>
           <h3>Grove</h3>
-          <ul class="phase-list"><li><strong>Essentials library</strong><span>Verified offline bundles for first aid, basic survival, disaster response and growing your own food.</span></li><li><strong>Desktop workbench</strong><span>A macOS and desktop companion for people who manage large libraries.</span></li><li><strong>Sharing nearby</strong><span>Exploring peer-to-peer sharing of packs between BOAR devices over Bluetooth or local Wi-Fi, no internet in between.</span></li></ul>
+          <p class="phase-sum"><strong>An essentials library:</strong> verified offline bundles for first aid, disaster response and growing your own food.</p>
         </li>
       </ol>
+      <p class="roadmap-more reveal"><a class="btn btn-line" href="/roadmap/">See the full roadmap <span class="arrow" aria-hidden="true">→</span></a></p>
     </div>
   </section>
 
