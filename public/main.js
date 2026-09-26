@@ -1,21 +1,16 @@
-// Picks the background film that matches the theme and orientation, and only loads it
-// when motion is welcome and the connection can take it. The poster is always there first.
+// Picks the background film for the screen's orientation, and only loads it when
+// motion is welcome and the connection can take it. The poster is always there first.
 (() => {
   const video = document.querySelector(".hero-video");
   if (!video) return;
 
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-  const dark = matchMedia("(prefers-color-scheme: dark)");
   const tall = matchMedia("(max-aspect-ratio: 4/5)");
   const conn = navigator.connection || {};
   const slow = conn.saveData || /(^|-)2g$/.test(conn.effectiveType || "");
 
   const canWebm = video.canPlayType('video/webm; codecs="vp9"') !== "";
-  const pick = () => {
-    const theme = dark.matches ? "dark" : "light";
-    if (tall.matches) return `/media/boar-field-recorder-${theme}-mobile.mp4`;
-    return `/media/boar-field-recorder-${theme}.${canWebm ? "webm" : "mp4"}`;
-  };
+  const pick = () => (tall.matches ? "/media/boar-no-signal-mobile.mp4" : `/media/boar-no-signal.${canWebm ? "webm" : "mp4"}`);
 
   let current = "";
   const load = () => {
@@ -37,6 +32,6 @@
     }).observe(video);
   }
 
-  for (const mq of [reduce, dark, tall]) mq.addEventListener?.("change", load);
+  for (const mq of [reduce, tall]) mq.addEventListener?.("change", load);
   if (document.readyState === "complete") load(); else addEventListener("load", load, { once: true });
 })();

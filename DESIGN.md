@@ -2,143 +2,162 @@
 
 ## The brief, in one line
 
-A 15-second, seamlessly looping background film for the BOAR landing page. It
-has to be spectacular without drowning the headline, and it has to be true to
+A 15-second, seamlessly looping background film for the BOAR landing page that
+shows the moments when you have no signal and still need an answer. It has to be
+dynamic and good-looking without drowning the headline, and it has to be true to
 the app.
 
-## Step 1: the obvious directions, rejected
+## Rejected directions
 
-These are the first things anyone (human or model) reaches for when asked for an
-"AI app showreel". Each one is rejected on purpose.
+### Rejected by the owner: "The Field Recorder" (first version)
+
+A strip-chart recorder (the paper-and-pen instrument from seismology) logging
+one real BOAR answer at real speed: a flat NETWORK pen, source ticks, a token
+seismogram, dimension lines and a rubber-stamped receipt, on cream chart paper
+with sprocket holes.
+
+The owner's verdict: *"I don't like the aesthetics. Do something completely
+different, more like something you need when you're offline in different
+situations, and make it more dynamic."* What went wrong:
+
+- It explained the product's **method** (measurement) instead of its **use**
+  (you're somewhere with no network and you need to know something).
+- One slow machine for 15 seconds. It was calm by design, and it read as static.
+- Beige print, graph paper and a scientific instrument read as "archive", not
+  "a thing in your pocket on a mountain".
+
+So this version drops the whole family: no chart or graph paper, no sprocket
+holes, no instrument panel, no stamp, no beige/print look.
+
+### Still rejected: the showreel clichés
 
 | # | The cliché | Why it's out |
 |---|---|---|
-| 1 | **Neon gradient blobs / aurora mesh.** Slow purple-to-teal blobs, glassmorphism on top. | Says "AI startup" and nothing else. Could be any product. BOAR has no cloud, no glow, no magic. |
-| 2 | **Particle field / neural-net brain.** Dots connected by lines, a glowing brain, synapses firing. | The generic "AI is thinking" picture. BOAR's point is the opposite of mystique: it shows its measurements. |
-| 3 | **Glowing 3D logo spin.** The mascot rotating on a turntable with rim light and lens flares. | Turns a friendly pig into a trophy. Also means redrawing the logo, which we don't do. |
-| 4 | **Glitch / cyberpunk terminal.** Green monospace scrolling, RGB split, "hacking" vibes, matrix rain. | Reads as crypto-hacker aesthetic, which is exactly the association the project is steering away from. Also unreadable as a background. |
-| 5 | **Kinetic type slamming words** ("OFFLINE." "PRIVATE." "FAST.") and **bento-grid UI mockups** of the chat screen floating in 3D. | Every launch video on X. Superlatives shouted at the viewer; the playbook says no superlatives. |
+| 1 | **Neon gradient blobs / aurora mesh**, glassmorphism on top. | Says "AI startup" and nothing else. |
+| 2 | **Particle field / neural-net brain.** | The generic "AI is thinking" picture. BOAR is about where you are, not what the model looks like. |
+| 3 | **Glowing 3D logo spin.** | Turns the mascot into a trophy and means redrawing the logo, which we don't do. |
+| 4 | **Glitch / cyberpunk terminal**, matrix rain. | Crypto-hacker associations; unreadable as a background. |
+| 5 | **Kinetic type slamming words** and **bento UI mockups** floating in 3D. | Every launch video on X. The playbook says no superlatives. |
 
-Also rejected, because it was *my* first instinct for "offline + mountain":
-**topographic contour lines**. It's the default "outdoorsy" texture on Dribbble
-and it says "hiking app", not "research tool that measures itself".
+The one piece of UI in the film is a single flat card, and it never moves. It's
+not a mockup being shown off; it's the thing that stays the same while the world
+changes.
 
-## Step 2: what is actually true about BOAR
+## The concept: "No Signal"
 
-Mined from MANIFESTO.md, README, docs/evidence and the playbook:
+**Six places where the phone has no network, cut on a steady beat. In each one,
+someone asks a real question and BOAR answers it offline, with its source. The
+card and its status bar never move; the world changes around them.**
 
-- **Offline means offline.** One download at setup, then nothing.
-- **BOAR measures itself.** Every answer records model, load time, time to first
-  token, tokens/sec and peak memory. "A model card isn't a benchmark."
-- **Failures included.** It writes down what happened, good or bad.
-- **Sources on every answer.** 4 retrieved chunks per answer.
-- **Measured on a real phone**: Xiaomi, Dimensity 8300, 11.6 GB RAM.
-- The mascot wears a **pith helmet**. It's an explorer. BOAR goes where there's
-  no signal.
+The story is one contrast, repeated: the status bar says **No Service** (or
+**Airplane mode**) and the answer arrives anyway, with a source chip under it.
 
-The common thread: BOAR is less like a chatbot and more like a **field
-instrument**. It goes out into the world, answers, and keeps a record.
+| # | Place | Clock | Question (BOAR eval set v1) | Source shown |
+|---|---|---|---|---|
+| 1 | In flight, night, airplane mode | 23:40 | What is a black hole and how does one form? (`grounded-2`) | Black hole |
+| 2 | Underground, a train in a tunnel | 08:15 | Why did the Western Roman Empire fall? (`grounded-1`) | Fall of the Western Roman Empire |
+| 3 | Above the treeline, dawn | 06:20 | Explain photosynthesis in simple terms. (`explanation-2`) | Photosynthesis |
+| 4 | Rainforest field camp, afternoon | 15:30 | Why is the Amazon rainforest considered important for global climate? (first sentence of `synthesis-3`) | Amazon rainforest |
+| 5 | At sea, midday | 12:10 | Who proposed the theory of evolution by natural selection? (`factual-2`) | Evolution |
+| 6 | City blackout, dusk | 20:05 | Compare the French Revolution and the Industrial Revolution. (`comparison-1`) | French Revolution, Industrial Revolution |
 
-## Step 3: the concept, "The Field Recorder"
+Then the end card: the card folds into a round badge with the mascot, over the
+night sky the blackout left behind, and the line **"Offline means offline."**
+(manifesto belief 1). The loop pulls back out of that sky through an airplane
+window, so the film never has a hard reset.
 
-**The film is a strip-chart recorder, the kind of paper-and-pen instrument that
-logs earthquakes and weather at remote stations, recording one real BOAR answer
-in real time.**
+### Why these questions
 
-Three pens write on a slowly moving roll of chart paper:
+The questions are from `docs/EVAL_QUERIES.md`, and every source chip is the
+expected article that BOAR's retrieval returned (ranked #1 or #2) for that exact
+question in the 2026-09-24 baseline run
+(`docs/evidence/2026-09-24-baseline-5-configs`, "Retrieved articles per query").
+So the chips show what BOAR actually found on a real phone, not a guess.
 
-- **CH1 NETWORK.** A flat line. It never moves. That's the whole point.
-- **CH2 SOURCES.** Four ticks when retrieval pulls its 4 chunks.
-- **CH3 TOKENS.** One tick per generated token, like a seismogram.
+The manifesto's "how do I treat a blister?" was the obvious mountain question,
+but it isn't in the eval set, and "Blister" isn't linked from Wikipedia's Vital
+Articles lists (the basis of the optional pack), so we couldn't show a source we
+knew BOAR would find. We used evaluated questions instead. We also skipped
+eval questions BOAR got wrong in the run (the train arrival time, the RAM
+budget).
 
-**The film is drawn to scale: 1 second on screen = 1 second on the phone.** The
-answer it records is the measured average from the Wikipedia Vital Articles
-pack run (Qwen2.5-1.5B, Xiaomi / Dimensity 8300, 2026-09-24,
-`docs/evidence/2026-09-24-vital-articles-pack/summary.txt`):
+The answer text is a short, plain summary of the correct answer, abridged to
+fit; it is not presented as a quoted model output. The page says so in the "No
+signal, still an answer" section. The clock times are scene decoration (time of
+day), not data. No other numbers appear in the film.
 
-| Beat | Real number | Film time |
-|---|---|---|
-| Question asked | | 1.0 s |
-| Sources retrieved | 4 chunks per answer | ~1.4 to 2.2 s |
-| First token | TTFT avg 6.4 s | 7.4 s |
-| Tokens | 17.5 tok/s avg, one tick each | 7.4 to 11.6 s |
-| Answer done | 10.6 s avg per query | 11.6 s |
-| Receipt stamped | peak memory 1.76 GB | ~11.8 s |
-| Silence | | 11.6 to 15 s |
+### What changed from "static instrument" to "dynamic"
 
-When the answer finishes, engineering **dimension lines** measure it on the
-paper ("time to first token 6.4 s", "answer 10.6 s") and a **rubber stamp**
-thumps down with the receipt. Then the paper keeps moving, the network pen
-keeps drawing its flat line, and fifteen seconds later the next question comes.
+- **Cuts every ~2.1 s** (boundaries at 0, 2.3, 4.4, 6.5, 8.6, 10.7, 13.0 s),
+  each one a motivated camera move, not a crossfade:
+  1. **End card → flight:** zoom out from 9× through the window; the end card's
+     starfield *is* the view outside.
+  2. **Flight → subway:** push into the window; the oval becomes the tunnel mouth.
+  3. **Subway → mountain:** the light at the end of the tunnel grows, flashes,
+     and you're out on the ridge at dawn.
+  4. **Mountain → rainforest:** a whip tilt down, below the treeline.
+  5. **Rainforest → sea:** a wall of leaves sweeps across.
+  6. **Sea → city:** the horizon line holds still and the world splits open
+     along it (the sea horizon becomes the harbor waterline).
+  7. **City → end card:** the grid goes down in a wave (windows, streetlights,
+     and the cell tower's beacon), the stars come out, the camera tilts up.
+- **Camera motion inside every scene:** parallax layers (5 mountain ridges,
+  3 rainforest depths, 3 building layers), clouds rushing past the plane window,
+  tunnel rings streaming at 7 per second, a ship pitching and rolling against the
+  horizon, turbulence bob in the cabin.
+- **Motion on the card:** the question is typed, the answer streams word by word
+  with a cursor in the scene's color, the source chip pops in with a back-out
+  ease, the clock rolls to the next place's time, and the card pops 1.8% on each
+  cut.
 
-The idea in one sentence: **every answer leaves a trace; the network never
-does.**
+## Visual language
 
-### Why this is not the cliché
+- **Flat illustration with cinematic light**, drawn in code (canvas 2D): strong
+  silhouettes, graded skies, rim light on ridges, glows from lamps, moon and sun.
+  No photos, no generated images, no people beyond a small hiker silhouette.
+- **One bold palette per place, one system:** violet night cabin, acid-mint
+  tunnel, coral/plum dawn, gold/green rainforest, cobalt sea, magenta dusk to
+  black. The card's top edge, the tag pill and the source chip take that place's
+  accent, so the constant element carries the color change.
+- **The card:** warm white, near-black type, 30px radius, deep shadow. Status
+  bar (clock, "No Service" / "Airplane mode", battery), the BOAR header with the
+  real mascot and an OFFLINE pill, "Qwen2.5-1.5B · on device" (the default
+  model), the question bubble, the answer, "OFFLINE SOURCE · WIKIPEDIA" and a
+  chip per source.
+- **Type:** Archivo (variable, width + weight axes), one family for film and
+  page. Semi-expanded 800 for headlines and the end line, semi-condensed caps for
+  place tags, normal width for reading.
+- **Logo:** only the existing mascot (`assets/icon.png` from rferrari/boar-app),
+  in the card header and the end badge. Never redrawn.
 
-- There's no "AI imagery" in it at all. No glow, no brain, no chat bubbles. It's
-  an analog scientific instrument, which is what the manifesto describes ("BOAR
-  measures itself").
-- The spectacle comes from *real data at real speed*. The token seismogram is
-  17.5 ticks per second because that's what the phone did. The quiet stretch is
-  quiet because nothing else happened.
-- **The calm zone behind the headline is the product's argument.** The flat
-  network line runs under the text. Readability and the message are the same
-  design decision: silence.
-- Failures and limits belong on a chart. The same paper could draw a timeout;
-  the language is built for honesty, not hype.
+## The readable zone
 
-## Graphic language
+The film is composed for a headline on the left: on desktop the card sits at
+61–95% of the width, focal elements (window, tunnel mouth, sun, tent, bow) sit
+around 40–55%, and the page lays a dark gradient scrim over the left half. The
+hero is therefore always dark, in both color schemes: the film is a sequence of
+places at different times of day, not a page surface, so it doesn't swap with the
+theme. Everything below the hero follows `prefers-color-scheme`.
 
-- **Material:** chart paper. Light theme = cream stock with a rust-orange grid
-  (classic recorder paper, and the same orange as the pig). Dark theme = carbon
-  paper: charcoal stock, warm grey grid, pale ink.
-- **Type:** IBM Plex Mono for instrument labels (small caps, tracked out, like
-  printed chart margins). Instrument Serif italic for the hand-annotated notes.
-  Archivo Narrow for the stamp.
-- **Marks:** hairline ink traces, sprocket holes along both edges, typewritten
-  question, dimension lines with arrowheads, a rubber stamp with ink bleed and a
-  slight rotation.
-- **Logo:** the existing BOAR mascot image only (`assets/icon.png` from
-  rferrari/boar-app), shown as the maker's plate on the recorder housing. Never
-  redrawn.
-- **Composition:** the recorder housing and the pens sit on the right, where the
-  ink is fresh and the motion lives. Ink fades as the paper travels left, so the
-  left side (where the landing page headline sits) is always the calmest part of
-  the frame.
+In the vertical film the card sits in the lower 40% (scaled 1.28× so its type
+stays legible on a phone) and the top is left for the copy, with a top-down
+scrim. On phones the hero shows only the eyebrow, headline, lede and two short
+CTAs, so it all fits above the card.
 
-## Motion
+## Loop
 
-- **Paper:** constant 80 px/s at 1920×1080, which means 1,200 px per loop. The
-  grid (24 px / 120 px) and the paper texture tile at 1,200 px, so frame 0 and
-  frame 15 s are identical.
-- **Every trace is a pure function of time**, `signal(t − (penX − x) / v)`,
-  with `signal` periodic over 15 s. No state, no drift, a perfect loop by
-  construction.
-- **Pens:** critically damped springs, so a token tick kicks and settles instead
-  of teleporting.
-- **Easing:** dimension lines grow with ease-out-cubic; arrowheads snap in with a
-  small overshoot; the stamp lands with a back-out ease (scale 1.35 to 1,
-  rotation settle), a 2-frame paper shudder and an ink-spread ring.
-- **Rhythm:** 1 s of silence, a question, 6.4 s of waiting (the honest part:
-  that's what the phone does), 4.2 s of fast ticks, a stamp, 3.4 s of silence.
-  Quiet, busy, punctuation, quiet.
-- **Housing timer:** mechanical rolling digits count the answer (0.0 to 10.6 s),
-  hold, then roll back to 0.0 before the loop point.
-
-## Copy rules applied
-
-- Every number on screen is from the evidence files. Provenance is printed in
-  the chart margin, like a figure caption.
-- The example question ("how do I treat a blister?") is the manifesto's own
-  example.
-- Nothing financial and no endorsements implied: the film and the page talk about the app only.
+Each scene is drawn only inside its own time window, as a function of its local
+time. The only thing on screen across the loop point is the end card: a static
+sky whose stars twinkle at whole-number frequencies of 1/15 s, the badge and the
+line. So `frame(15 s) === frame(0)`; `render.mjs` writes both frames and they
+compare byte-identical.
 
 ## Renders
 
-`npm run render` renders the scene (`render/scene.html`, a canvas driven by
-`t`) frame by frame in headless Chrome and pipes the PNGs to ffmpeg.
+`npm run render` renders `render/scene.html` frame by frame in headless Chrome
+and pipes the PNGs to ffmpeg.
 
-- `public/media/boar-field-recorder-{light,dark}.mp4` / `.webm`: 1920×1080, 30 fps, 15 s
-- `public/media/boar-field-recorder-{light,dark}-mobile.mp4`: 1080×1920
-- `public/media/poster-{light,dark}.jpg` (+ mobile posters): a frame from right after the stamp
+- `public/media/boar-no-signal.mp4` / `.webm`: 1920×1080, 30 fps, 15 s
+- `public/media/boar-no-signal-mobile.mp4`: 1080×1920
+- `public/media/poster.jpg`, `poster-mobile.jpg`: the in-flight scene with the
+  answer and source on screen (also the reduced-motion image)

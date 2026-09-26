@@ -1,8 +1,8 @@
 // Renders render/scene.html frame by frame in headless Chrome and encodes it with ffmpeg.
 //
 //   npm run render                      all variants -> public/media
-//   node render/render.mjs --stills 0,3,7.4,12 --variant desktop-light   review PNGs -> render/out
-//   node render/render.mjs --only desktop-dark
+//   node render/render.mjs --stills 0,3,7.4,12 --variant desktop   review PNGs -> render/out
+//   node render/render.mjs --only mobile
 //
 // Deterministic: each frame is renderFrame(i / FPS); nothing depends on wall-clock time.
 import { spawn, execFileSync } from "node:child_process";
@@ -17,13 +17,12 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "render/out");
 const MEDIA = path.join(ROOT, "public/media");
 const FPS = 30, SECONDS = 15, FRAMES = FPS * SECONDS;
-const POSTER_T = 12.6; // just after the receipt stamp lands
+const POSTER_T = 1.95; // in flight, answer and source on screen
 
+// One film for both themes: it's a night-to-day sequence of places, not a page surface.
 const VARIANTS = {
-  "desktop-light": { w: 1920, h: 1080, theme: "light", name: "boar-field-recorder-light", webm: true },
-  "desktop-dark": { w: 1920, h: 1080, theme: "dark", name: "boar-field-recorder-dark", webm: true },
-  "mobile-light": { w: 1080, h: 1920, theme: "light", name: "boar-field-recorder-light-mobile", webm: false },
-  "mobile-dark": { w: 1080, h: 1920, theme: "dark", name: "boar-field-recorder-dark-mobile", webm: false },
+  desktop: { w: 1920, h: 1080, name: "boar-no-signal", poster: "poster", webm: true },
+  mobile: { w: 1080, h: 1920, name: "boar-no-signal-mobile", poster: "poster-mobile", webm: false },
 };
 
 const args = process.argv.slice(2);
@@ -49,7 +48,7 @@ async function main() {
       if (only && !only.includes(key)) continue;
       const page = await browser.newPage();
       await page.setViewport({ width: v.w, height: v.h, deviceScaleFactor: 1 });
-      await page.goto(`${url}/render/scene.html?w=${v.w}&h=${v.h}&theme=${v.theme}`, { waitUntil: "load" });
+      await page.goto(`${url}/render/scene.html?w=${v.w}&h=${v.h}`, { waitUntil: "load" });
       await page.evaluate(() => window.ready);
       const grab = async (t) => {
         const data = await page.evaluate((t) => { window.renderFrame(t); return document.getElementById("c").toDataURL("image/png"); }, t);
@@ -82,14 +81,14 @@ async function main() {
 
       // 2) web deliverables
       const mp4 = path.join(MEDIA, `${v.name}.mp4`);
-      ff(["-i", master, "-c:v", "libx264", "-preset", "veryslow", "-crf", v.w > v.h ? "24" : "27", "-tune", "animation",
+      ff(["-i", master, "-c:v", "libx264", "-preset", "veryslow", "-crf", v.w > v.h ? "20" : "22", "-tune", "animation",
         "-profile:v", "high", "-level", "4.1", "-pix_fmt", "yuv420p", "-g", String(FPS * 5), "-an", "-movflags", "+faststart", mp4]);
       if (v.webm) {
         const webm = path.join(MEDIA, `${v.name}.webm`);
-        ff(["-i", master, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "37", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2",
+        ff(["-i", master, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "32", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2",
           "-pix_fmt", "yuv420p", "-g", String(FPS * 5), "-an", webm]);
       }
-      const poster = path.join(MEDIA, `poster-${v.theme}${v.w > v.h ? "" : "-mobile"}.jpg`);
+      const poster = path.join(MEDIA, `${v.poster}.jpg`);
       await writeFile(path.join(OUT, "poster.png"), await grab(POSTER_T));
       ff(["-i", path.join(OUT, "poster.png"), "-q:v", "4", poster]);
       rmSync(path.join(OUT, "poster.png"));
