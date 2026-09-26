@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BOAR: offline research on your phone</title>
+<meta name="description" content="BOAR is an open-source Android app that answers research questions with no signal: a small local model, an offline Wikipedia library, sources on every answer, and measurements from a real phone.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#efe7d5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17171a" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="BOAR: offline means offline">
+<meta property="og:description" content="An open-source Android research companion that works in airplane mode, shows its sources and measures every answer on a real phone.">
+<meta property="og:image" content="/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BOAR: offline means offline">
+<meta name="twitter:description" content="An open-source Android research companion that works in airplane mode, shows its sources and measures every answer on a real phone.">
+<meta name="twitter:image" content="/og.jpg">
+
+<link rel="preload" as="image" href="/media/poster-light.jpg" media="(prefers-color-scheme: light) and (min-aspect-ratio: 4/5)">
+<link rel="preload" as="image" href="/media/poster-dark.jpg" media="(prefers-color-scheme: dark) and (min-aspect-ratio: 4/5)">
+<link rel="preload" as="image" href="/media/poster-light-mobile.jpg" media="(prefers-color-scheme: light) and (max-aspect-ratio: 4/5)">
+<link rel="preload" as="image" href="/media/poster-dark-mobile.jpg" media="(prefers-color-scheme: dark) and (max-aspect-ratio: 4/5)">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/InstrumentSerif-400.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/IBMPlexMono-500.woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="hero" id="top">
+  <div class="hero-media" aria-hidden="true">
+    <picture>
+      <source media="(prefers-color-scheme: dark) and (max-aspect-ratio: 4/5)" srcset="/media/poster-dark-mobile.jpg">
+      <source media="(max-aspect-ratio: 4/5)" srcset="/media/poster-light-mobile.jpg">
+      <source media="(prefers-color-scheme: dark)" srcset="/media/poster-dark.jpg">
+      <img class="hero-poster" src="/media/poster-light.jpg" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+    </picture>
+    <video class="hero-video" muted loop playsinline preload="none" disablepictureinpicture></video>
+  </div>
+  <div class="hero-scrim" aria-hidden="true"></div>
+
+  <nav class="topbar" aria-label="Main">
+    <a class="brand" href="#top">
+      <img src="/boar-512.png" alt="" width="40" height="40">
+      <span>BOAR</span>
+    </a>
+    <div class="topbar-links">
+      <a href="#how">How it works</a>
+      <a href="#receipt">The receipt</a>
+      <a href="https://github.com/rferrari/boar-app">GitHub</a>
+    </div>
+  </nav>
+
+  <div class="hero-copy">
+    <p class="eyebrow">An offline research companion for Android</p>
+    <h1>Offline means <em>offline.</em></h1>
+    <p class="lede">Ask in airplane mode. BOAR answers from a small model and an offline Wikipedia library on your phone, shows its sources, and writes down how every answer went.</p>
+    <p class="lede-small">One download at setup, then nothing. No account, no API, no Google Play Services.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="https://github.com/rferrari/boar-app/releases/tag/v1.0.0">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download the APK
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/rferrari/boar-app">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.8 9.6.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 2.9.9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.2 10.2 0 0 0 22 12.2C22 6.6 17.5 2 12 2z"/></svg>
+        Source on GitHub
+      </a>
+    </div>
+    <p class="apk-note">boar-v1.0.0-arm64.apk · 122 MB · any 64-bit ARM Android phone · SHA-256 published with the release · MIT</p>
+  </div>
+
+  <p class="film-caption">Background: a chart of one real answer, drawn to scale. 1 second on screen is 1 second on the phone.</p>
+</header>
+
+<main>
+  <section class="section" id="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <p class="kicker">How it works</p>
+      <h2 id="how-title">Install it, download once, go somewhere without signal.</h2>
+      <ol class="steps">
+        <li>
+          <span class="step-n">01</span>
+          <h3>Install the APK</h3>
+          <p>Get <code>boar-v1.0.0-arm64.apk</code> from the release and check it against the published SHA-256. <code>make setup</code> can do the download, checksum and USB install for you.</p>
+        </li>
+        <li>
+          <span class="step-n">02</span>
+          <h3>Download once</h3>
+          <p>On first launch BOAR fetches its default model, Qwen2.5-1.5B, plus a small embedding model: about 1 GB. That's the only time it needs the network.</p>
+        </li>
+        <li>
+          <span class="step-n">03</span>
+          <h3>Switch on airplane mode</h3>
+          <p>Ask. BOAR searches its offline library (keyword + on-device embeddings), answers with the local model and shows the sources it used.</p>
+        </li>
+      </ol>
+      <ul class="facts">
+        <li><strong>Sources on every answer.</strong> Each answer lists the offline articles it was built from.</li>
+        <li><strong>A bigger library, optional.</strong> The Wikipedia Vital Articles pack: 49,832 articles in 164 MB.</li>
+        <li><strong>Bring your own.</strong> Import your .txt, .md, .csv, .json and .pdf files, or search Hugging Face for another GGUF model.</li>
+        <li><strong>Open.</strong> MIT licensed. Code, models, data sources and benchmark results are in the repo.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-receipt" id="receipt" aria-labelledby="receipt-title">
+    <div class="wrap">
+      <p class="kicker">The receipt</p>
+      <h2 id="receipt-title">A model card isn't a benchmark.</h2>
+      <p class="section-lede">Every answer records which model ran, how long until the first word, how fast it generated and how much memory it used. These are the first runs on a real phone, failures included.</p>
+
+      <div class="receipt-grid">
+        <article class="receipt" aria-label="Wikipedia Vital Articles pack run">
+          <header>
+            <img src="/boar-512.png" alt="" width="44" height="44" loading="lazy">
+            <div>
+              <p class="receipt-title">Receipt · Vital Articles pack</p>
+              <p class="receipt-sub">Qwen2.5-1.5B · 6 questions · 2026-09-24</p>
+            </div>
+          </header>
+          <dl>
+            <div><dt>Answered correctly</dt><dd>6 / 6</dd></div>
+            <div><dt>Time to first token</dt><dd>6.4 s <small>avg</small></dd></div>
+            <div><dt>Generation</dt><dd>17.5 tok/s <small>avg</small></dd></div>
+            <div><dt>Whole answer</dt><dd>10.6 s <small>avg</small></dd></div>
+            <div><dt>Peak memory</dt><dd>1.76 GB</dd></div>
+            <div><dt>Library</dt><dd>49,832 articles · 164 MB</dd></div>
+            <div><dt>Network</dt><dd>none</dd></div>
+          </dl>
+          <p class="receipt-foot">Xiaomi 2311DRK48G · Dimensity 8300 · 11.6 GB RAM · Android 16</p>
+        </article>
+
+        <div class="table-card">
+          <p class="table-title">Five configurations, 17 questions each, same phone <span>2026-09-24</span></p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th scope="col">Model</th><th scope="col">tok/s</th><th scope="col">First token</th><th scope="col">Per answer</th><th scope="col">What happened</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Qwen2.5-1.5B <span>default</span></th><td>11.4</td><td>13.6 s</td><td>21.0 s</td><td>17/17, no timeouts</td></tr>
+                <tr><th scope="row">LFM2.5-8B-A1B <span>MoE</span></th><td>14.8</td><td>27.2 s</td><td>57.3 s</td><td>Only model to solve the RAM question; 4 of 17 ran out of answer budget</td></tr>
+                <tr><th scope="row">Phi-3.5-mini</th><td>4.0</td><td>44.0 s</td><td>73.1 s</td><td>4 timeouts at 120 s</td></tr>
+                <tr><th scope="row">Qwen2.5-7B</th><td>2.7</td><td>70.5 s</td><td>107.1 s</td><td>5 timeouts at 120 s</td></tr>
+                <tr class="fail"><th scope="row">Instella-MoE-16B-A3B</th><td>—</td><td>—</td><td>—</td><td>Didn't load: architecture not supported yet</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-foot">Medians. LFM2.5 ran separately with the same 17 questions. Highest peak memory of any run: 5.21 GB, under the 12 GB limit. Raw results: <a href="https://github.com/rferrari/boar-app/tree/main/docs/evidence">docs/evidence</a>.</p>
+        </div>
+      </div>
+
+      <div class="run-it">
+        <p>If our numbers look wrong, run them yourself and tell us. A result from your device is data nobody else has.</p>
+        <pre><code>npm run eval:device -- --models &lt;model&gt;</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-honest" aria-labelledby="honest-title">
+    <div class="wrap two-col">
+      <div>
+        <p class="kicker">Not the dream, and we say so</p>
+        <h2 id="honest-title">Useful now beats perfect later.</h2>
+        <p>The model everyone wants on a phone, a huge mixture-of-experts model streaming from storage, doesn't exist yet. BOAR is what works today, measured honestly, with a place ready for that model when it arrives.</p>
+        <p>4–15 tok/s is enough to find out how to treat a blister, what a museum is about, or why the train isn't running, when there's no signal and nobody around to ask.</p>
+      </div>
+      <ul class="status-list" aria-label="Open items">
+        <li><span class="dot dot-open"></span><div><strong>Not measured yet:</strong> a comparison against internet search plus frontier models.</div></li>
+        <li><span class="dot dot-open"></span><div><strong>Not run yet:</strong> GrapheneOS on real hardware. The release build has no Google Play Services dependency.</div></li>
+        <li><span class="dot dot-open"></span><div><strong>Known weak spots:</strong> synthesis on the 1.5B model, and citation formatting.</div></li>
+        <li><span class="dot dot-done"></span><div><strong>poidh bounty #31:</strong> BOAR is claim #124 on <a href="https://poidh.xyz/mainnet/bounty/31">"Build the Best Offline AI Research App for Android"</a>. The bounty is still open.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-end" aria-labelledby="end-title">
+    <div class="wrap end">
+      <img src="/boar-512.png" alt="BOAR mascot, a boar in a pith helmet" width="120" height="120" loading="lazy">
+      <h2 id="end-title">Keep your phone charged, pack BOAR, and go somewhere without signal.</h2>
+      <div class="ctas ctas-center">
+        <a class="btn btn-primary" href="https://github.com/rferrari/boar-app/releases/tag/v1.0.0">Download the APK</a>
+        <a class="btn btn-ghost" href="https://github.com/rferrari/boar-app/blob/main/MANIFESTO.md">Read the manifesto</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <p>MIT license · built by <a href="https://github.com/rferrari">vaipraonde</a> &amp; Vlad · SOPA</p>
+    <p class="footer-links">
+      <a href="https://github.com/rferrari/boar-app">Repo</a>
+      <a href="https://github.com/rferrari/boar-app/tree/main/docs/evidence">Evidence</a>
+      <a href="https://github.com/rferrari/boar-app/tree/main/docs/demo">Demo</a>
+      <a href="https://github.com/sopa-agency/boar-landing/blob/main/DESIGN.md">About the film</a>
+    </p>
+  </div>
+</footer>
+
+<script src="/main.js" defer></script>
+</body>
+</html>

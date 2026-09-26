@@ -1,0 +1,4 @@
+node_modules/
+render/out/
+.vercel
+.DS_Store

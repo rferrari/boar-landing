@@ -1,0 +1,16 @@
+{
+  "name": "boar-landing",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Landing page for BOAR, the offline research companion for Android.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "render": "node render/render.mjs",
+    "render:frames": "node render/render.mjs --frames-only",
+    "preview": "node render/serve.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}
