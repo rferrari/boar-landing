@@ -3,30 +3,33 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>BOAR: offline research on your phone</title>
-<meta name="description" content="BOAR is an open-source Android app that answers research questions with no signal: a small local model, an offline Wikipedia library, sources on every answer, and measurements from a real phone.">
+<title>BOAR: knowledge you can carry</title>
+<meta name="description" content="BOAR is an open-source Android app that keeps a small AI model and a library of knowledge on your phone. It answers with no signal, shows its sources and measures itself on a real phone.">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0c0c12" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#f6f0e4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111710" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://boar.sopa.team/">
 <link rel="canonical" href="https://boar.sopa.team/">
-<meta property="og:title" content="BOAR: offline means offline">
-<meta property="og:description" content="An open-source Android research companion that works in airplane mode, shows its sources and measures every answer on a real phone.">
+<meta property="og:title" content="BOAR: knowledge you can carry">
+<meta property="og:description" content="A small AI and a library that live on your phone. It still answers when the signal is gone, shows its sources and measures every answer. Open source, for Android.">
 <meta property="og:image" content="https://boar.sopa.team/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="BOAR: offline means offline">
-<meta name="twitter:description" content="An open-source Android research companion that works in airplane mode, shows its sources and measures every answer on a real phone.">
+<meta name="twitter:title" content="BOAR: knowledge you can carry">
+<meta name="twitter:description" content="A small AI and a library that live on your phone. It still answers when the signal is gone, shows its sources and measures every answer. Open source, for Android.">
 <meta name="twitter:image" content="https://boar.sopa.team/og.jpg">
 
 <link rel="preload" as="image" href="/media/poster.jpg" media="(min-aspect-ratio: 4/5)">
 <link rel="preload" as="image" href="/media/poster-mobile.jpg" media="(max-aspect-ratio: 4/5)">
 <link rel="preload" as="font" type="font/woff2" href="/fonts/Archivo-var.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/Fraunces-italic-var.woff2" crossorigin>
 <link rel="stylesheet" href="/styles.css">
 <script>document.documentElement.className = "js";</script>
 </head>
@@ -44,21 +47,22 @@
 
   <nav class="topbar" aria-label="Main">
     <a class="brand" href="#top">
-      <img src="/boar-512.png" alt="" width="40" height="40">
+      <img src="/boar-96.png" alt="" width="40" height="40">
       <span>BOAR</span>
     </a>
     <div class="topbar-links">
       <a href="#how">How it works</a>
-      <a href="#film">Where it matters</a>
+      <a href="#film">When it matters</a>
       <a href="#receipt">The receipt</a>
+      <a href="#roadmap">Roadmap</a>
       <a href="https://github.com/rferrari/boar-app">GitHub</a>
     </div>
   </nav>
 
   <div class="hero-copy">
-    <p class="eyebrow">An offline research companion for Android</p>
-    <h1>Offline means <em>offline.</em></h1>
-    <p class="lede">Ask in airplane mode. BOAR answers from a small model and an offline Wikipedia library on your phone, shows its sources, and writes down how every answer went.</p>
+    <p class="eyebrow">Open source · on your phone · for Android</p>
+    <h1>Knowledge you can <em>carry.</em></h1>
+    <p class="lede">BOAR keeps a small AI and a library of knowledge on your phone, so it can still think a problem through with you when the signal is gone.<span class="long"> It shows where each answer came from, and keeps an honest record of how it ran.</span></p>
     <div class="ctas">
       <a class="btn btn-primary" href="https://github.com/rferrari/boar-app/releases/tag/v1.0.0">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -79,8 +83,8 @@
     <div class="wrap">
       <header class="section-head reveal">
         <p class="kicker">How it works</p>
-        <h2 id="how-title">Download once. Then switch the network off.</h2>
-        <p class="section-lede">BOAR needs the internet one time, to fetch its model. After that, every answer comes from your phone.</p>
+        <h2 id="how-title">Download once. After that, it’s yours.</h2>
+        <p class="section-lede">BOAR needs the internet one time, to fetch its model. From then on, everything it knows and everything it says stays on your phone.</p>
       </header>
       <ol class="steps">
         <li class="step reveal" style="--i: 0">
@@ -100,14 +104,14 @@
             <div class="qs qs-off"><span class="qs-bars"><i></i><i></i><i></i><i></i></span><span class="qs-label">No Service</span></div>
           </div>
           <p class="step-n">02</p>
-          <h3>Go somewhere without signal</h3>
+          <h3>Go where the signal doesn’t</h3>
           <p>Airplane mode on, Wi-Fi off, mobile data off. BOAR searches its offline library with keywords and on-device embeddings, and runs the model locally.</p>
         </li>
         <li class="step reveal" style="--i: 2">
           <div class="vis vis-answer" aria-hidden="true">
-            <p class="mini-q">How do vaccines work?</p>
+            <p class="mini-q">Why plant corn, beans and squash together?</p>
             <p class="mini-a"><i></i><i></i><i class="short"></i></p>
-            <p class="mini-src"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Vaccine</p>
+            <p class="mini-src"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Companion planting</p>
           </div>
           <p class="step-n">03</p>
           <h3>Ask, and see the sources</h3>
@@ -116,71 +120,78 @@
       </ol>
       <ul class="facts">
         <li class="reveal" style="--i: 0"><strong>49,832 articles, 164 MB</strong><span>The optional Wikipedia Vital Articles pack, on top of the built-in library.</span></li>
-        <li class="reveal" style="--i: 1"><strong>Your own documents</strong><span>Import .txt, .md, .csv, .json and .pdf files as collections you can switch on and off.</span></li>
+        <li class="reveal" style="--i: 1"><strong>Your own knowledge</strong><span>Import .txt, .md, .csv, .json and .pdf files as collections you can switch on and off, and share them as portable packs.</span></li>
         <li class="reveal" style="--i: 2"><strong>Your own model</strong><span>Search Hugging Face for another GGUF model and run it on the phone.</span></li>
         <li class="reveal" style="--i: 3"><strong>No Google Play Services</strong><span>The release build has no Play Services or Firebase dependency. No account, no API.</span></li>
       </ul>
     </div>
   </section>
 
-  <!-- 2. where it matters -->
+  <!-- 2. when it matters -->
   <section class="section section-places" id="film" aria-labelledby="film-title">
     <div class="wrap">
       <header class="section-head reveal">
-        <p class="kicker">Where it matters</p>
-        <h2 id="film-title">No signal. Still an answer.</h2>
-        <p class="section-lede">The six places in the film. Each question is from BOAR's evaluation set, and each source is the article BOAR's offline search returned for it on a real phone on 2026-09-24.</p>
+        <p class="kicker">When it matters</p>
+        <h2 id="film-title">The moments you can’t look things up.</h2>
+        <p class="section-lede">The six places in the film. BOAR reasons with a model on the phone and grounds what it says in its library. Each source named here is an article in the Wikipedia Vital Articles pack BOAR can download. <strong>Answers are abridged</strong> and written for the page. The train question is from BOAR’s evaluation set, where the default model answered 6:15 pm on a real phone.</p>
       </header>
       <ol class="places">
-        <li class="place-card reveal" style="--c: #a898ff; --i: 0">
+        <li class="place-card reveal" style="--c: #f6a96b; --i: 0">
           <img src="/scenes/flight.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
           <div class="place-body">
             <p class="place-tag">In flight</p>
-            <p class="bubble">What is a black hole and how does one form?</p>
-            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Black hole</span></p></div>
+            <p class="bubble">The man next to me is choking and can’t speak. What do I do?</p>
+            <p class="answer"><span class="answer-who">BOAR</span>Lean him forward and give up to five firm blows between the shoulder blades. If that fails, give up to five abdominal thrusts. Keep alternating, and call the crew.</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Choking</span></p></div>
           </div>
         </li>
-        <li class="place-card reveal" style="--c: #3fe8b4; --i: 1">
+        <li class="place-card reveal" style="--c: #5fd6a4; --i: 1">
           <img src="/scenes/subway.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
           <div class="place-body">
             <p class="place-tag">Underground</p>
-            <p class="bubble">Why did the Western Roman Empire fall?</p>
-            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Fall of the Western Roman Empire</span></p></div>
+            <p class="bubble">A train leaves at 3:40 pm and the trip takes 2 hours and 35 minutes. What time does it arrive?</p>
+            <p class="answer"><span class="answer-who">BOAR</span>3:40 pm plus 2 hours is 5:40 pm. Add 35 minutes: 20 to reach 6:00, then 15 more. 6:15 pm.</p>
+            <div class="chips"><p class="chip chip-think"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h3l2-6 4 12 2-6h3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Worked out on the phone · no source needed</span></p></div>
           </div>
         </li>
-        <li class="place-card reveal" style="--c: #ff7d5e; --i: 2">
+        <li class="place-card reveal" style="--c: #f2c14e; --i: 2">
           <img src="/scenes/peak.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
           <div class="place-body">
-            <p class="place-tag">Above the treeline</p>
-            <p class="bubble">Explain photosynthesis in simple terms.</p>
-            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Photosynthesis</span></p></div>
+            <p class="place-tag">Mountain hut</p>
+            <p class="bubble">My friend is shivering, clumsy and slurring words. Is it hypothermia?</p>
+            <p class="answer"><span class="answer-who">BOAR</span>Those are classic signs. Get her out of the wind, swap wet clothes for dry layers, warm her core first, and give a warm sweet drink if she’s alert.</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Hypothermia</span></p></div>
           </div>
         </li>
-        <li class="place-card reveal" style="--c: #ffcc1f; --i: 3">
-          <img src="/scenes/jungle.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+        <li class="place-card reveal" style="--c: #a6d16a; --i: 3">
+          <img src="/scenes/garden.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
           <div class="place-body">
-            <p class="place-tag">Rainforest field camp</p>
-            <p class="bubble">Why is the Amazon rainforest considered important for global climate?</p>
-            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Amazon rainforest</span></p></div>
+            <p class="place-tag">In the garden</p>
+            <p class="bubble">Why plant corn, beans and squash together?</p>
+            <p class="answer"><span class="answer-who">BOAR</span>They help each other. Corn gives the beans a pole to climb, beans add nitrogen to the soil, and squash leaves shade the ground and hold in moisture.</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Companion planting</span></p></div>
           </div>
         </li>
-        <li class="place-card reveal" style="--c: #59a8ff; --i: 4">
+        <li class="place-card reveal" style="--c: #7cc3da; --i: 4">
           <img src="/scenes/sea.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
           <div class="place-body">
             <p class="place-tag">At sea</p>
-            <p class="bubble">Who proposed the theory of evolution by natural selection?</p>
-            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Evolution</span></p></div>
+            <p class="bubble">Thunder came 9 seconds after the flash. How far away is the storm?</p>
+            <p class="answer"><span class="answer-who">BOAR</span>Sound covers about 1 km every 3 seconds, so roughly 3 km. That’s close: head for shore or shelter now.</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Thunder</span></p><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Lightning</span></p></div>
           </div>
         </li>
-        <li class="place-card reveal" style="--c: #ffae34; --i: 5">
-          <img src="/scenes/city.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+        <li class="place-card reveal" style="--c: #ec9467; --i: 5">
+          <img src="/scenes/road.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
           <div class="place-body">
-            <p class="place-tag">Blackout</p>
-            <p class="bubble">Compare the French Revolution and the Industrial Revolution.</p>
-            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>French Revolution</span></p><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Industrial Revolution</span></p></div>
+            <p class="place-tag">Flooded road</p>
+            <p class="bubble">Water is running across the road ahead. Can I drive through it?</p>
+            <p class="answer"><span class="answer-who">BOAR</span>Don’t. Moving water can float a car even when it looks shallow, and the road underneath may be gone. Turn around and wait on higher ground.</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Flash flood</span></p></div>
           </div>
         </li>
       </ol>
+      <p class="places-note">For anything serious, BOAR is a companion, not a doctor or a rescue service. Get help as soon as you can reach it.</p>
     </div>
   </section>
 
@@ -266,8 +277,8 @@
   <section class="manifesto" aria-labelledby="manifesto-title">
     <div class="wrap">
       <h2 id="manifesto-title" class="sr-only">From the manifesto</h2>
-      <p class="m-line reveal" style="--i: 0">Offline means <em>offline.</em></p>
-      <p class="m-line reveal" style="--i: 1">Nothing leaves your phone.</p>
+      <p class="m-line reveal" style="--i: 0">Nothing leaves <em>your phone.</em></p>
+      <p class="m-line reveal" style="--i: 1">Useful now beats perfect later.</p>
       <p class="m-line m-small reveal" style="--i: 2">No account, no API, no Google Play Services. One download at setup, then nothing. Not “mostly local”, not “offline except when it matters”.</p>
       <p class="m-cite reveal" style="--i: 3"><a href="https://github.com/rferrari/boar-app/blob/main/MANIFESTO.md">From the BOAR manifesto</a></p>
     </div>
@@ -277,8 +288,8 @@
   <section class="section section-honest" aria-labelledby="honest-title">
     <div class="wrap">
       <header class="section-head reveal">
-        <p class="kicker">Not the dream, and we say so</p>
-        <h2 id="honest-title">Useful now beats perfect later.</h2>
+        <p class="kicker">Still growing</p>
+        <h2 id="honest-title">Not the dream, and we say so.</h2>
         <p class="section-lede">The model everyone wants on a phone, a huge mixture-of-experts model streaming from storage, doesn't exist yet. BOAR is what works today, measured honestly. 4–15 tok/s is enough to find out how to treat a blister, what a museum is about, or why the train isn't running, when there's no signal and nobody around to ask.</p>
       </header>
       <div class="strip">
@@ -303,10 +314,47 @@
     </div>
   </section>
 
-  <!-- 6. final call -->
+  <!-- 6. roadmap -->
+  <section class="section section-roadmap" id="roadmap" aria-labelledby="roadmap-title">
+    <div class="wrap">
+      <header class="section-head reveal">
+        <p class="kicker">Roadmap</p>
+        <h2 id="roadmap-title">First the roots. Then what grows from them.</h2>
+        <p class="section-lede">A direction, not a schedule. The first job is making the everyday app excellent, tested by the people who use it. After that, BOAR grows into a library that the community fills and shares, one pack at a time.</p>
+      </header>
+      <ol class="path">
+        <li class="phase phase-now reveal" style="--i: 0">
+          <div class="phase-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 38c10-3 26-3 36 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 36c-5-2-7-7-5-12 4 1 7 4 7 9M24 36c1-6 5-10 11-10-1 5-5 9-11 10" fill="var(--g-fill)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M24 38v5M18 40l-2 4M30 40l2 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          <p class="phase-when">Phase 1 · <span>Here today</span></p>
+          <h3>Roots</h3>
+          <ul class="phase-list"><li><strong>Local offline engine</strong><span>Hybrid search (SQLite FTS5 plus on-device embeddings) and llama.cpp running on the phone through llama.rn.</span></li><li><strong>Your own knowledge base</strong><span>Import .txt, .md, .csv and .json documents; BOAR chunks and embeds them on the device into collections you can switch on and off.</span></li><li><strong>Model browser</strong><span>Search and download curated or Hugging Face GGUF models inside the app.</span></li><li><strong>Portable collections</strong><span>Export and share your knowledge packs as JSON, without device-specific embedding vectors baked in.</span></li></ul>
+        </li>
+        <li class="phase phase-next reveal" style="--i: 1">
+          <div class="phase-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 40c10-3 26-3 36 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 39V20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 24c-8 0-12-5-12-11 7 0 12 4 12 11zM24 20c1-7 6-11 13-11 0 7-5 11-13 11z" fill="var(--g-fill)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
+          <p class="phase-when">Phase 2 · <span>Next</span></p>
+          <h3>First shoots</h3>
+          <ul class="phase-list"><li><strong>iOS</strong><span>In progress: the same offline pipeline, on iPhone.</span></li><li><strong>Offline voice</strong><span>Speak your question and hear the answer, with lightweight speech-to-text and text-to-speech that run on the device.</span></li><li><strong>Packs for places</strong><span>Ready-made packs to download before a trip: a city’s food, transit and maps.</span></li></ul>
+        </li>
+        <li class="phase phase-later reveal" style="--i: 2">
+          <div class="phase-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 42c10-3 26-3 36 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 41V12M24 30l-8-7M24 22l8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 23c-6 1-10-2-11-7 5-1 10 2 11 7zM32 16c2-6 7-8 11-7-1 5-6 8-11 7zM24 12c-3-4-2-8 0-10 2 2 3 6 0 10z" fill="var(--g-fill)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
+          <p class="phase-when">Phase 3 · <span>After that</span></p>
+          <h3>Branches</h3>
+          <ul class="phase-list"><li><strong>A shared pack library</strong><span>An offline-first marketplace to browse, preview and download knowledge packs curated by the community.</span></li><li><strong>Private memory</strong><span>Optional local encryption for your imported documents and conversation history.</span></li><li><strong>The right model for each task</strong><span>Switch models per task or per question without restarting the session.</span></li></ul>
+        </li>
+        <li class="phase phase-later reveal" style="--i: 3">
+          <div class="phase-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M3 43c12-3 30-3 42 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="17" r="11" fill="var(--g-fill)" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="27" r="6" fill="var(--g-fill)" stroke="currentColor" stroke-width="2"/><circle cx="38" cy="27" r="6" fill="var(--g-fill)" stroke="currentColor" stroke-width="2"/><path d="M24 42V24M10 42v-9M38 42v-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <p class="phase-when">Phase 4 · <span>Further out</span></p>
+          <h3>Grove</h3>
+          <ul class="phase-list"><li><strong>Essentials library</strong><span>Verified offline bundles for first aid, basic survival, disaster response and growing your own food.</span></li><li><strong>Desktop workbench</strong><span>A macOS and desktop companion for people who manage large libraries.</span></li><li><strong>Sharing nearby</strong><span>Exploring peer-to-peer sharing of packs between BOAR devices over Bluetooth or local Wi-Fi, no internet in between.</span></li></ul>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 7. final call -->
   <section class="cta-band" aria-labelledby="end-title">
     <div class="wrap cta-inner reveal">
-      <img src="/boar-512.png" alt="BOAR mascot, a boar in a pith helmet" width="160" height="160" loading="lazy">
+      <img src="/boar-320.png" alt="BOAR mascot, a boar in a pith helmet" width="160" height="160" loading="lazy">
       <h2 id="end-title">Keep your phone charged, pack BOAR, and go somewhere without signal.</h2>
       <div class="ctas">
         <a class="btn btn-primary" href="https://github.com/rferrari/boar-app/releases/tag/v1.0.0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the APK</a>

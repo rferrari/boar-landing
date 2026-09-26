@@ -2,9 +2,13 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>BOAR no signal (scene)</title>
+<title>BOAR film (scene)</title>
 <style>
   @font-face { font-family: "Archivo"; src: url("../public/fonts/Archivo-var.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; }
+  @font-face { font-family: "Fraunces"; font-style: italic; src: url("../public/fonts/Fraunces-italic-var.woff2") format("woff2"); font-weight: 300 700; }
+  /* the app's own families on Android: sans-serif (Roboto) and monospace (Noto Sans Mono) */
+  @font-face { font-family: "Roboto"; src: url("fonts/Roboto-var.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Noto Sans Mono"; src: url("fonts/NotoSansMono-var.woff2") format("woff2"); font-weight: 100 900; }
   html, body { margin: 0; background: #000; }
   canvas { display: block; }
 </style>
@@ -14,17 +18,19 @@
 <script>
 /*
  * BOAR "No Signal": six places where the phone has no network, one question in
- * each, answered offline with its source. The answer card and its status bar
- * ("No Service" / airplane mode) never move; the world changes around them.
+ * each, answered on the phone. The phone, its status bar ("No Service" /
+ * airplane mode) and the app chrome never move; the world changes around them.
  *
  * Every pixel is a pure function of t. Scenes only exist inside their own time
- * window; the one thing on screen across the loop point (the end card's night
- * sky) is periodic over T = 15 s, so frame(0) === frame(15). See DESIGN.md.
+ * window; the one thing on screen across the loop point (the end card's sky
+ * before dawn) is periodic over T = 15 s, so frame(0) === frame(15).
  *
- * Questions: BOAR eval set v1 (docs/EVAL_QUERIES.md). Sources: the expected
- * article that retrieval returned for that question in the 2026-09-24 baseline
- * run (docs/evidence/2026-09-24-baseline-5-configs, "Retrieved articles per
- * query"). Answer text is a short plain summary, not a quoted model output.
+ * Questions and sources: each source is an article in the Wikipedia Vital
+ * Articles pack BOAR can download (checked against the Vital Articles lists).
+ * Answers are abridged and written for the film. The train question is from
+ * BOAR's eval set v1 (reasoning-1); the default model answered 6:15 pm in the
+ * 2026-09-24 baseline run. It is reasoning, so it shows no sources.
+ * The screen is the BOAR chat UI, redrawn from the app's screenshots.
  */
 const Q = new URLSearchParams(location.search);
 const W = +(Q.get("w") || 1920), H = +(Q.get("h") || 1080);
@@ -40,48 +46,57 @@ const ctx = cv.getContext("2d");
 // ---------- brand tokens (swap here for a brand guide; scene illustration palettes live in each scene) ----------
 const BRAND = {
   font: "Archivo",
-  card: "#fbfaf7",        // answer card surface
-  ink: "#15151b",         // card text, question bubble, OFFLINE pill
-  muted: "#6b6a72",       // secondary card text
-  endAccent: "#ff9a52",   // card edge + glow on the end card
-  endText: "#ffffff",
+  serif: "Fraunces",      // italic accent, the hand-set voice of the end line
+  sun: "#f2b13e",         // end-card glow and phone rim
+  leaf: "#8cc063",
+  soil: "#c46a3c",
+  sky: "#7cc3da",
+  dawnTop: "#0d1c1e",     // the end card's sky before dawn, top to horizon
+  dawnMid: "#15302b",
+  dawnLow: "#3a3a2c",
+  endText: "#fff8ea",
+  endLine: "Knowledge you can carry.",
+  endSub: "BOAR · answers on your phone, signal or not",
 };
+const endAccent = BRAND.sun;
 
 // ---------- layout ----------
 const F = LAND ? { x: 0.42 * W, y: 0.46 * H } : { x: 0.5 * W, y: 0.36 * H };   // focal point: window, tunnel, sun
 const HY = LAND ? 0.6 * H : 0.46 * H;                                            // sea / city horizon
-// The card is designed at 640x530 (x S) and scaled by K in portrait so its type stays legible on a phone.
-const CW = 640 * S, CH = 530 * S, K = LAND ? 1 : 1.28;
+// The phone is designed at 640 wide (x S) and scaled by K in portrait so its type stays legible on a phone.
+const CW = 640 * S, CH = (LAND ? 760 : 690) * S, K = LAND ? 1 : 1.28;
 const CX = LAND ? 0.615 * W : (W - CW * K) / 2;
-const CY = LAND ? 0.5 * H - CH / 2 + 30 * S : 0.585 * H;
+const CY = LAND ? 0.5 * H - CH / 2 + 34 * S : 0.5 * H;
 const CCX = CX + CW * K / 2, CCY = CY + CH * K / 2;   // card centre on screen
 
 // ---------- the six situations ----------
+// q: the question. a: an abridged answer ("…" marks the cut). src: the pack article that covers it
+// (empty for reasoning: the answer is worked out, not looked up).
 const SC = [
-  { id: "flight", tag: "In flight", clock: "23:40", air: true, accent: "#a898ff",
-    q: "What is a black hole and how does one form?",
-    a: "A region where gravity is so strong that nothing, not even light, can escape. Most form when a massive star collapses at the end of its life.",
-    src: ["Black hole"] },
-  { id: "subway", tag: "Underground", clock: "08:15", accent: "#3fe8b4",
-    q: "Why did the Western Roman Empire fall?",
-    a: "No single cause. Civil wars, a strained economy and pressure from Germanic peoples wore it down until the last western emperor was deposed in 476.",
-    src: ["Fall of the Western Roman Empire"] },
-  { id: "peak", tag: "Above the treeline", clock: "06:20", accent: "#ff7d5e",
-    q: "Explain photosynthesis in simple terms.",
-    a: "Plants use sunlight to turn water and carbon dioxide into the sugar they live on, and release oxygen as a by-product.",
-    src: ["Photosynthesis"] },
-  { id: "jungle", tag: "Rainforest field camp", clock: "15:30", accent: "#ffcc1f",
-    q: "Why is the Amazon rainforest considered important for global climate?",
-    a: "It stores a vast amount of carbon and recycles moisture into rain far beyond the forest. Losing it releases that carbon and weakens the water cycle.",
-    src: ["Amazon rainforest"] },
-  { id: "sea", tag: "At sea", clock: "12:10", accent: "#59a8ff",
-    q: "Who proposed the theory of evolution by natural selection?",
-    a: "Charles Darwin, in On the Origin of Species (1859). Alfred Russel Wallace reached the same idea independently.",
-    src: ["Evolution"] },
-  { id: "city", tag: "Blackout", clock: "20:05", accent: "#ffae34",
-    q: "Compare the French Revolution and the Industrial Revolution.",
-    a: "One was political: it overthrew the French monarchy. The other was economic: machines and factories changed how people worked and lived.",
-    src: ["French Revolution", "Industrial Revolution"] },
+  { id: "flight", tag: "In flight", clock: "19:40", air: true, accent: "#f6a96b",
+    q: "The man next to me is choking and can't speak. What do I do?",
+    a: "Lean him forward and give up to five firm blows between the shoulder blades. If that fails, give up to five abdominal thrusts. Keep alternating, and call the crew. …",
+    src: ["Choking"] },
+  { id: "subway", tag: "Underground", clock: "15:52", accent: "#5fd6a4",
+    q: "A train leaves at 3:40 pm and the trip takes 2 hours and 35 minutes. What time does it arrive?",
+    a: "3:40 pm plus 2 hours is 5:40 pm. Add 35 minutes: 5:40 + 0:20 is 6:00, and 15 more makes 6:15 pm.",
+    src: [] },
+  { id: "peak", tag: "Mountain hut", clock: "06:20", accent: "#f2c14e",
+    q: "My friend is shivering, clumsy and slurring words. Is it hypothermia?",
+    a: "Those are classic signs. Get her out of the wind, swap wet clothes for dry layers, warm her core first, and give a warm sweet drink if she's alert. …",
+    src: ["Hypothermia"] },
+  { id: "garden", tag: "In the garden", clock: "18:10", accent: "#a6d16a",
+    q: "Why plant corn, beans and squash together?",
+    a: "They help each other. Corn gives the beans a pole to climb, beans add nitrogen to the soil, and squash leaves shade the ground and hold in moisture. …",
+    src: ["Companion planting"] },
+  { id: "sea", tag: "At sea", clock: "14:05", accent: "#7cc3da",
+    q: "Thunder came 9 seconds after the flash. How far away is the storm?",
+    a: "Sound covers about 1 km every 3 seconds, so roughly 3 km. That's close: head for shore or shelter now. …",
+    src: ["Thunder", "Lightning"] },
+  { id: "road", tag: "Flooded road", clock: "20:05", accent: "#ec9467",
+    q: "Water is running across the road ahead. Can I drive through it?",
+    a: "Don't. Moving water can float a car even when it looks shallow, and the road underneath may be gone. Turn around and wait on higher ground. …",
+    src: ["Flash flood"] },
 ];
 const B = [0, 2.3, 4.4, 6.5, 8.6, 10.7, 13.0, 15];   // scene starts; 13.0-15 is the end card
 
@@ -138,44 +153,21 @@ function ridge(n, u) {
   const a = 1 - Math.abs(n(u)), b = 1 - Math.abs(n(u * 2.13 + 9.1)), c = n(u * 4.7 + 3.3);
   return 0.62 * a * a + 0.28 * b * b + 0.1 * c;
 }
-// city: three building layers across a wide strip, with windows
-const CITY = [
-  { pf: 0.3, col: "#3a2868", hMin: 120, hMax: 330, wMin: 70, wMax: 150, win: 0.0, ww: 7, wh: 9, gx: 16, gy: 20 },
-  { pf: 0.6, col: "#211848", hMin: 160, hMax: 470, wMin: 90, wMax: 180, win: 0.55, ww: 8, wh: 11, gx: 19, gy: 25 },
-  { pf: 1.0, col: "#0d0a22", hMin: 110, hMax: 380, wMin: 120, wMax: 230, win: 0.6, ww: 11, wh: 14, gx: 26, gy: 32 },
-].map((L, li) => {
-  const r = rng(100 + li); const b = []; let x = -0.6 * W;
-  while (x < 1.8 * W) {
-    const w = (L.wMin + r() * (L.wMax - L.wMin)) * S, h = (L.hMin + r() * (L.hMax - L.hMin)) * S * (LAND ? 1 : 1.25);
-    const wins = [];
-    if (L.win > 0) for (let yy = 22 * S; yy < h - 16 * S; yy += L.gy * S) for (let xx = 12 * S; xx < w - 12 * S; xx += L.gx * S) if (r() < L.win) wins.push({ x: xx, y: yy, j: r(), c: r() < 0.18 ? "#fff0c4" : r() < 0.5 ? "#ffc766" : "#ffb04a" });
-    b.push({ x, w, h, wins, top: r() });
-    x += w + (r() < 0.3 ? r() * 30 * S : -8 * S);
-  }
-  return { ...L, b };
-});
-// candles / torches that come back on after the blackout (building index, window index)
-const JR = rng(5);
-const JUNGLE = {
-  far: Array.from({ length: 22 }, (_, i) => ({ x: (i / 22) * 2.4 * W - 0.6 * W + JR() * 60 * S, r: (70 + JR() * 90) * S, y: JR() })),
-  trunks: Array.from({ length: 9 }, (_, i) => ({ x: (i / 9) * 2.2 * W - 0.5 * W + JR() * 120 * S, w: (26 + JR() * 40) * S, lean: (JR() - 0.5) * 0.08 })),
-  blobs: Array.from({ length: 40 }, () => ({ x: JR() * 2.4 * W - 0.6 * W, y: JR() * 0.32 * H, r: (60 + JR() * 110) * S })),
-};
 
 // ============================================================
-// SCENE 1: in flight, night, airplane mode
+// SCENE 1: in flight at sunset, airplane mode
 // ============================================================
 function flightSky(cx, cy, lt, k) {
-  ctx.fillStyle = vg(cy - 240 * S, cy + 240 * S, [[0, "#04061c"], [0.42, "#121a58"], [0.58, "#3a3796"], [0.66, "#8074dc"], [0.72, "#4b44a8"], [1, "#221e66"]]);
+  ctx.fillStyle = vg(cy - 240 * S, cy + 240 * S, [[0, "#1c2e4a"], [0.3, "#3d5a78"], [0.5, "#c98d78"], [0.62, "#f6b774"], [0.7, "#f9d49a"], [1, "#b8705c"]]);
   ctx.fillRect(cx - 180 * S, cy - 250 * S, 360 * S, 500 * S);
-  for (const s of WIN_STARS) { ctx.fillStyle = `rgba(255,255,255,${s.a})`; ctx.fillRect(cx + s.x * S, cy + s.y * S, s.r * S, s.r * S); }
+  for (const s of WIN_STARS) { if (s.y < -150) { ctx.fillStyle = `rgba(255,248,230,${s.a * 0.45})`; ctx.fillRect(cx + s.x * S, cy + s.y * S, s.r * S, s.r * S); } }
   if (k === 0) {
-    ctx.fillStyle = rg(cx + 70 * S, cy - 130 * S, 0, 140 * S, [[0, "rgba(255,244,214,0.55)"], [1, "rgba(255,244,214,0)"]]);
-    ctx.fillRect(cx - 180 * S, cy - 250 * S, 360 * S, 300 * S);
-    ctx.fillStyle = "#fff4da"; ctx.beginPath(); ctx.arc(cx + 70 * S, cy - 130 * S, 24 * S, 0, TAU); ctx.fill();
+    ctx.fillStyle = rg(cx + 60 * S, cy + 30 * S, 0, 220 * S, [[0, "rgba(255,238,190,0.95)"], [0.25, "rgba(255,200,130,0.5)"], [1, "rgba(255,190,120,0)"]]);
+    ctx.fillRect(cx - 180 * S, cy - 250 * S, 360 * S, 500 * S);
+    ctx.fillStyle = "#fff1cc"; ctx.beginPath(); ctx.arc(cx + 60 * S, cy + 30 * S, 30 * S, 0, TAU); ctx.fill();
   }
   // sea of clouds, three layers rushing past
-  const cols = [["#4a45a6", "#7d74db"], ["#6c63c8", "#a99ff2"], ["#9a90e8", "#e0dbff"]];
+  const cols = [["#b87766", "#e7a784"], ["#d49378", "#f6c69c"], ["#eab28c", "#ffe6c4"]];
   for (let j = 0; j < 3; j++) {
     const y0 = cy + (40 + j * 62) * S, sp = (90 + j * 260) * S, amp = (10 + j * 9) * S, per = (34 + j * 22) * S;
     ctx.beginPath(); ctx.moveTo(cx - 200 * S, cy + 260 * S);
@@ -184,13 +176,13 @@ function flightSky(cx, cy, lt, k) {
       ctx.lineTo(x, y0 - amp * Math.abs(Math.sin(u)) - amp * 0.5 * Math.abs(Math.sin(u * 0.47 + j)));
     }
     ctx.lineTo(cx + 200 * S, cy + 260 * S); ctx.closePath();
-    ctx.fillStyle = vg(y0 - amp * 1.5, y0 + 90 * S, [[0, cols[j][1]], [0.35, cols[j][0]], [1, "#1a1650"]]); ctx.fill();
+    ctx.fillStyle = vg(y0 - amp * 1.5, y0 + 90 * S, [[0, cols[j][1]], [0.35, cols[j][0]], [1, "#6d4550"]]); ctx.fill();
   }
   if (k === 0) {
     // wing
     ctx.beginPath(); ctx.moveTo(cx - 200 * S, cy + 132 * S); ctx.lineTo(cx + 104 * S, cy + 70 * S); ctx.lineTo(cx + 114 * S, cy + 80 * S); ctx.lineTo(cx - 200 * S, cy + 232 * S); ctx.closePath();
-    ctx.fillStyle = vg(cy + 70 * S, cy + 232 * S, [[0, "#2a2566"], [1, "#0b0920"]]); ctx.fill();
-    ctx.strokeStyle = "rgba(200,190,255,0.55)"; ctx.lineWidth = 2 * S; ctx.beginPath(); ctx.moveTo(cx - 200 * S, cy + 132 * S); ctx.lineTo(cx + 104 * S, cy + 70 * S); ctx.stroke();
+    ctx.fillStyle = vg(cy + 70 * S, cy + 232 * S, [[0, "#4a3438"], [1, "#1a1214"]]); ctx.fill();
+    ctx.strokeStyle = "rgba(255,214,170,0.7)"; ctx.lineWidth = 2 * S; ctx.beginPath(); ctx.moveTo(cx - 200 * S, cy + 132 * S); ctx.lineTo(cx + 104 * S, cy + 70 * S); ctx.stroke();
     const on = ((lt * 1.25) % 1 + 1) % 1 < 0.14;
     if (on) { ctx.fillStyle = rg(cx + 110 * S, cy + 75 * S, 0, 40 * S, [[0, "rgba(255,70,70,0.95)"], [0.25, "rgba(255,70,70,0.5)"], [1, "rgba(255,70,70,0)"]]); ctx.fillRect(cx + 60 * S, cy + 25 * S, 100 * S, 100 * S); }
     ctx.fillStyle = on ? "#ff6a6a" : "#5a1a2a"; ctx.beginPath(); ctx.arc(cx + 110 * S, cy + 75 * S, 4 * S, 0, TAU); ctx.fill();
@@ -199,9 +191,9 @@ function flightSky(cx, cy, lt, k) {
 function flightWindow(cx, cy, lt, k, portal, skyA) {
   // bezel
   rr(cx - 225 * S, cy - 305 * S, 450 * S, 610 * S, 215 * S);
-  ctx.fillStyle = hg(cx - 225 * S, cx + 225 * S, [[0, "#4c3d97"], [0.5, "#6553b8"], [1, "#3a2d7e"]]); ctx.fill();
+  ctx.fillStyle = hg(cx - 225 * S, cx + 225 * S, [[0, "#6b5048"], [0.5, "#8a6a5c"], [1, "#58403a"]]); ctx.fill();
   rr(cx - 190 * S, cy - 262 * S, 380 * S, 524 * S, 190 * S);
-  ctx.fillStyle = vg(cy - 262 * S, cy + 262 * S, [[0, "#1a1440"], [1, "#2f2672"]]); ctx.fill();
+  ctx.fillStyle = vg(cy - 262 * S, cy + 262 * S, [[0, "#2b1e1c"], [1, "#4a3530"]]); ctx.fill();
   ctx.save();
   rr(cx - 165 * S, cy - 235 * S, 330 * S, 470 * S, 165 * S); ctx.clip();
   if (portal) portal();
@@ -209,9 +201,9 @@ function flightWindow(cx, cy, lt, k, portal, skyA) {
   if (!portal || skyA > 0) {
     ctx.globalAlpha = portal ? skyA : 1;
     const sh = [0.62, 0.16, 0.34][k + 1];
-    ctx.fillStyle = vg(cy - 235 * S, cy - 235 * S + 470 * S * sh, [[0, "#d7cffb"], [1, "#b3a7ee"]]);
+    ctx.fillStyle = vg(cy - 235 * S, cy - 235 * S + 470 * S * sh, [[0, "#f3e3cf"], [1, "#dcc4ab"]]);
     ctx.fillRect(cx - 170 * S, cy - 240 * S, 340 * S, 470 * S * sh + 5 * S);
-    ctx.fillStyle = "#8f82d6"; ctx.fillRect(cx - 40 * S, cy - 235 * S + 470 * S * sh - 10 * S, 80 * S, 6 * S);
+    ctx.fillStyle = "#b8977c"; ctx.fillRect(cx - 40 * S, cy - 235 * S + 470 * S * sh - 10 * S, 80 * S, 6 * S);
     // glass reflection
     ctx.fillStyle = "rgba(255,255,255,0.06)";
     ctx.beginPath(); ctx.moveTo(cx - 120 * S, cy + 240 * S); ctx.lineTo(cx - 40 * S, cy + 240 * S); ctx.lineTo(cx + 150 * S, cy - 240 * S); ctx.lineTo(cx + 70 * S, cy - 240 * S); ctx.fill();
@@ -224,27 +216,27 @@ function drawFlight(lt, o = {}) {
   const zi = 1 + 0.07 * clamp(lt / 2.5);
   const bob = Math.sin(lt * 6.1) * 2.5 * S + Math.sin(lt * 14.3) * 1.2 * S;
   cam({ z: (o.z || 1) * zi, dy: bob });
-  big(vg(F.y - 900 * S, F.y + 900 * S, [[0, "#140f33"], [0.3, "#2c226a"], [0.55, "#3d3084"], [0.8, "#241c5a"], [1, "#0e0a26"]]));
+  big(vg(F.y - 900 * S, F.y + 900 * S, [[0, "#241816"], [0.3, "#4a342e"], [0.55, "#5e443a"], [0.8, "#3c2a26"], [1, "#1a1110"]]));
   // warm pool of light from the reading lamp
   ctx.fillStyle = rg(F.x + 360 * S, F.y - 560 * S, 0, 1000 * S, [[0, "rgba(255,178,92,0.6)"], [0.35, "rgba(255,140,80,0.2)"], [1, "rgba(255,140,80,0)"]]);
   ctx.fillRect(F.x - 1500 * S, F.y - 1600 * S, 3500 * S, 2600 * S);
   // overhead bins
-  ctx.fillStyle = vg(F.y - 1000 * S, F.y - 400 * S, [[0, "#0b0820"], [1, "#221a55"]]);
+  ctx.fillStyle = vg(F.y - 1000 * S, F.y - 400 * S, [[0, "#1a1110"], [1, "#3a2824"]]);
   ctx.fillRect(F.x - 3000 * S, F.y - 1400 * S, 6000 * S, 1000 * S);
   ctx.fillStyle = "rgba(255,190,120,0.55)"; ctx.fillRect(F.x - 3000 * S, F.y - 404 * S, 6000 * S, 3 * S);
   // lamp
   ctx.fillStyle = rg(F.x + 360 * S, F.y - 420 * S, 0, 60 * S, [[0, "rgba(255,236,190,1)"], [0.3, "rgba(255,200,130,0.6)"], [1, "rgba(255,200,130,0)"]]);
   ctx.fillRect(F.x + 290 * S, F.y - 480 * S, 140 * S, 120 * S);
   // panel seams
-  ctx.strokeStyle = "rgba(10,6,30,0.35)"; ctx.lineWidth = 3 * S;
+  ctx.strokeStyle = "rgba(20,10,8,0.35)"; ctx.lineWidth = 3 * S;
   for (let k = -3; k <= 3; k++) { ctx.beginPath(); ctx.moveTo(F.x + (k * 600 + 300) * S, F.y - 400 * S); ctx.lineTo(F.x + (k * 600 + 300) * S, F.y + 1400 * S); ctx.stroke(); }
   for (const k of [-1, 0, 1]) flightWindow(F.x + k * 600 * S, F.y, lt, k, k === 0 ? o.portal : null, o.skyA ?? 1);
   // seat backs in the foreground
   const seat = (x, y, w, h) => {
-    rr(x, y, w, h, [150 * S, 150 * S, 20 * S, 20 * S]); ctx.fillStyle = vg(y, y + h * 0.6, [[0, "#2a2160"], [1, "#0a0720"]]); ctx.fill();
+    rr(x, y, w, h, [150 * S, 150 * S, 20 * S, 20 * S]); ctx.fillStyle = vg(y, y + h * 0.6, [[0, "#4a3a34"], [1, "#150e0c"]]); ctx.fill();
     ctx.strokeStyle = "rgba(255,180,110,0.55)"; ctx.lineWidth = 3 * S; ctx.beginPath(); ctx.arc(x + w / 2, y + 150 * S, w / 2 - 2 * S, Math.PI * 1.08, Math.PI * 1.5); ctx.stroke();
-    rr(x + w * 0.2, y + 26 * S, w * 0.6, 92 * S, 30 * S); ctx.fillStyle = "rgba(205,195,245,0.85)"; ctx.fill();
-    ctx.fillStyle = "rgba(90,70,170,0.4)"; ctx.fillRect(x + w * 0.2, y + 96 * S, w * 0.6, 22 * S);
+    rr(x + w * 0.2, y + 26 * S, w * 0.6, 92 * S, 30 * S); ctx.fillStyle = "rgba(240,224,204,0.85)"; ctx.fill();
+    ctx.fillStyle = "rgba(150,110,90,0.4)"; ctx.fillRect(x + w * 0.2, y + 96 * S, w * 0.6, 22 * S);
   };
   if (LAND) { seat(F.x - 720 * S, F.y + 330 * S, 420 * S, 700 * S); seat(F.x + 330 * S, F.y + 300 * S, 420 * S, 700 * S); }
   else { seat(F.x - 520 * S, F.y + 420 * S, 440 * S, 900 * S); seat(F.x + 180 * S, F.y + 460 * S, 440 * S, 900 * S); }
@@ -318,7 +310,7 @@ function drawSubway(lt, o = {}) {
 }
 
 // ============================================================
-// SCENE 3: above the treeline, dawn
+// SCENE 3: a mountain hut above the treeline, dawn
 // ============================================================
 let HIKER_X = null;
 function peakY(L, x, pan) { return L.base - L.amp * ridge(L.n, (x - pan * L.pf) / L.sc + L.off); }
@@ -328,24 +320,24 @@ function drawPeak(lt, o = {}) {
   cam({ z: (o.z || 1) * emerge, dy: o.dy || 0 });
   const hy = LAND ? 0.64 * H : 0.54 * H;
   const pan = -lt * 60 * S;
-  big(vg(hy - 1100 * S, hy + 100 * S, [[0, "#1d1650"], [0.35, "#4d2c86"], [0.62, "#b64a8a"], [0.8, "#ff6f6a"], [0.92, "#ffae7c"], [1, "#ffd9a2"]]));
+  big(vg(hy - 1100 * S, hy + 100 * S, [[0, "#1f3a52"], [0.35, "#4f7a8c"], [0.62, "#d9a676"], [0.8, "#f4bb72"], [0.92, "#fbd592"], [1, "#fde9bd"]]));
   const sx = F.x + (LAND ? 40 : 0) * S, sy = hy - 110 * S - lt * 22 * S;
   ctx.fillStyle = rg(sx, sy, 0, 900 * S, [[0, "rgba(255,226,170,0.85)"], [0.2, "rgba(255,190,140,0.45)"], [1, "rgba(255,160,130,0)"]]);
   ctx.fillRect(sx - 1000 * S, sy - 1000 * S, 2000 * S, 2000 * S);
   ctx.fillStyle = "#fff4da"; ctx.beginPath(); ctx.arc(sx, sy, 64 * S, 0, TAU); ctx.fill();
   const layers = [
-    { base: hy + 10 * S, amp: 300 * S, sc: 820 * S, pf: 0.12, col: "#e38aa0", n: nR[0], off: 3 },
-    { base: hy + 120 * S, amp: 300 * S, sc: 700 * S, pf: 0.25, col: "#b8588c", n: nR[1], off: 7 },
-    { base: hy + 240 * S, amp: 260 * S, sc: 600 * S, pf: 0.45, col: "#7d3880", n: nR[2], off: 1 },
-    { base: hy + (LAND ? 380 : 420) * S, amp: 240 * S, sc: 540 * S, pf: 0.72, col: "#4a2164", n: nR[3], off: 5 },
-    { base: hy + (LAND ? 440 : 560) * S, amp: 300 * S, sc: 520 * S, pf: 1.0, col: "#21102f", n: nR[4], off: 2.4 },
+    { base: hy + 10 * S, amp: 300 * S, sc: 820 * S, pf: 0.12, col: "#d8b48c", n: nR[0], off: 3 },
+    { base: hy + 120 * S, amp: 300 * S, sc: 700 * S, pf: 0.25, col: "#a7a07a", n: nR[1], off: 7 },
+    { base: hy + 240 * S, amp: 260 * S, sc: 600 * S, pf: 0.45, col: "#6f8a62", n: nR[2], off: 1 },
+    { base: hy + (LAND ? 380 : 420) * S, amp: 240 * S, sc: 540 * S, pf: 0.72, col: "#3f6248", n: nR[3], off: 5 },
+    { base: hy + (LAND ? 440 : 560) * S, amp: 300 * S, sc: 520 * S, pf: 1.0, col: "#1d3325", n: nR[4], off: 2.4 },
   ];
   const x0 = -0.3 * W, x1 = 1.3 * W, step = 7 * S;
   layers.forEach((L, i) => {
     ctx.beginPath(); ctx.moveTo(x0, H * 3);
     for (let x = x0; x <= x1; x += step) ctx.lineTo(x, peakY(L, x, pan));
     ctx.lineTo(x1, H * 3); ctx.closePath();
-    ctx.fillStyle = vg(L.base - L.amp, L.base + 200 * S, [[0, L.col], [1, mixHex(L.col, "#12081e", 0.35)]]); ctx.fill();
+    ctx.fillStyle = vg(L.base - L.amp, L.base + 200 * S, [[0, L.col], [1, mixHex(L.col, "#0f1a12", 0.35)]]); ctx.fill();
     // rim light facing the sun
     if (i >= 1) {
       ctx.save(); ctx.clip();
@@ -354,8 +346,18 @@ function drawPeak(lt, o = {}) {
       ctx.beginPath(); for (let x = x0; x <= x1; x += step) { const y = peakY(L, x, pan); x === x0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); } ctx.stroke();
       ctx.restore();
     }
+    if (i === 3) { // the hut, with its window lit and smoke from the chimney
+      const hx = F.x + (LAND ? -330 : -250) * S + pan * L.pf, hb = peakY(L, hx, pan) + 14 * S, hw = 120 * S, hh = 70 * S;
+      ctx.fillStyle = "#2c4634"; ctx.fillRect(hx - hw / 2, hb - hh, hw, hh + 20 * S);
+      ctx.beginPath(); ctx.moveTo(hx - hw / 2 - 18 * S, hb - hh + 4 * S); ctx.lineTo(hx, hb - hh - 62 * S); ctx.lineTo(hx + hw / 2 + 18 * S, hb - hh + 4 * S); ctx.closePath(); ctx.fillStyle = "#223a2b"; ctx.fill();
+      ctx.fillStyle = "#223a2b"; ctx.fillRect(hx + 24 * S, hb - hh - 58 * S, 16 * S, 40 * S);
+      ctx.fillStyle = rg(hx - 22 * S, hb - hh / 2, 0, 70 * S, [[0, "rgba(255,196,106,0.55)"], [1, "rgba(255,196,106,0)"]]); ctx.fillRect(hx - 92 * S, hb - hh - 30 * S, 140 * S, 120 * S);
+      ctx.fillStyle = "#ffc56a"; ctx.fillRect(hx - 36 * S, hb - hh + 20 * S, 28 * S, 24 * S);
+      ctx.fillStyle = "#2c4634"; ctx.fillRect(hx - 23 * S, hb - hh + 20 * S, 2 * S, 24 * S);
+      for (let k = 0; k < 7; k++) { const q = ((lt * 0.5 + k / 7) % 1), px2 = hx + 32 * S + Math.sin(q * 5 + k) * 14 * S + q * 60 * S, py2 = hb - hh - 62 * S - q * 170 * S; ctx.fillStyle = `rgba(250,240,225,${0.32 * (1 - q)})`; ctx.beginPath(); ctx.arc(px2, py2, (8 + q * 22) * S, 0, TAU); ctx.fill(); }
+    }
     if (i < 3) { // mist in the valleys
-      ctx.fillStyle = vg(L.base - 40 * S, L.base + 110 * S, [[0, "rgba(255,190,200,0)"], [0.5, "rgba(255,196,206,0.34)"], [1, "rgba(255,190,200,0)"]]);
+      ctx.fillStyle = vg(L.base - 40 * S, L.base + 110 * S, [[0, "rgba(255,226,190,0)"], [0.5, "rgba(255,230,196,0.34)"], [1, "rgba(255,226,190,0)"]]);
       ctx.fillRect(x0, L.base - 40 * S, x1 - x0, 150 * S);
     }
   });
@@ -364,18 +366,18 @@ function drawPeak(lt, o = {}) {
   if (HIKER_X === null) { HIKER_X = F.x; let best = Infinity; for (let x = F.x - (LAND ? 150 : 250) * S; x <= F.x + 260 * S; x += 4 * S) { const y = peakY(L, x, 0); if (y < best) { best = y; HIKER_X = x; } } }
   const hx = HIKER_X + pan * L.pf, hyk = peakY(L, hx, pan) + 4 * S, h = 118 * S;
   ctx.save(); ctx.translate(hx, hyk);
-  ctx.fillStyle = "#21102f";
+  ctx.fillStyle = "#1d3325";
   ctx.beginPath(); ctx.moveTo(-14 * S, 0); ctx.lineTo(-6 * S, -h * 0.5); ctx.lineTo(8 * S, -h * 0.5); ctx.lineTo(18 * S, 0); ctx.lineTo(10 * S, 0); ctx.lineTo(2 * S, -h * 0.34); ctx.lineTo(-6 * S, 0); ctx.closePath(); ctx.fill();
   rr(-12 * S, -h * 0.86, 24 * S, h * 0.4, 8 * S); ctx.fill();
   rr(-30 * S, -h * 0.84, 22 * S, h * 0.36, 7 * S); ctx.fill(); // pack
   ctx.beginPath(); ctx.arc(1 * S, -h * 0.94, 10 * S, 0, TAU); ctx.fill();
-  ctx.lineWidth = 3.5 * S; ctx.strokeStyle = "#21102f"; ctx.beginPath(); ctx.moveTo(12 * S, -h * 0.6); ctx.lineTo(34 * S, 2 * S); ctx.stroke();
+  ctx.lineWidth = 3.5 * S; ctx.strokeStyle = "#1d3325"; ctx.beginPath(); ctx.moveTo(12 * S, -h * 0.6); ctx.lineTo(34 * S, 2 * S); ctx.stroke();
   ctx.strokeStyle = "rgba(255,214,170,0.9)"; ctx.lineWidth = 2 * S;
   ctx.beginPath(); ctx.arc(1 * S, -h * 0.94, 10 * S, -1.9, -0.2); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(-12 * S, -h * 0.84); ctx.lineTo(-28 * S, -h * 0.84); ctx.stroke();
   ctx.restore();
   // birds
-  ctx.strokeStyle = "#3a1d4a"; ctx.lineWidth = 3 * S; ctx.lineCap = "round";
+  ctx.strokeStyle = "#2a3a2c"; ctx.lineWidth = 3 * S; ctx.lineCap = "round";
   for (let b = 0; b < 3; b++) {
     const bx = F.x - 260 * S + lt * (110 + b * 25) * S + b * 70 * S, by = hy - 330 * S + b * 36 * S + Math.sin(lt * 3 + b) * 8 * S, fl = Math.sin(lt * 14 + b * 2) * 6 * S;
     ctx.beginPath(); ctx.moveTo(bx - 14 * S, by - fl); ctx.quadraticCurveTo(bx - 6 * S, by - 4 * S, bx, by); ctx.quadraticCurveTo(bx + 6 * S, by - 4 * S, bx + 14 * S, by - fl); ctx.stroke();
@@ -384,64 +386,83 @@ function drawPeak(lt, o = {}) {
 }
 
 // ============================================================
-// SCENE 4: rainforest field camp, afternoon
+// SCENE 4: a kitchen garden at golden hour
 // ============================================================
 function canopy(x, y, r, col) { ctx.fillStyle = col; ctx.beginPath(); for (const [dx, dy, k] of [[0, 0, 1], [-0.8, 0.25, 0.75], [0.8, 0.2, 0.8], [-0.35, -0.45, 0.7], [0.45, -0.4, 0.65], [0, 0.5, 0.8]]) { ctx.moveTo(x + dx * r + k * r, y + dy * r); ctx.arc(x + dx * r, y + dy * r, k * r, 0, TAU); } ctx.fill(); }
-function drawJungle(lt, o = {}) {
+function corn(x, y, h, sw, col, leafCol) {
+  // a stalk with alternating leaves and a tassel
+  ctx.strokeStyle = col; ctx.lineWidth = 7 * S; ctx.lineCap = "round";
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + sw * 0.5, y - h * 0.5, x + sw, y - h); ctx.stroke();
+  for (let k = 0; k < 6; k++) {
+    const t = 0.18 + k * 0.13, lx = x + sw * t * t, ly = y - h * t, side = k % 2 ? 1 : -1;
+    leaf(lx, ly, (150 - k * 12) * S, 16 * S, side > 0 ? -0.45 + sw / (900 * S) : Math.PI + 0.45 + sw / (900 * S), leafCol, "rgba(255,240,190,0.35)");
+  }
+  ctx.strokeStyle = "#e9c46a"; ctx.lineWidth = 3 * S;
+  for (let k = -2; k <= 2; k++) { ctx.beginPath(); ctx.moveTo(x + sw, y - h); ctx.lineTo(x + sw + k * 9 * S, y - h - 36 * S + Math.abs(k) * 8 * S); ctx.stroke(); }
+}
+function drawGarden(lt, o = {}) {
   ctx.save();
-  cam({ z: (o.z || 1) * (1.04 - 0.04 * clamp(lt / 2.2)), dy: o.dy || 0 });
-  const gy = LAND ? 0.8 * H : 0.74 * H;
-  const pan = -lt * 80 * S;
-  big(vg(-200 * S, gy, [[0, "#fff6c9"], [0.35, "#e4e38e"], [0.7, "#98c46a"], [1, "#5f8f45"]]));
-  // glare
-  ctx.fillStyle = rg(F.x + 200 * S, -60 * S, 0, 900 * S, [[0, "rgba(255,250,210,0.95)"], [0.4, "rgba(255,240,170,0.35)"], [1, "rgba(255,240,170,0)"]]);
+  cam({ z: (o.z || 1) * (1.05 - 0.05 * clamp(lt / 2.2)), dy: o.dy || 0 });
+  const gy = LAND ? 0.62 * H : 0.5 * H;          // horizon
+  const pan = -lt * 50 * S;
+  big(vg(gy - 1100 * S, gy, [[0, "#5f9bb8"], [0.4, "#a9c9c2"], [0.72, "#f3d49a"], [0.9, "#f6b56c"], [1, "#f09a58"]]));
+  // the low sun
+  const sx = (LAND ? 0.27 : 0.62) * W, sy = gy - 70 * S;
+  ctx.fillStyle = rg(sx, sy, 0, 1100 * S, [[0, "rgba(255,236,180,0.95)"], [0.12, "rgba(255,214,140,0.6)"], [0.45, "rgba(255,180,110,0.18)"], [1, "rgba(255,170,100,0)"]]);
   ctx.fillRect(-W, -H, 3 * W, 3 * H);
-  // far canopy
-  for (const t of JUNGLE.far) { const x = t.x + pan * 0.2; ctx.fillStyle = "#86b56c"; ctx.fillRect(x - 6 * S, gy - 360 * S, 12 * S, 400 * S); canopy(x, gy - 380 * S - t.y * 120 * S, t.r, "#8dbd70"); }
-  ctx.fillStyle = vg(gy - 300 * S, gy, [[0, "rgba(220,235,160,0)"], [1, "rgba(220,235,160,0.75)"]]); ctx.fillRect(-W, gy - 300 * S, 3 * W, 300 * S);
-  // light shafts
+  ctx.fillStyle = "#fff3cf"; ctx.beginPath(); ctx.arc(sx, sy, 58 * S, 0, TAU); ctx.fill();
+  // far hills and a tree line
+  for (const [amp, per, col, off, pf] of [[60, 700, "#c7b27c", 1.3, 0.1], [44, 460, "#9e9a62", 4.1, 0.2]]) {
+    ctx.beginPath(); ctx.moveTo(-W, gy + 4 * S);
+    for (let x = -W; x <= 2 * W; x += 10 * S) ctx.lineTo(x, gy - amp * S * (0.55 + 0.45 * Math.sin((x - pan * pf) / (per * S) + off)));
+    ctx.lineTo(2 * W, gy + 4 * S); ctx.closePath(); ctx.fillStyle = col; ctx.fill();
+  }
+  const TR = rng(31);
+  for (let i = 0; i < 26; i++) { const x = TR() * 2.6 * W - 0.8 * W + pan * 0.3, r = (26 + TR() * 30) * S; canopy(x, gy - r * 0.8, r, i % 3 ? "#6f7d45" : "#7c8a4d"); }
+  // fields: rows running to the horizon, crops and soil
+  ctx.fillStyle = vg(gy, H, [[0, "#9a8a4c"], [0.25, "#7d7a3a"], [1, "#3f4a22"]]); ctx.fillRect(-W, gy, 3 * W, 3 * H);
+  const vx = F.x + pan * 0.4, n = 22;
+  for (let r = -n; r <= n; r++) {
+    const bx = vx + r * 190 * S, bx2 = vx + (r + 0.45) * 190 * S;
+    ctx.beginPath(); ctx.moveTo(vx + r * 3 * S, gy); ctx.lineTo(bx * 1 + (bx - vx) * 1.6, H + 400 * S); ctx.lineTo(bx2 + (bx2 - vx) * 1.6, H + 400 * S); ctx.lineTo(vx + (r + 0.45) * 3 * S, gy); ctx.closePath();
+    ctx.fillStyle = vg(gy, H, [[0, "rgba(120,72,40,0.35)"], [1, "rgba(110,62,34,0.9)"]]); ctx.fill();
+  }
+  // warm haze on the horizon
+  ctx.fillStyle = vg(gy - 60 * S, gy + 120 * S, [[0, "rgba(255,210,150,0)"], [0.45, "rgba(255,210,150,0.45)"], [1, "rgba(255,210,150,0)"]]); ctx.fillRect(-W, gy - 60 * S, 3 * W, 180 * S);
+  // bean poles and squash between the corn
+  const sway = Math.sin(lt * 1.5) * 10 * S;
+  const cornAt = LAND ? [[0.04, 1.0], [0.12, 0.86], [0.2, 1.08], [0.3, 0.8], [0.9, 0.7]] : [[0.02, 0.78], [0.14, 0.64], [0.86, 0.66], [0.98, 0.8]];
+  const base = LAND ? H + 20 * S : 0.66 * H;
+  for (const [fx, k] of cornAt) {
+    const x = fx * W + pan * 1.1, h = (LAND ? 820 : 760) * S * k;
+    corn(x, base, h, sway * k + 18 * S, "#4f6f2c", "#5f8a34");
+    // a bean vine twining up
+    ctx.strokeStyle = "#7da646"; ctx.lineWidth = 3 * S; ctx.beginPath();
+    for (let t = 0; t <= 0.7; t += 0.01) { const yy = base - h * t, xx = x + (sway * k + 18 * S) * t * t + Math.sin(t * 38) * 12 * S; t === 0 ? ctx.moveTo(xx, yy) : ctx.lineTo(xx, yy); }
+    ctx.stroke();
+    for (let t = 0.1; t < 0.7; t += 0.12) leaf(x + (sway * k + 18 * S) * t * t + Math.sin(t * 38) * 12 * S, base - h * t, 36 * S, 14 * S, Math.sin(t * 38) > 0 ? -0.3 : Math.PI + 0.3, "#8cc063");
+  }
+  // squash: broad leaves on the ground and one ripe fruit
+  const sqx = (LAND ? 0.2 : 0.5) * W + pan * 1.2, sqy = LAND ? H - 40 * S : 0.64 * H;
+  for (let i = 0; i < 7; i++) { const a = -Math.PI / 2 + (i - 3) * 0.42 + Math.sin(lt * 1.2 + i) * 0.03; leaf(sqx, sqy + 40 * S, (190 + (i % 2) * 40) * S, 80 * S, a, i % 2 ? "#4c7a2e" : "#5d8c36", "rgba(230,240,190,0.45)"); }
+  ctx.fillStyle = vg(sqy - 70 * S, sqy + 20 * S, [[0, "#f3a444"], [1, "#c86a24"]]);
+  ctx.beginPath(); ctx.ellipse(sqx + 90 * S, sqy - 10 * S, 70 * S, 52 * S, -0.1, 0, TAU); ctx.fill();
+  ctx.strokeStyle = "rgba(140,70,20,0.45)"; ctx.lineWidth = 3 * S;
+  for (const d of [-36, 0, 36]) { ctx.beginPath(); ctx.ellipse(sqx + 90 * S + d * S * 0.5, sqy - 10 * S, Math.max(4, (70 - Math.abs(d)) * 0.35) * S, 50 * S, -0.1, 0, TAU); ctx.stroke(); }
+  // pollen / dust drifting in the light
+  const DR = rng(77);
   ctx.globalCompositeOperation = "lighter";
-  for (let i = 0; i < 5; i++) {
-    const x = F.x - 600 * S + i * 280 * S + pan * 0.1, a = 0.10 + 0.05 * Math.sin(lt * 2 + i * 1.7);
-    ctx.fillStyle = vg(0, gy, [[0, `rgba(255,236,160,${a})`], [1, "rgba(255,236,160,0)"]]);
-    ctx.beginPath(); ctx.moveTo(x, -50 * S); ctx.lineTo(x + 90 * S, -50 * S); ctx.lineTo(x - 180 * S, gy); ctx.lineTo(x - 420 * S, gy); ctx.fill();
+  for (let i = 0; i < 70; i++) {
+    const x0 = DR() * W, y0 = DR() * H, sp = 12 + DR() * 26, x = ((x0 + lt * sp * S) % W + W) % W, y = y0 - lt * 8 * S + Math.sin(lt * 1.3 + i) * 12 * S;
+    const a = 0.25 + 0.35 * Math.sin(lt * 2 + i * 1.7) ** 2;
+    ctx.fillStyle = `rgba(255,226,160,${a})`; ctx.beginPath(); ctx.arc(x, y, (1.4 + DR() * 2.4) * S, 0, TAU); ctx.fill();
   }
   ctx.globalCompositeOperation = "source-over";
-  // mid trunks + canopy
-  for (const t of JUNGLE.trunks) {
-    const x = t.x + pan * 0.5;
-    ctx.fillStyle = "#3b6b3e"; ctx.beginPath(); ctx.moveTo(x - t.w / 2, gy + 10 * S); ctx.lineTo(x - t.w * 0.3 + t.lean * H, -50 * S); ctx.lineTo(x + t.w * 0.3 + t.lean * H, -50 * S); ctx.lineTo(x + t.w / 2, gy + 10 * S); ctx.fill();
-    ctx.strokeStyle = "#2f5a34"; ctx.lineWidth = 3 * S; ctx.beginPath(); ctx.moveTo(x + t.w * 0.2, 0); ctx.quadraticCurveTo(x + 60 * S, gy * 0.4, x + 30 * S, gy * 0.62); ctx.stroke();
-  }
-  for (const b of JUNGLE.blobs) canopy(b.x + pan * 0.5, b.y - 40 * S, b.r, b.r > 120 * S ? "#2f6a3a" : "#3f7d45");
-  // ground
-  ctx.fillStyle = vg(gy - 30 * S, H, [[0, "#4d7a34"], [1, "#1f3b1c"]]);
-  ctx.beginPath(); ctx.moveTo(-W, H * 2); ctx.lineTo(-W, gy); for (let x = -W; x < 2 * W; x += 40 * S) ctx.lineTo(x, gy - 10 * S * Math.sin(x / (130 * S))); ctx.lineTo(2 * W, H * 2); ctx.fill();
-  // camp: tarp between two poles, a tent, a crate
-  const cx = F.x + (LAND ? -30 : 20) * S + pan * 0.7;
-  ctx.strokeStyle = "#22361a"; ctx.lineWidth = 7 * S;
-  ctx.beginPath(); ctx.moveTo(cx - 250 * S, gy); ctx.lineTo(cx - 250 * S, gy - 230 * S); ctx.moveTo(cx + 250 * S, gy + 6 * S); ctx.lineTo(cx + 250 * S, gy - 250 * S); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(cx - 290 * S, gy - 200 * S); ctx.quadraticCurveTo(cx, gy - 330 * S + Math.sin(lt * 2.4) * 8 * S, cx + 290 * S, gy - 214 * S); ctx.lineTo(cx + 250 * S, gy - 160 * S); ctx.quadraticCurveTo(cx, gy - 230 * S, cx - 250 * S, gy - 150 * S); ctx.closePath();
-  ctx.fillStyle = vg(gy - 330 * S, gy - 150 * S, [[0, "#ffd23a"], [1, "#e89b12"]]); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(cx - 170 * S, gy + 4 * S); ctx.lineTo(cx - 20 * S, gy - 150 * S); ctx.lineTo(cx + 130 * S, gy + 4 * S); ctx.closePath(); ctx.fillStyle = "#ff6b1f"; ctx.fill();
-  ctx.beginPath(); ctx.moveTo(cx - 20 * S, gy - 150 * S); ctx.lineTo(cx + 130 * S, gy + 4 * S); ctx.lineTo(cx + 40 * S, gy + 4 * S); ctx.closePath(); ctx.fillStyle = "#c9460e"; ctx.fill();
-  ctx.beginPath(); ctx.moveTo(cx - 60 * S, gy + 4 * S); ctx.lineTo(cx - 20 * S, gy - 92 * S); ctx.lineTo(cx + 18 * S, gy + 4 * S); ctx.closePath(); ctx.fillStyle = "#4a1c08"; ctx.fill();
-  rr(cx + 150 * S, gy - 56 * S, 84 * S, 60 * S, 5 * S); ctx.fillStyle = "#6b4a22"; ctx.fill();
-  ctx.fillStyle = "#e9e1c8"; ctx.fillRect(cx + 162 * S, gy - 44 * S, 30 * S, 6 * S);
-  // near trunks
-  for (const [nx, w] of [[-0.2, 110], [0.78, 90], [1.25, 130]]) { const x = nx * W + pan * 0.95; ctx.fillStyle = vg(0, H, [[0, "#163b24"], [1, "#0a2415"]]); ctx.fillRect(x - w * S / 2, -100 * S, w * S, H + 200 * S); }
-  // foreground leaves, swaying
-  const sw = Math.sin(lt * 1.6) * 0.06;
-  const lp = pan * 1.25;
-  const fan = (x, y, base, n, len, col, rib) => { for (let i = 0; i < n; i++) leaf(x, y, len * (0.8 + 0.25 * Math.sin(i * 2.1)), len * 0.2, base + (i - n / 2) * 0.28 + sw * (1 + i * 0.2), col, rib); };
-  fan(-40 * S + lp * 0.2, H + 40 * S, -1.2, 6, 520 * S, "#0f3520", "#1f5a33");
-  fan(LAND ? 0.52 * W + lp * 0.3 : 0.9 * W, H + 80 * S, -1.9, 5, 440 * S, "#0b2a19", "#1a4a2c");
-  fan(W + 60 * S, -40 * S, 2.3, 6, 560 * S, "#0d301d", "#1c5230");
   ctx.restore();
 }
 
 // ============================================================
-// SCENE 5: at sea, midday
+// SCENE 5: at sea, a storm on the horizon
 // ============================================================
 function drawSea(lt, o = {}) {
   ctx.save();
@@ -459,6 +480,27 @@ function drawSea(lt, o = {}) {
     for (const [dx, dy, k] of [[0, 0, 1], [1.1, 0.25, 0.8], [-1.1, 0.3, 0.75], [0.5, -0.5, 0.85], [2, 0.5, 0.55], [-1.9, 0.55, 0.5]]) { ctx.moveTo(x + dx * r + k * r, y + dy * r); ctx.arc(x + dx * r, y + dy * r, k * r, 0, TAU); }
     ctx.fill(); rr(x - 2.3 * r, y + 0.45 * r, 4.6 * r, 0.42 * r, 0.2 * r); ctx.fillStyle = "#ffffff"; ctx.fill();
     rr(x - 2.1 * r, y + 0.72 * r, 4.2 * r, 0.16 * r, 0.08 * r); ctx.fillStyle = "rgba(170,200,240,0.6)"; ctx.fill();
+  }
+  // a storm building on the horizon, with lightning in it
+  const flash = (lt > 0.55 && lt < 0.62) || (lt > 0.7 && lt < 0.75) || (lt > 1.5 && lt < 1.56) ? 1 : 0;
+  const stx = (LAND ? 0.16 : 0.24) * W - lt * 8 * S, sty = HY - (LAND ? 150 : 230) * S;
+  const SR = rng(88);
+  for (let i = 0; i < 14; i++) {
+    const r = (70 + SR() * 90) * S * (LAND ? 1 : 0.9), x = stx + (SR() - 0.5) * 620 * S, y = sty - SR() * 200 * S + (i < 6 ? 110 * S : 0);
+    canopy(x, y, r, flash ? "#8d96a8" : i % 2 ? "#4f5b6e" : "#5c687a");
+  }
+  // rain falling out of the cloud base: a soft curtain, streaked
+  ctx.beginPath(); ctx.moveTo(stx - 330 * S, sty + 70 * S); ctx.lineTo(stx + 300 * S, sty + 70 * S); ctx.lineTo(stx + 250 * S, HY); ctx.lineTo(stx - 400 * S, HY); ctx.closePath();
+  ctx.fillStyle = vg(sty + 60 * S, HY, [[0, flash ? "rgba(140,150,170,0.8)" : "rgba(70,82,100,0.75)"], [1, "rgba(70,82,100,0.25)"]]); ctx.fill();
+  ctx.strokeStyle = "rgba(200,212,228,0.18)"; ctx.lineWidth = 2 * S;
+  for (let k = 0; k < 22; k++) { const x = stx - 320 * S + k * 28 * S; ctx.beginPath(); ctx.moveTo(x, sty + 80 * S); ctx.lineTo(x - 40 * S, HY); ctx.stroke(); }
+  if (flash) {
+    ctx.strokeStyle = "#fffbe6"; ctx.lineWidth = 4 * S; ctx.lineJoin = "round";
+    ctx.beginPath(); let bx0 = stx + 60 * S, by0 = sty + 70 * S; ctx.moveTo(bx0, by0);
+    const BR = rng(lt < 1 ? 5 : 6);
+    while (by0 < HY - 4 * S) { bx0 += (BR() - 0.5) * 60 * S; by0 += (18 + BR() * 26) * S; ctx.lineTo(bx0, Math.min(by0, HY)); }
+    ctx.stroke();
+    ctx.fillStyle = "rgba(255,250,230,0.16)"; ctx.fillRect(-W, -H, 3 * W, 3 * H);
   }
   // sea
   ctx.fillStyle = vg(HY, H + 200 * S, [[0, "#3e8ff2"], [0.08, "#1a5bd0"], [0.5, "#0b3196"], [1, "#051a5e"]]);
@@ -531,70 +573,82 @@ function drawSea(lt, o = {}) {
 }
 
 // ============================================================
-// SCENE 6: city blackout, dusk
+// SCENE 6: a flooded road at dusk, the storm moving off
 // ============================================================
-const OUT0 = 0.75;   // local time the blackout starts (right edge), sweeps left
-function winOff(xs, j) { return OUT0 + (1 - clamp(xs / W, -0.2, 1.2)) * 0.45 + j * 0.1; }
-function drawCity(lt, o = {}) {
+const RAIN = (() => { const r = rng(61); return Array.from({ length: 220 }, () => ({ x: r() * 1.4 * W - 0.2 * W, y: r() * H, l: (30 + r() * 50) * S, sp: (1400 + r() * 900) * S, a: 0.12 + r() * 0.25 })); })();
+function drawRoad(lt, o = {}) {
   ctx.save();
-  cam({ z: (o.z || 1) * (1 + 0.04 * clamp(lt / 2.3)), dy: o.dy || 0 }, F.x, HY);
-  const pan = -lt * 34 * S;
-  const bo = clamp((lt - OUT0) / 0.6);
-  big(vg(HY - 1300 * S, HY, [[0, "#0a0c2e"], [0.45, "#1f1a54"], [0.74, "#5a2a6e"], [0.92, "#d0506c"], [1, "#ff925c"]]));
-  // stars come out when the lights go
-  for (const s of SKY_STARS) { if (s.y > HY * 0.9) continue; ctx.fillStyle = `rgba(255,255,255,${s.a * eIO(bo) * 0.9})`; ctx.fillRect(s.x, s.y - 0.1 * H, s.r, s.r); }
-  ctx.fillStyle = "#fff1d8"; ctx.beginPath(); ctx.arc(F.x - (LAND ? 380 : 200) * S, HY - (LAND ? 470 : 620) * S, 30 * S, 0, TAU); ctx.fill();
-  ctx.fillStyle = "#1f1a54"; ctx.beginPath(); ctx.arc(F.x - (LAND ? 368 : 188) * S, HY - (LAND ? 478 : 628) * S, 27 * S, 0, TAU); ctx.fill();
-  // buildings
-  CITY.forEach((L, li) => {
-    for (const b of L.b) {
-      const x = b.x + pan * L.pf, y = HY - b.h;
-      if (x > 1.3 * W || x + b.w < -0.3 * W) continue;
-      ctx.fillStyle = L.col; ctx.fillRect(x, y, b.w, b.h + 2 * S);
-      if (li === 2 && b.top > 0.7) { ctx.fillRect(x + b.w * 0.3, y - 30 * S, b.w * 0.3, 30 * S); }
-      for (const w of b.wins) {
-        const xs = x + w.x, off = winOff(xs, w.j), f = lt - off;
-        let a = f < 0 ? 1 : f < 0.12 ? (Math.sin(f * 180) > 0 ? 0.8 : 0.1) : 0;
-        if (w.j > 0.965) a = Math.max(a, lt > off + 0.35 ? 0.55 + 0.25 * Math.sin(lt * 23 + w.j * 99) : 0); // a candle / flashlight
-        if (a <= 0.01) { ctx.fillStyle = li === 2 ? "#17122e" : "#2a2058"; ctx.fillRect(xs, y + w.y, L.ww * S, L.wh * S); continue; }
-        ctx.globalAlpha = a; ctx.fillStyle = w.j > 0.965 && f > 0.35 ? "#ff9a3c" : w.c; ctx.fillRect(xs, y + w.y, L.ww * S, L.wh * S); ctx.globalAlpha = 1;
-      }
-    }
-  });
-  // the cell tower, whose beacon dies with the grid
-  const tx = F.x + (LAND ? 150 : 180) * S + pan, tb = HY - 210 * S, th = 330 * S;
-  ctx.strokeStyle = "#0d0a22"; ctx.lineWidth = 5 * S;
-  ctx.beginPath(); ctx.moveTo(tx - 34 * S, tb); ctx.lineTo(tx - 6 * S, tb - th); ctx.lineTo(tx + 6 * S, tb - th); ctx.lineTo(tx + 34 * S, tb); ctx.stroke();
-  for (let i = 1; i < 7; i++) { const t0 = (i - 1) / 7, t1 = i / 7; ctx.beginPath(); ctx.moveTo(lerp(tx - 34 * S, tx - 6 * S, t0), tb - th * t0); ctx.lineTo(lerp(tx + 34 * S, tx + 6 * S, t1), tb - th * t1); ctx.moveTo(lerp(tx + 34 * S, tx + 6 * S, t0), tb - th * t0); ctx.lineTo(lerp(tx - 34 * S, tx - 6 * S, t1), tb - th * t1); ctx.stroke(); }
-  ctx.fillStyle = "#0d0a22";
-  for (const [dx, dy] of [[-22, -th / S + 30], [14, -th / S + 30], [-18, -th / S + 80], [10, -th / S + 80]]) rr(tx + dx * S, tb + dy * S, 10 * S, 34 * S, 2 * S), ctx.fill();
-  ctx.fillRect(tx - 60 * S, tb, 120 * S, HY - tb + 2 * S);
-  const beaconOff = winOff(tx, 0) - 0.05, bon = lt < beaconOff && ((lt * 1.4) % 1 + 1) % 1 < 0.45;
-  if (bon) { ctx.fillStyle = rg(tx, tb - th - 8 * S, 0, 46 * S, [[0, "rgba(255,60,60,0.95)"], [1, "rgba(255,60,60,0)"]]); ctx.fillRect(tx - 50 * S, tb - th - 58 * S, 100 * S, 100 * S); }
-  ctx.fillStyle = bon ? "#ff5a5a" : "#3a1422"; ctx.beginPath(); ctx.arc(tx, tb - th - 8 * S, 6 * S, 0, TAU); ctx.fill();
-  // waterfront
-  ctx.fillStyle = vg(HY, H, [[0, "#1d1548"], [1, "#05041a"]]); ctx.fillRect(-W, HY, 3 * W, 3 * H);
-  ctx.fillStyle = `rgba(255,140,110,${0.35 * (1 - bo * 0.6)})`; ctx.fillRect(-W, HY, 3 * W, 3 * S);
-  // reflections of the lit windows
-  const nearL = CITY[1];
-  for (const b of nearL.b) {
-    const x = b.x + pan * nearL.pf; if (x > 1.2 * W || x + b.w < -0.2 * W) continue;
-    for (let i = 0; i < b.wins.length; i += 3) {
-      const w = b.wins[i], xs = x + w.x, off = winOff(xs, w.j); if (lt > off) continue;
-      const ry = HY + (b.h - w.y) * 0.5, wob = Math.sin(lt * 5 + i) * 4 * S;
-      ctx.fillStyle = "rgba(255,190,100,0.35)"; ctx.fillRect(xs + wob, ry, nearL.ww * S, 3 * S);
-    }
+  cam({ z: (o.z || 1) * (1 + 0.035 * clamp(lt / 2.3)), dy: o.dy || 0 }, F.x, HY);
+  const vx = F.x + (LAND ? -40 : 0) * S;
+  // sky: heavy cloud overhead, a band of clear sunset at the horizon
+  big(vg(HY - 1300 * S, HY, [[0, "#0d1c1e"], [0.4, "#2b3a44"], [0.72, "#56606a"], [0.9, "#e0885a"], [1, "#f6c27a"]]));
+  const cR = rng(19);
+  for (let i = 0; i < 16; i++) {
+    const x = cR() * 1.8 * W - 0.4 * W - lt * (14 + cR() * 10) * S, y = HY - (380 + cR() * 520) * S * (LAND ? 1 : 1.3), r = (90 + cR() * 120) * S;
+    canopy(x, y, r, i % 2 ? "#3b4852" : "#46535d");
+    ctx.fillStyle = "rgba(246,178,112,0.25)"; ctx.beginPath(); ctx.ellipse(x, y + r * 0.62, r * 1.3, r * 0.14, 0, 0, TAU); ctx.fill();
   }
-  // promenade lamps
-  for (let i = -10; i < 30; i++) {
-    const x = i * 110 * S + pan * 1.1; if (x < -100 * S || x > W + 100 * S) continue;
-    const on = lt < winOff(x, 0.02);
-    ctx.fillStyle = "#0d0a22"; ctx.fillRect(x - 2 * S, HY - 36 * S, 4 * S, 40 * S);
-    if (on) { ctx.fillStyle = rg(x, HY - 38 * S, 0, 40 * S, [[0, "rgba(255,220,150,0.9)"], [1, "rgba(255,220,150,0)"]]); ctx.fillRect(x - 40 * S, HY - 78 * S, 80 * S, 80 * S); ctx.fillStyle = "rgba(255,200,120,0.4)"; ctx.fillRect(x - 3 * S, HY + 8 * S, 6 * S, 60 * S); }
+  // fields to the horizon, a line of trees
+  ctx.fillStyle = vg(HY, H, [[0, "#3a4a33"], [1, "#16200f"]]); ctx.fillRect(-W, HY, 3 * W, 3 * H);
+  const tR = rng(23);
+  for (let i = 0; i < 30; i++) { const x = tR() * 2.4 * W - 0.7 * W, r = (18 + tR() * 26) * S; canopy(x, HY - r * 0.7, r, "#1f2c20"); }
+  // power line along the road, running out to the horizon (dark, no lamps)
+  for (let k = 0; k < 9; k++) {
+    const z = 1 + k * 1.1, x = vx + 560 * S / z, top = HY - 420 * S / z, bot = HY + 260 * S / z;
+    ctx.strokeStyle = "#141c16"; ctx.lineWidth = Math.max(1.2, 12 * S / z);
+    ctx.beginPath(); ctx.moveTo(x, bot); ctx.lineTo(x, top); ctx.moveTo(x - 50 * S / z, top + 18 * S / z); ctx.lineTo(x + 50 * S / z, top + 18 * S / z); ctx.stroke();
+    if (k < 8) { const z2 = z + 1.1, x2 = vx + 560 * S / z2, t2 = HY - 420 * S / z2; ctx.lineWidth = Math.max(1, 2 * S / z); ctx.beginPath(); ctx.moveTo(x, top + 18 * S / z); ctx.quadraticCurveTo((x + x2) / 2, (top + t2) / 2 + 40 * S / z, x2, t2 + 18 * S / z2); ctx.stroke(); }
   }
-  // the blackout itself: a dip in exposure as the grid drops
-  const dropA = clamp(1 - Math.abs(lt - (OUT0 + 0.25)) / 0.25) * 0.25;
-  if (dropA > 0) { ctx.fillStyle = `rgba(0,0,10,${dropA})`; ctx.fillRect(-W, -H, 3 * W, 3 * H); }
+  // the road
+  const bw = (LAND ? 1500 : 1300) * S;
+  ctx.beginPath(); ctx.moveTo(vx - 6 * S, HY); ctx.lineTo(vx + 6 * S, HY); ctx.lineTo(vx + bw, H + 60 * S); ctx.lineTo(vx - bw, H + 60 * S); ctx.closePath();
+  ctx.fillStyle = vg(HY, H, [[0, "#4b4a4c"], [1, "#232428"]]); ctx.fill();
+  // centre dashes
+  const px = (yy) => (yy - HY) / (H + 60 * S - HY);
+  for (let k = 0; k < 14; k++) {
+    const d0 = ((k + lt * 0.35) % 14) / 14, a = Math.pow(d0, 2.2), b = Math.pow(Math.min(1, d0 + 0.03), 2.2);
+    const y0 = HY + a * (H - HY), y1 = HY + b * (H - HY), w0 = 8 * S * px(y0) * 3 + 1, w1 = 8 * S * px(y1) * 3 + 1;
+    ctx.fillStyle = "rgba(240,220,170,0.75)"; ctx.beginPath(); ctx.moveTo(vx - w0, y0); ctx.lineTo(vx + w0, y0); ctx.lineTo(vx + w1, y1); ctx.lineTo(vx - w1, y1); ctx.fill();
+  }
+  // headlights from our car, stopped short of the water
+  ctx.globalCompositeOperation = "lighter";
+  for (const s of [-1, 1]) {
+    ctx.fillStyle = vg(HY + 0.2 * (H - HY), H, [[0, "rgba(255,226,170,0)"], [1, "rgba(255,226,170,0.22)"]]);
+    ctx.beginPath(); ctx.moveTo(vx + s * 380 * S, H + 40 * S); ctx.lineTo(vx + s * 40 * S, HY + 0.2 * (H - HY)); ctx.lineTo(vx + s * 170 * S, HY + 0.2 * (H - HY)); ctx.lineTo(vx + s * 760 * S, H + 40 * S); ctx.fill();
+  }
+  ctx.globalCompositeOperation = "source-over";
+  // the water: a sheet across road and fields, reflecting the sunset, flowing left to right
+  const w0 = HY + 0.07 * (H - HY), w1 = HY + 0.42 * (H - HY);
+  ctx.beginPath(); ctx.moveTo(-W, w0 + 6 * S);
+  for (let x = -W; x <= 2 * W; x += 16 * S) ctx.lineTo(x, w0 + 5 * S * Math.sin(x / (90 * S) + lt * 2));
+  ctx.lineTo(2 * W, w1); for (let x = 2 * W; x >= -W; x -= 16 * S) ctx.lineTo(x, w1 + 7 * S * Math.sin(x / (120 * S) - lt * 2.4)); ctx.closePath();
+  ctx.fillStyle = vg(w0, w1, [[0, "#f3b77c"], [0.25, "#d39472"], [0.6, "#7a7a82"], [1, "#46535e"]]); ctx.fill();
+  ctx.save(); ctx.clip();
+  for (let k = 0; k < 16; k++) {
+    const y = lerp(w0, w1, (k + 0.5) / 16), t = (k + 0.5) / 16;
+    ctx.strokeStyle = `rgba(255,236,200,${0.35 - t * 0.2})`; ctx.lineWidth = (1 + t * 2.5) * S;
+    ctx.setLineDash([(40 + t * 140) * S, (30 + t * 90) * S]); ctx.lineDashOffset = -lt * (140 + t * 300) * S - k * 50 * S;
+    ctx.beginPath(); ctx.moveTo(-W, y); ctx.lineTo(2 * W, y); ctx.stroke();
+  }
+  ctx.setLineDash([]); ctx.restore();
+  // foam where the water crosses the near edge of the road
+  ctx.strokeStyle = "rgba(255,244,226,0.7)"; ctx.lineWidth = 3 * S; ctx.setLineDash([22 * S, 12 * S]); ctx.lineDashOffset = -lt * 160 * S;
+  ctx.beginPath(); for (let x = -W; x <= 2 * W; x += 16 * S) { const y = w1 + 7 * S * Math.sin(x / (120 * S) - lt * 2.4) - 2 * S; x === -W ? ctx.moveTo(x, y) : ctx.lineTo(x, y); } ctx.stroke(); ctx.setLineDash([]);
+  // a warning sign at the edge of the water
+  const sgx = vx + (LAND ? -300 : -260) * S, sgy = w1 + 30 * S;
+  ctx.fillStyle = "#1a1f1a"; ctx.fillRect(sgx - 4 * S, sgy - 150 * S, 8 * S, 170 * S);
+  ctx.save(); ctx.translate(sgx, sgy - 190 * S); ctx.rotate(Math.PI / 4);
+  rr(-48 * S, -48 * S, 96 * S, 96 * S, 8 * S); ctx.fillStyle = "#f2b13e"; ctx.fill(); ctx.strokeStyle = "#1a1f1a"; ctx.lineWidth = 5 * S; ctx.stroke();
+  ctx.restore();
+  ctx.strokeStyle = "#1a1f1a"; ctx.lineWidth = 6 * S; ctx.lineCap = "round";
+  for (const dy of [-10, 10]) { ctx.beginPath(); for (let x = -34; x <= 34; x += 2) { const y = sgy - 190 * S + dy * S + Math.sin(x / 7) * 6 * S; x === -34 ? ctx.moveTo(sgx + x * S, y) : ctx.lineTo(sgx + x * S, y); } ctx.stroke(); }
+  // rain
+  ctx.strokeStyle = "rgba(210,225,235,0.5)"; ctx.lineWidth = 1.6 * S;
+  for (const d of RAIN) {
+    const y = ((d.y + lt * d.sp) % (H + 200 * S)) - 100 * S, x = d.x - (y - d.y) * 0.18;
+    ctx.globalAlpha = d.a; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - d.l * 0.18, y + d.l); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
   ctx.restore();
 }
 
@@ -602,14 +656,26 @@ function drawCity(lt, o = {}) {
 // END CARD sky (periodic over T; it is on screen across the loop point)
 // ============================================================
 function drawEndSky(tau) {
-  ctx.fillStyle = vg(0, H, [[0, "#05071c"], [0.6, "#110f3a"], [1, "#1c1850"]]); ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = vg(0, H, [[0, BRAND.dawnTop], [0.62, BRAND.dawnMid], [1, BRAND.dawnLow]]); ctx.fillRect(0, 0, W, H);
   for (const s of SKY_STARS) {
-    const a = s.a * (0.72 + 0.28 * Math.sin(TAU * s.k * tau / T + s.p));
-    ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.fillRect(s.x, s.y, s.r, s.r);
+    if (s.y > H * 0.8) continue;
+    const a = s.a * (1 - s.y / (H * 0.8)) * (0.72 + 0.28 * Math.sin(TAU * s.k * tau / T + s.p));
+    ctx.fillStyle = `rgba(255,248,226,${a})`; ctx.fillRect(s.x, s.y, s.r, s.r);
   }
+  // first light under the horizon, and the sun's warmth behind the badge
+  ctx.fillStyle = vg(H * 0.7, H, [[0, "rgba(242,177,62,0)"], [1, "rgba(242,150,70,0.30)"]]); ctx.fillRect(0, H * 0.7, W, H * 0.3);
   const cx = CCX, cy = CCY - 70 * S * K;
-  ctx.fillStyle = rg(cx, cy, 0, 620 * S * K, [[0, "rgba(255,150,90,0.30)"], [0.5, "rgba(170,120,255,0.10)"], [1, "rgba(120,100,255,0)"]]);
+  ctx.fillStyle = rg(cx, cy, 0, 620 * S * K, [[0, "rgba(242,177,62,0.34)"], [0.5, "rgba(140,192,99,0.10)"], [1, "rgba(140,192,99,0)"]]);
   ctx.fillRect(0, 0, W, H);
+  // slow rays turning with the loop (one turn per 15 s / 6 rays = periodic)
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(TAU * tau / T / 6);
+  ctx.globalCompositeOperation = "lighter";
+  for (let k = 0; k < 6; k++) {
+    ctx.rotate(TAU / 6);
+    ctx.fillStyle = rg(0, 0, 150 * S * K, 900 * S * K, [[0, "rgba(255,214,140,0.07)"], [1, "rgba(255,214,140,0)"]]);
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, 900 * S * K, -0.12, 0.12); ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
 }
 
 // ============================================================
@@ -641,49 +707,49 @@ function drawWorld(tau) {
     if (fl > 0) { ctx.fillStyle = `rgba(255,236,220,${fl})`; ctx.fillRect(0, 0, W, H); }
     return;
   }
-  // peak -> jungle: whip tilt down below the treeline
+  // peak -> garden: whip tilt down, off the mountain
   if (tau < 6.3) return drawPeak(lt(2));
   if (tau < 6.72) {
     const e = eIO(inv(6.3, 6.72, tau));
     clipRect(0, -e * H, W, H, () => drawPeak(lt(2), { dy: -e * H }));
-    clipRect(0, (1 - e) * H, W, H, () => drawJungle(lt(3), { dy: (1 - e) * H }));
+    clipRect(0, (1 - e) * H, W, H, () => drawGarden(lt(3), { dy: (1 - e) * H }));
     const a = Math.sin(e * Math.PI) * 0.5, R = rng(4);
     ctx.fillStyle = `rgba(255,255,255,${a * 0.5})`;
     for (let i = 0; i < 40; i++) ctx.fillRect(R() * W, R() * H - 200 * S, (1 + R() * 3) * S, (120 + R() * 400) * S);
     return;
   }
-  // jungle -> sea: a wall of leaves sweeps across
-  if (tau < 8.35) return drawJungle(lt(3));
+  // garden -> sea: a wall of leaves sweeps across
+  if (tau < 8.35) return drawGarden(lt(3));
   if (tau < 8.85) {
     const e = eIO(inv(8.35, 8.85, tau)), X = lerp(W + 0.35 * W, -0.45 * W, e);
-    drawJungle(lt(3));
+    drawGarden(lt(3));
     clipRect(X, -10, W * 2, H + 20, () => drawSea(lt(4)));
     const R = rng(12);
     for (let i = 0; i < 26; i++) {
       const y = (i / 25) * (H + 200 * S) - 100 * S, len = (380 + R() * 380) * S;
-      leaf(X - 120 * S + R() * 160 * S, y, len, len * 0.24, Math.PI + (R() - 0.5) * 1.2 + e * 0.6, R() < 0.5 ? "#0c2f1c" : "#154a2a", "#1f5d36");
+      leaf(X - 120 * S + R() * 160 * S, y, len, len * 0.24, Math.PI + (R() - 0.5) * 1.2 + e * 0.6, R() < 0.5 ? "#3f6a2c" : "#5a8a3a", "rgba(230,240,180,0.5)");
     }
     return;
   }
-  // sea -> city: the horizon holds, the world splits open along it
+  // sea -> road: the horizon holds, the world splits open along it
   if (tau < 10.5) return drawSea(lt(4));
   if (tau < 10.92) {
     const e = eIO(inv(10.5, 10.92, tau));
     drawSea(lt(4));
     const top = HY - e * (HY + 20), bot = HY + e * (H - HY + 20);
-    clipRect(0, top, W, bot - top, () => drawCity(lt(5)));
+    clipRect(0, top, W, bot - top, () => drawRoad(lt(5)));
     ctx.fillStyle = `rgba(255,255,255,${0.9 * (1 - e)})`; ctx.fillRect(0, top - 2 * S, W, 3 * S); ctx.fillRect(0, bot - 1 * S, W, 3 * S);
     return;
   }
-  // city -> end: tilt up into the night the blackout left behind
-  if (tau < 12.8) return drawCity(lt(5));
+  // road -> end: tilt up past the clearing storm into the sky before dawn
+  if (tau < 12.8) return drawRoad(lt(5));
   if (tau < 13.35) {
     const e = eIO(inv(12.8, 13.35, tau));
     drawEndSky(tau);
     ctx.save(); ctx.globalAlpha = 1 - clamp((e - 0.55) / 0.45);
-    clipRect(0, e * H * 0.9, W, H, () => drawCity(lt(5), { dy: e * H * 0.9 }));
+    clipRect(0, e * H * 0.9, W, H, () => drawRoad(lt(5), { dy: e * H * 0.9 }));
     ctx.restore();
-    ctx.fillStyle = vg(e * H * 0.9 - 10, e * H * 0.9 + 400 * S, [[0, "rgba(10,12,46,1)"], [1, "rgba(10,12,46,0)"]]);
+    ctx.fillStyle = vg(e * H * 0.9 - 10, e * H * 0.9 + 400 * S, [[0, rgba(BRAND.dawnMid, 1)], [1, rgba(BRAND.dawnMid, 0)]]);
     if (e > 0.02) ctx.fillRect(0, e * H * 0.9 - 10, W, 410 * S);
     return;
   }
@@ -691,9 +757,32 @@ function drawWorld(tau) {
 }
 
 // ============================================================
-// THE CARD: status bar ("No Service" / airplane mode) + one answer
+// THE CARD: the real BOAR chat screen, inside a phone. The status bar
+// ("No Service" / airplane mode) and the app chrome never move; each place gets
+// one question, an abridged answer and the pack article behind it.
+// Layout and colours are measured from docs/demo/screenshots/01-offline-answer-sources.png
+// (rferrari/boar-app).
 // ============================================================
-function wrap(text, maxW) {
+const VW = LAND ? 540 : 460;    // the app screen's width in app px (540 = the demo screenshots' width)
+const U = CW / VW;              // app px -> design px
+const u = (v) => v * U;
+const APP = {
+  sans: "Roboto", mono: "Noto Sans Mono",
+  status: "#03110a", header: "#0c0f18", headerRule: "#141926", btn: "#181b24",
+  chat: "#081d18", chatShade: "#06180e",
+  userBg: "#112f1a", userBorder: "#74f08e", you: "#7eeea2",
+  astBg: "#06190e", astBorder: "#1c3f27", boar: "#75ed8b",
+  text: "#f7fffc", rule: "rgba(255,255,255,0.08)",
+  srcTitle: "#65bffa", countBg: "rgba(255,255,255,0.07)", count: "#7c8a94",
+  chipBg: "#0e1724", chipBorder: "#1f2938", idxBg: "rgba(6,182,212,0.16)", idx: "#5fb0e0", chipText: "#f2f5f7", chev: "#6b788d",
+  pillBg: "#122226", pillBorder: "#22493e", pillText: "#6cca9d", model: "#6b7688",
+  plusBg: "#0e2a20", plusBorder: "#23473e", plus: "#70d9a4",
+  cursor: "#3ef08a", footBtn: "#0b2414", footBorder: "#173a21",
+  inputBar: "#03120a", inputBg: "#020d06", inputBorder: "#1e4029", placeholder: "#498c5a", send: "#18231e", sendGlyph: "#6a7b77",
+  stop: "#dc2626",
+};
+function af(weight, px, fam = APP.sans) { ctx.font = `${weight} ${u(px)}px "${fam}"`; ctx.fontStretch = "normal"; }
+function wrapW(text, maxW) {
   const words = text.split(" "), lines = []; let line = [];
   for (const w of words) { const test = [...line, w].join(" "); if (line.length && ctx.measureText(test).width > maxW) { lines.push(line); line = [w]; } else line.push(w); }
   if (line.length) lines.push(line);
@@ -705,38 +794,34 @@ function airplaneIcon(x, y, s, col) {
   ctx.restore();
 }
 function noBars(x, y, s, col) {
-  for (let i = 0; i < 4; i++) { const h = s * (0.35 + i * 0.21), w = s * 0.17; rr(x + i * s * 0.25, y + s - h, w, h, 1.5 * S); ctx.strokeStyle = col; ctx.lineWidth = 1.6 * S; ctx.stroke(); }
-  ctx.strokeStyle = col; ctx.lineWidth = 2.2 * S; ctx.beginPath(); ctx.moveTo(x - 2 * S, y + s + 1 * S); ctx.lineTo(x + s * 0.95, y - 1 * S); ctx.stroke();
+  for (let i = 0; i < 4; i++) { const h = s * (0.35 + i * 0.21), w = s * 0.17; rr(x + i * s * 0.25, y + s - h, w, h, s * 0.06); ctx.strokeStyle = col; ctx.lineWidth = s * 0.07; ctx.stroke(); }
+  ctx.strokeStyle = col; ctx.lineWidth = s * 0.1; ctx.beginPath(); ctx.moveTo(x - s * 0.08, y + s * 1.04); ctx.lineTo(x + s * 0.95, y - s * 0.04); ctx.stroke();
 }
-function battery(x, y, s, col) { rr(x, y, s * 1.9, s, 3 * S); ctx.strokeStyle = col; ctx.lineWidth = 1.8 * S; ctx.stroke(); rr(x + 3 * S, y + 3 * S, s * 1.9 * 0.62, s - 6 * S, 1.5 * S); ctx.fillStyle = col; ctx.fill(); ctx.fillRect(x + s * 1.9 + 1.5 * S, y + s * 0.3, 3 * S, s * 0.4); }
-function bookIcon(x, y, s, col) { ctx.strokeStyle = col; ctx.lineWidth = 1.8 * S; ctx.lineJoin = "round"; ctx.beginPath(); ctx.moveTo(x, y + s * 0.1); ctx.quadraticCurveTo(x + s * 0.25, y, x + s * 0.5, y + s * 0.12); ctx.lineTo(x + s * 0.5, y + s); ctx.quadraticCurveTo(x + s * 0.25, y + s * 0.88, x, y + s * 0.98); ctx.closePath(); ctx.moveTo(x + s, y + s * 0.1); ctx.quadraticCurveTo(x + s * 0.75, y, x + s * 0.5, y + s * 0.12); ctx.moveTo(x + s * 0.5, y + s); ctx.quadraticCurveTo(x + s * 0.75, y + s * 0.88, x + s, y + s * 0.98); ctx.lineTo(x + s, y + s * 0.1); ctx.stroke(); }
-
 function sceneAt(tau) { let i = 0; for (let k = 0; k < 6; k++) if (tau >= B[k]) i = k; return i; }
 function accentAt(tau) {
-  if (tau >= 13.0 || tau < 0.3) return BRAND.endAccent;
+  if (tau >= 13.0 || tau < 0.3) return endAccent;
   const i = sceneAt(tau);
   if (i === 0) return SC[0].accent;
   return mixHex(SC[i - 1].accent, SC[i].accent, clamp((tau - B[i] + 0.15) / 0.3));
 }
-
 function drawCardLayer(tau) {
   ctx.save(); ctx.translate(CX, CY); ctx.scale(K, K); ctx.translate(-CX, -CY);
   drawCardLayerInner(tau);
   ctx.restore();
 }
 function drawCardLayerInner(tau) {
-  // morph: card <-> round badge with the mascot (end card)
+  // morph: phone <-> round badge with the mascot (end card)
   let m = 0;
   if (tau >= 13.05) m = eIO(inv(13.05, 13.6, tau));
   else if (tau < 0.5) m = 1 - eIO(inv(0.0, 0.5, tau));
   const D = 300 * S;
   const ccx = CX + CW / 2, ccy = lerp(CY + CH / 2, CY + CH / 2 - (LAND ? 90 : 60) * S, m);
-  const w = lerp(CW, D, m), h = lerp(CH, D, m), r = lerp(30 * S, D / 2, m);
+  const w = lerp(CW, D, m), h = lerp(CH, D, m), r = lerp(46 * S, D / 2, m);
   const x = ccx - w / 2, y = ccy - h / 2;
   const acc = accentAt(tau);
 
   // glow of the screen onto the world
-  ctx.fillStyle = rg(ccx, ccy, 0, Math.max(w, h) * 0.9, [[0, rgba(acc, 0.22)], [1, rgba(acc, 0)]]);
+  ctx.fillStyle = rg(ccx, ccy, 0, Math.max(w, h) * 0.9, [[0, rgba(acc, 0.24)], [1, rgba(acc, 0)]]);
   ctx.fillRect(ccx - Math.max(w, h), ccy - Math.max(w, h), Math.max(w, h) * 2, Math.max(w, h) * 2);
 
   // pop on every cut
@@ -744,15 +829,17 @@ function drawCardLayerInner(tau) {
   for (let k = 1; k < 7; k++) { const d = tau - B[k]; if (d >= 0 && d < 0.35) pop = 1 + 0.018 * Math.sin((d / 0.35) * Math.PI); }
   ctx.save();
   ctx.translate(ccx, ccy); ctx.scale(pop, pop); ctx.translate(-ccx, -ccy);
-  ctx.shadowColor = "rgba(0,0,0,0.45)"; ctx.shadowBlur = 70 * S; ctx.shadowOffsetY = 26 * S;
-  rr(x, y, w, h, r); ctx.fillStyle = BRAND.card; ctx.fill();
+  // phone body: near-black bezel, a rim of the place's light
+  ctx.shadowColor = "rgba(0,0,0,0.55)"; ctx.shadowBlur = 70 * S; ctx.shadowOffsetY = 26 * S;
+  rr(x, y, w, h, r); ctx.fillStyle = "#0a0b0f"; ctx.fill();
   ctx.shadowColor = "transparent";
-  ctx.save(); rr(x, y, w, h, r); ctx.clip();
-  // accent edge
-  ctx.fillStyle = acc; ctx.fillRect(x, y, w, 7 * S);
-
+  rr(x, y, w, h, r); ctx.strokeStyle = rgba(acc, 0.85); ctx.lineWidth = 2.5 * S; ctx.stroke();
+  rr(x + 2.5 * S, y + 2.5 * S, w - 5 * S, h - 5 * S, r - 2.5 * S); ctx.strokeStyle = "rgba(255,255,255,0.10)"; ctx.lineWidth = 1.2 * S; ctx.stroke();
+  const b = lerp(10 * S, 0, m), sx = x + b, sy = y + b, sw = w - 2 * b, sh = h - 2 * b, sr = Math.max(0, r - b);
+  ctx.save(); rr(sx, sy, sw, sh, sr); ctx.clip();
+  ctx.fillStyle = m > 0 ? mix(APP.chat, APP.header, m) : APP.chat; ctx.fillRect(sx, sy, sw, sh);
   const cA = clamp(1 - m * 2.2);
-  if (cA > 0) { ctx.globalAlpha = cA; drawCardContent(tau, x, y, w); ctx.globalAlpha = 1; }
+  if (cA > 0) { ctx.globalAlpha = cA; drawScreen(tau, sx, sy, sw, sh); ctx.globalAlpha = 1; }
   const pA = clamp((m - 0.45) / 0.4);
   if (pA > 0 && ICON) {
     const s = D * 0.84 * lerp(0.7, 1, eBack(pA));
@@ -771,10 +858,10 @@ function drawCardLayerInner(tau) {
   if (tA > 0) {
     const ty = ccy + D / 2 + 96 * S + (1 - tA) * 20 * S;
     ctx.globalAlpha = tA; ctx.textAlign = "center"; ctx.fillStyle = BRAND.endText;
-    font(800, (LAND ? 66 : 54) * S, "semi-expanded"); ctx.letterSpacing = `${-1 * S}px`;
-    ctx.fillText("Offline means offline.", ccx, ty);
-    font(500, (LAND ? 25 : 21) * S); ctx.letterSpacing = `${0.5 * S}px`; ctx.fillStyle = "rgba(255,255,255,0.78)";
-    ctx.fillText("BOAR · an offline research companion for Android", ccx, ty + 50 * S);
+    ctx.font = `italic 560 ${(LAND ? 68 : 62) * S}px ${BRAND.serif}`; ctx.fontStretch = "normal"; ctx.letterSpacing = `${-0.5 * S}px`;
+    ctx.fillText(BRAND.endLine, ccx, ty);
+    font(500, (LAND ? 25 : 21) * S); ctx.letterSpacing = `${0.5 * S}px`; ctx.fillStyle = "rgba(255,248,234,0.8)";
+    ctx.fillText(BRAND.endSub, ccx, ty + 54 * S);
     ctx.globalAlpha = 1; ctx.textAlign = "left"; ctx.letterSpacing = "0px";
   }
 
@@ -796,103 +883,179 @@ function drawCardLayerInner(tau) {
   }
 }
 
-function drawCardContent(tau, x, y, w) {
-  const P = 30 * S, ink = BRAND.ink, muted = BRAND.muted;
+// One exchange, as the app lays it out. Returns the bubbles' geometry for a given reveal state.
+function drawScreen(tau, X, Y, SW, SH) {
   const i = tau >= 13.0 ? 5 : sceneAt(tau);
   const D = SC[i];
-  // ---- status bar (constant; only the clock and the network glyph change) ----
-  const sbY = y + 46 * S;
+  const start = i === 0 ? 0.3 : B[i] + 0.04;
+  const ct = tau - start;
+  const T_SEND = 0.3, T_A0 = 0.42, T_A1 = 1.22, T_DONE = 1.26;
+  const SB = u(40), HD = u(72), IB = u(84);
+
+  // ---- chat background, with the app's soft backdrop circles ----
+  ctx.fillStyle = APP.chat; ctx.fillRect(X, Y, SW, SH);
+  ctx.fillStyle = APP.chatShade; ctx.beginPath(); ctx.arc(X + SW * 0.95, Y + SH * 0.95, u(230), 0, TAU); ctx.fill();
+  ctx.fillStyle = "rgba(0,0,0,0.16)"; ctx.beginPath(); ctx.arc(X + SW * 0.9, Y - u(40), u(300), 0, TAU); ctx.fill();
+
+  // ---- conversation (clipped between the header and the input bar, auto-scrolled to the end) ----
+  const vTop = Y + SB + HD, vBot = Y + SH - IB, vH = vBot - vTop;
+  const inA = clamp(ct / 0.12), outA = clamp((B[i + 1] - tau - 0.02) / 0.14), cA = Math.min(inA, outA);
+  const M = u(14), maxW = (SW - 2 * M) * 0.92, pad = u(14);
+  // user bubble
+  af(400, 18); const qLines = wrapW(D.q, maxW - 2 * pad), qlh = u(26);
+  const qW = Math.min(maxW, Math.max(u(60), ...qLines.map((l) => ctx.measureText(l.join(" ")).width)) + 2 * pad);
+  const qH = pad + u(17) + qLines.length * qlh + pad - u(4);
+  // assistant bubble
+  af(400, 18); const aW = maxW, aLines = wrapW(D.a, aW - 2 * pad), alh = u(27);
+  const words = D.a.split(" ").length;
+  const aP = clamp((ct - T_A0) / (T_A1 - T_A0));
+  const nShow = Math.floor(aP * words + 0.001);
+  let k = 0, linesShown = 0; aLines.forEach((l) => { if (nShow > k) linesShown++; k += l.length; });
+  const done = ct >= T_DONE;
+  const srcP = eO(clamp((ct - T_DONE) / 0.22));
+  const nSrc = D.src.length, chipH = u(32), chipG = u(6);
+  const srcBlock = nSrc ? u(6) + u(4) + u(26) + nSrc * (chipH + chipG) : 0;
+  const footBlock = u(36);
+  const streamingRows = !done && ct >= T_A0 ? u(22) : 0;
+  const aH = pad + u(20) + Math.max(1, linesShown) * alh + streamingRows + srcBlock * srcP + footBlock + pad - u(4);
+  const gap = u(12);
+  const showQ = ct >= T_SEND, showA = ct >= T_SEND + 0.08;
+  const contentH = u(12) + (showQ ? qH : 0) + (showA ? gap + aH : 0) + u(12);
+  // The chat follows the answer down, but stops while the question's last line is still on screen
+  // (the state you get by nudging the list up a little), so the question never leaves the frame.
+  const qKeep = showQ ? u(12) + qH - u(46) : 0;
+  const scroll = clamp(contentH - vH, 0, Math.max(0, qKeep));
+
+  ctx.save(); ctx.beginPath(); ctx.rect(X, vTop, SW, vH); ctx.clip();
+  ctx.globalAlpha *= cA;
+  let cy = vTop + u(12) - scroll;
+  if (showQ) {
+    const qx = X + SW - M - qW, pp = eBack(clamp((ct - T_SEND) / 0.18));
+    ctx.save(); ctx.translate(qx + qW, cy + qH); ctx.scale(pp, pp); ctx.translate(-(qx + qW), -(cy + qH));
+    ctx.beginPath(); ctx.roundRect(qx, cy, qW, qH, [u(12), u(12), u(4), u(12)]); ctx.fillStyle = APP.userBg; ctx.fill();
+    ctx.strokeStyle = APP.userBorder; ctx.lineWidth = u(1.6); ctx.stroke();
+    af(600, 11.5, APP.mono); ctx.letterSpacing = `${u(0.6)}px`; ctx.fillStyle = APP.you; ctx.fillText("YOU", qx + pad, cy + pad + u(11)); ctx.letterSpacing = "0px";
+    af(400, 18); ctx.fillStyle = APP.text;
+    qLines.forEach((l, li) => ctx.fillText(l.join(" "), qx + pad, cy + pad + u(17) + qlh * (li + 1) - u(7)));
+    ctx.restore();
+    cy += qH + gap;
+  }
+  if (showA) {
+    const ax = X + M, ap = eO(clamp((ct - T_SEND - 0.08) / 0.16));
+    ctx.save(); ctx.globalAlpha *= ap; ctx.translate(0, (1 - ap) * u(10));
+    ctx.beginPath(); ctx.roundRect(ax, cy, aW, aH, [u(12), u(12), u(12), u(4)]); ctx.fillStyle = APP.astBg; ctx.fill();
+    ctx.strokeStyle = APP.astBorder; ctx.lineWidth = u(1.2); ctx.stroke();
+    ctx.save(); ctx.beginPath(); ctx.rect(ax, cy, aW, aH); ctx.clip();
+    let yy = cy + pad;
+    af(400, 11, "Apple Color Emoji"); ctx.fillText("🐗", ax + pad, yy + u(11));
+    af(600, 11.5, APP.mono); ctx.letterSpacing = `${u(0.6)}px`; ctx.fillStyle = APP.boar; ctx.fillText("BOAR", ax + pad + u(20), yy + u(11)); ctx.letterSpacing = "0px";
+    yy += u(20);
+    af(400, 18); ctx.fillStyle = APP.text;
+    let kk = 0;
+    aLines.forEach((l, li) => { const shown = l.slice(0, Math.max(0, nShow - kk)); kk += l.length; if (shown.length) ctx.fillText(shown.join(" "), ax + pad, yy + alh * (li + 1) - u(7)); });
+    yy += Math.max(1, linesShown) * alh;
+    if (streamingRows) { rr(ax + pad, yy + u(2), u(8), u(18), u(2)); ctx.fillStyle = rgba(APP.cursor, 0.85); ctx.fill(); yy += streamingRows; }
+    const ys = yy;
+    if (srcP > 0 && nSrc) {
+      ctx.save(); ctx.globalAlpha *= srcP;
+      yy += u(6); ctx.fillStyle = APP.rule; ctx.fillRect(ax + pad, yy, aW - 2 * pad, u(1)); yy += u(4);
+      af(400, 11, "Apple Color Emoji"); ctx.fillText("📚", ax + pad, yy + u(15));
+      af(700, 11.5, APP.mono); ctx.letterSpacing = `${u(0.55)}px`; ctx.fillStyle = APP.srcTitle; ctx.fillText("OFFLINE VERIFIED SOURCES", ax + pad + u(18), yy + u(15)); ctx.letterSpacing = "0px";
+      af(400, 11, APP.mono); const cn = String(nSrc), cw = ctx.measureText(cn).width + u(10);
+      rr(ax + aW - pad - cw, yy + u(3), cw, u(16), u(4)); ctx.fillStyle = APP.countBg; ctx.fill(); ctx.fillStyle = APP.count; ctx.fillText(cn, ax + aW - pad - cw + u(5), yy + u(15));
+      yy += u(26);
+      D.src.forEach((s, j) => {
+        const cx0 = ax + pad, cwid = aW - 2 * pad;
+        rr(cx0, yy, cwid, chipH, u(6)); ctx.fillStyle = APP.chipBg; ctx.fill(); ctx.strokeStyle = APP.chipBorder; ctx.lineWidth = u(1); ctx.stroke();
+        ctx.fillStyle = APP.idxBg; ctx.beginPath(); ctx.arc(cx0 + u(18), yy + chipH / 2, u(9), 0, TAU); ctx.fill();
+        af(700, 10, APP.mono); ctx.fillStyle = APP.idx; ctx.textAlign = "center"; ctx.fillText(String(j + 1), cx0 + u(18), yy + chipH / 2 + u(3.5)); ctx.textAlign = "left";
+        af(500, 14.5); ctx.fillStyle = APP.chipText; ctx.fillText(s, cx0 + u(34), yy + chipH / 2 + u(5));
+        af(400, 9); ctx.fillStyle = APP.chev; ctx.fillText("▼", cx0 + cwid - u(20), yy + chipH / 2 + u(3.5));
+        yy += chipH + chipG;
+      });
+      ctx.restore();
+    }
+    yy = ys + srcBlock * srcP;
+    // footer: rate up / down, copy
+    yy += u(6); ctx.fillStyle = "rgba(255,255,255,0.05)"; ctx.fillRect(ax + pad, yy, aW - 2 * pad, u(1)); yy += u(8);
+    for (const [bx, g] of [[ax + pad, "▲"], [ax + pad + u(40), "▼"]]) { rr(bx, yy, u(32), u(22), u(4)); ctx.fillStyle = APP.footBtn; ctx.fill(); ctx.strokeStyle = APP.footBorder; ctx.lineWidth = u(1); ctx.stroke(); af(700, 9); ctx.fillStyle = APP.boar; ctx.textAlign = "center"; ctx.fillText(g, bx + u(16), yy + u(15)); ctx.textAlign = "left"; }
+    { const bx = ax + aW - pad - u(32); rr(bx, yy, u(32), u(22), u(4)); ctx.fillStyle = APP.footBtn; ctx.fill(); ctx.strokeStyle = APP.footBorder; ctx.stroke(); ctx.strokeStyle = APP.boar; ctx.lineWidth = u(1.3); ctx.strokeRect(bx + u(11), yy + u(5), u(8), u(8)); ctx.strokeRect(bx + u(14), yy + u(9), u(8), u(8)); }
+    ctx.restore();
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // ---- status bar (constant; only the clock and the network label change) ----
+  ctx.fillStyle = APP.status; ctx.fillRect(X, Y, SW, SB);
+  const sbY = Y + u(27);
   const roll = i === 0 ? 1 : eIO(clamp((tau - B[i] + 0.05) / 0.28));
   const prev = i === 0 ? null : SC[i - 1];
-  ctx.save(); ctx.beginPath(); ctx.rect(x, y + 12 * S, w, 48 * S); ctx.clip();
-  font(700, 23 * S); ctx.fillStyle = ink;
-  const rh = 34 * S;
-  if (prev && roll < 1) { ctx.globalAlpha = 1 - roll; ctx.fillText(prev.clock, x + P, sbY - roll * rh); }
-  ctx.globalAlpha = roll; ctx.fillText(D.clock, x + P, sbY + (1 - roll) * rh); ctx.globalAlpha = 1;
-  // right side: network state + battery
-  const bx = x + w - P - 40 * S;
-  battery(bx, sbY - 16 * S, 18 * S, ink);
+  ctx.save(); ctx.beginPath(); ctx.rect(X, Y, SW, SB); ctx.clip();
+  af(600, 16.5); ctx.fillStyle = "#ffffff";
+  const rh = u(26);
+  if (prev && roll < 1) { ctx.globalAlpha = 1 - roll; ctx.fillText(prev.clock, X + u(22), sbY - roll * rh); }
+  ctx.globalAlpha = roll; ctx.fillText(D.clock, X + u(22), sbY + (1 - roll) * rh); ctx.globalAlpha = 1;
+  // battery (Android pill)
+  const bx = X + SW - u(22) - u(30);
+  rr(bx, sbY - u(12.5), u(26), u(14), u(5)); ctx.strokeStyle = "#ffffff"; ctx.lineWidth = u(1.4); ctx.stroke();
+  rr(bx + u(2.5), sbY - u(10), u(14), u(9), u(2.5)); ctx.fillStyle = "#ffffff"; ctx.fill();
+  ctx.fillRect(bx + u(27), sbY - u(8), u(2), u(5));
   const netLabel = (d) => (d.air ? "Airplane mode" : "No Service");
   const drawNet = (d, dy, a) => {
-    ctx.globalAlpha = a; font(650, 20 * S); ctx.fillStyle = ink;
+    ctx.globalAlpha = a; af(500, 14.5); ctx.fillStyle = "#ffffff";
     const lab = netLabel(d), lw = ctx.measureText(lab).width;
-    const gx = bx - 16 * S - 26 * S;
-    if (d.air) airplaneIcon(gx, sbY - 20 * S + dy, 24 * S, ink); else noBars(gx, sbY - 19 * S + dy, 22 * S, ink);
-    ctx.fillText(lab, gx - 12 * S - lw, sbY + dy);
+    const gx = bx - u(10) - u(18);
+    if (d.air) airplaneIcon(gx, sbY - u(15) + dy, u(18), "#ffffff"); else noBars(gx + u(1), sbY - u(14) + dy, u(15), "#ffffff");
+    ctx.fillText(lab, gx - u(8) - lw, sbY + dy);
     ctx.globalAlpha = 1;
   };
   if (prev && !!prev.air !== !!D.air && roll < 1) { drawNet(prev, -roll * rh, 1 - roll); drawNet(D, (1 - roll) * rh, roll); }
   else drawNet(D, 0, 1);
   ctx.restore();
-  ctx.fillStyle = "rgba(20,20,30,0.08)"; ctx.fillRect(x + P, y + 72 * S, w - 2 * P, 1.5 * S);
 
   // ---- app header ----
-  const hy = y + 88 * S;
-  if (ICON) { const k = 50 * S / 690; ctx.drawImage(ICON, 138, 198, 690, 606, x + P - 4 * S, hy + 2 * S, 690 * k, 606 * k); }
-  font(800, 25 * S, "semi-expanded"); ctx.letterSpacing = `${1.5 * S}px`; ctx.fillStyle = ink; ctx.fillText("BOAR", x + P + 56 * S, hy + 34 * S);
-  const bw = ctx.measureText("BOAR").width; ctx.letterSpacing = "0px";
-  font(800, 14 * S); ctx.letterSpacing = `${1.6 * S}px`;
-  const ow = ctx.measureText("OFFLINE").width + 22 * S, ox = x + P + 56 * S + bw + 14 * S;
-  rr(ox, hy + 12 * S, ow, 28 * S, 14 * S); ctx.fillStyle = ink; ctx.fill();
-  ctx.fillStyle = "#ffffff"; ctx.fillText("OFFLINE", ox + 11 * S, hy + 31 * S); ctx.letterSpacing = "0px";
-  font(500, 16 * S); ctx.fillStyle = muted; ctx.textAlign = "right"; ctx.fillText("Qwen2.5-1.5B · on device", x + w - P, hy + 32 * S); ctx.textAlign = "left";
-
-  // ---- one exchange ----
-  const start = i === 0 ? 0.3 : B[i] + 0.04;
-  const ct = tau - start;
-  const inA = clamp(ct / 0.14), outA = clamp((B[i + 1] - tau - 0.02) / 0.14);
-  const cA = Math.min(inA, outA);
-  if (cA <= 0) return;
-  const shift = (1 - eO(clamp(ct / 0.22))) * 22 * S - (1 - outA) * 22 * S;
-  ctx.save(); ctx.beginPath(); ctx.rect(x, y + 150 * S, w, CH - 150 * S); ctx.clip();
-  ctx.globalAlpha *= cA; ctx.translate(0, shift);
-
-  // question bubble (typed)
-  font(650, 27 * S);
-  const qMax = w - 2 * P - 50 * S, qLines = wrap(D.q, qMax - 40 * S), lh = 35 * S;
-  const qW = Math.min(qMax, Math.max(...qLines.map((l) => ctx.measureText(l.join(" ")).width)) + 44 * S), qH = qLines.length * lh + 26 * S;
-  const qx = x + w - P - qW, qy = y + 158 * S;
-  const pop = eBack(clamp(ct / 0.2));
-  ctx.save(); ctx.translate(qx + qW, qy + qH); ctx.scale(pop, pop); ctx.translate(-(qx + qW), -(qy + qH));
-  ctx.beginPath(); ctx.roundRect(qx, qy, qW, qH, [24 * S, 24 * S, 6 * S, 24 * S]); ctx.fillStyle = ink; ctx.fill();
-  let chars = Math.floor(clamp((ct - 0.04) / 0.34) * D.q.length);
-  ctx.fillStyle = "#ffffff";
-  qLines.forEach((l, li) => { const s = l.join(" "); const shown = s.slice(0, Math.max(0, chars)); chars -= s.length + 1; ctx.fillText(shown, qx + 22 * S, qy + 13 * S + lh * (li + 1) - 9 * S); });
+  const hy = Y + SB;
+  ctx.fillStyle = APP.header; ctx.fillRect(X, hy, SW, HD);
+  ctx.fillStyle = APP.headerRule; ctx.fillRect(X, hy + HD - u(1), SW, u(1));
+  rr(X + u(14), hy + u(14), u(36), u(44), u(9)); ctx.fillStyle = APP.btn; ctx.fill();
+  ctx.fillStyle = "#e8eaee"; for (let l = 0; l < 3; l++) rr(X + u(23), hy + u(28) + l * u(7), u(18), u(2.2), u(1.1)), ctx.fill();
+  rr(X + u(58), hy + u(15), u(42), u(42), u(10)); ctx.fillStyle = "#1a1d26"; ctx.fill();
+  if (ICON) { const s = u(38) / 690; ctx.drawImage(ICON, 138, 198, 690, 606, X + u(60), hy + u(19), 690 * s, 606 * s); }
+  af(500, 21); ctx.fillStyle = "#ffffff"; ctx.fillText("BOAR", X + u(108), hy + u(33));
+  const bw = ctx.measureText("BOAR").width;
+  af(700, 10.5, APP.mono); ctx.letterSpacing = `${u(1)}px`;
+  const ow = ctx.measureText("OFFLINE").width + u(22), ox = X + u(108) + bw + u(9);
+  rr(ox, hy + u(16), ow, u(20), u(5)); ctx.fillStyle = APP.pillBg; ctx.fill(); ctx.strokeStyle = APP.pillBorder; ctx.lineWidth = u(1.2); ctx.stroke();
+  ctx.fillStyle = APP.pillText; ctx.beginPath(); ctx.arc(ox + u(8), hy + u(26), u(2.8), 0, TAU); ctx.fill();
+  ctx.fillText("OFFLINE", ox + u(15), hy + u(30)); ctx.letterSpacing = "0px";
+  af(400, 11.5, APP.mono); ctx.letterSpacing = `${u(1)}px`; ctx.fillStyle = APP.model; ctx.fillText("QWEN2.5-1.5B-INSTRUCT (Q4_K_M)", X + u(108), hy + u(54)); ctx.letterSpacing = "0px";
+  const px = X + SW - u(14) - u(46);
+  rr(px, hy + u(14), u(46), u(44), u(10)); ctx.fillStyle = APP.plusBg; ctx.fill(); ctx.strokeStyle = APP.plusBorder; ctx.lineWidth = u(1.2); ctx.stroke();
+  ctx.fillStyle = APP.plus; ctx.fillRect(px + u(16), hy + u(35), u(14), u(2.4)); ctx.fillRect(px + u(21.8), hy + u(29), u(2.4), u(14));
+  rr(px - u(54), hy + u(14), u(46), u(44), u(10)); ctx.fillStyle = APP.btn; ctx.fill();
+  af(400, 17, "Apple Color Emoji"); ctx.textAlign = "center"; ctx.fillText("📋", px - u(31), hy + u(42)); ctx.textAlign = "left";
+  // ---- input bar: the question is typed here, then sent ----
+  const iy = Y + SH - IB;
+  ctx.fillStyle = APP.inputBar; ctx.fillRect(X, iy, SW, IB);
+  ctx.fillStyle = "rgba(255,255,255,0.05)"; ctx.fillRect(X, iy, SW, u(1));
+  const fw = SW - u(14) * 3 - u(48);
+  rr(X + u(14), iy + u(10), fw, u(46), u(8)); ctx.fillStyle = APP.inputBg; ctx.fill(); ctx.strokeStyle = APP.inputBorder; ctx.lineWidth = u(1.2); ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.rect(X + u(20), iy + u(10), fw - u(12), u(46)); ctx.clip();
+  af(400, 16);
+  const typing = cA > 0 && ct >= 0 && ct < T_SEND;
+  if (typing) {
+    const chars = Math.floor(clamp((ct - 0.02) / 0.26) * D.q.length), s = D.q.slice(0, chars), tw = ctx.measureText(s).width;
+    ctx.globalAlpha *= cA; ctx.fillStyle = APP.text; const tx = X + u(30) + Math.min(0, fw - u(40) - tw);
+    ctx.fillText(s, tx, iy + u(38)); ctx.fillStyle = APP.cursor; ctx.fillRect(tx + tw + u(2), iy + u(24), u(1.6), u(19));
+  } else { ctx.fillStyle = APP.placeholder; ctx.fillText("Ask an offline research question…", X + u(30), iy + u(38)); }
   ctx.restore();
-
-  // answer (streamed word by word)
-  font(450, 25 * S); ctx.fillStyle = ink;
-  const aLines = wrap(D.a, w - 2 * P), alh = 35 * S, ay = qy + qH + 46 * S;
-  const total = D.a.split(" ").length;
-  const nShow = Math.floor(clamp((ct - 0.46) / 0.95) * total + 0.001);
-  let k = 0, cx = 0, cy = 0;
-  aLines.forEach((l, li) => {
-    const shown = l.slice(0, Math.max(0, nShow - k)); k += l.length;
-    if (!shown.length) return;
-    const s = shown.join(" "); ctx.fillText(s, x + P, ay + li * alh); cx = x + P + ctx.measureText(s).width; cy = ay + li * alh;
-  });
-  if (nShow > 0 && nShow < total) { ctx.fillStyle = D.accent; rr(cx + 6 * S, cy - 19 * S, 11 * S, 23 * S, 3 * S); ctx.fill(); }
-
-  // sources
-  const sy = y + CH - 92 * S;
-  const lblA = clamp((ct - 1.2) / 0.15);
-  if (lblA > 0) {
-    ctx.globalAlpha *= 1; font(750, 13.5 * S); ctx.letterSpacing = `${1.8 * S}px`; ctx.fillStyle = rgba("#6b6a72", lblA);
-    ctx.fillText("OFFLINE SOURCE" + (D.src.length > 1 ? "S" : "") + " · WIKIPEDIA", x + P, sy); ctx.letterSpacing = "0px";
-  }
-  let sx = x + P;
-  D.src.forEach((s, j) => {
-    const p = clamp((ct - 1.25 - j * 0.1) / 0.22); if (p <= 0) return;
-    font(650, 19 * S); const tw = ctx.measureText(s).width, cw = tw + 66 * S, chh = 44 * S, cy2 = sy + 14 * S;
-    const sc = eBack(p);
-    ctx.save(); ctx.translate(sx, cy2 + chh / 2); ctx.scale(sc, sc); ctx.translate(-sx, -(cy2 + chh / 2));
-    rr(sx, cy2, cw, chh, 12 * S); ctx.fillStyle = rgba(D.accent, 0.2); ctx.fill(); ctx.strokeStyle = rgba(mixHex(D.accent, "#15151b", 0.35), 0.8); ctx.lineWidth = 1.5 * S; ctx.stroke();
-    bookIcon(sx + 16 * S, cy2 + 13 * S, 20 * S, "#15151b");
-    ctx.fillStyle = "#15151b"; ctx.fillText(s, sx + 48 * S, cy2 + 29 * S);
-    ctx.restore();
-    sx += cw + 12 * S;
-  });
-  ctx.restore();
+  const gen = cA > 0 && ct >= T_SEND && ct < T_DONE;
+  const sx2 = X + SW - u(14) - u(48);
+  rr(sx2, iy + u(10), u(48), u(46), u(8)); ctx.fillStyle = gen ? APP.stop : APP.send; ctx.fill();
+  if (gen) { rr(sx2 + u(17), iy + u(26), u(14), u(14), u(2)); ctx.fillStyle = "#fde68a"; ctx.fill(); }
+  else { ctx.fillStyle = APP.sendGlyph; ctx.beginPath(); ctx.moveTo(sx2 + u(16), iy + u(24)); ctx.lineTo(sx2 + u(34), iy + u(33)); ctx.lineTo(sx2 + u(16), iy + u(42)); ctx.lineTo(sx2 + u(20), iy + u(33)); ctx.closePath(); ctx.fill(); }
+  // gesture bar
+  rr(X + SW / 2 - u(55), Y + SH - u(12), u(110), u(4), u(2)); ctx.fillStyle = "rgba(235,240,238,0.75)"; ctx.fill();
 }
 
 function drawVignette() {
@@ -909,12 +1072,13 @@ window.renderFrame = function (t) {
   drawWorld(tau);
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   drawVignette();
-  drawCardLayer(tau);
+  if (!Q.has("nocard")) drawCardLayer(tau);   // ?nocard: the world alone (the page's scene thumbnails)
 };
 
 function loadImage(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
 window.ready = (async () => {
-  await Promise.all([document.fonts.load(`800 20px ${BRAND.font}`), document.fonts.load(`450 20px ${BRAND.font}`)]);
+  await Promise.all([document.fonts.load(`800 20px ${BRAND.font}`), document.fonts.load(`450 20px ${BRAND.font}`), document.fonts.load(`italic 560 20px ${BRAND.serif}`),
+    document.fonts.load(`400 20px "Roboto"`), document.fonts.load(`600 20px "Noto Sans Mono"`), document.fonts.load(`20px "Apple Color Emoji"`)]);
   ICON = await loadImage("assets/boar-icon.png");
   renderFrame(+(Q.get("t") || 0));
 })();

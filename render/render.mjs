@@ -17,9 +17,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "render/out");
 const MEDIA = path.join(ROOT, "public/media");
 const FPS = 30, SECONDS = 15, FRAMES = FPS * SECONDS;
-const POSTER_T = 1.95; // in flight, answer and source on screen
+const POSTER_T = 8.3; // in the garden at golden hour, answer and source on screen
 
-// One film for both themes: it's a night-to-day sequence of places, not a page surface.
+// One film for both themes: it is a sequence of places, not a page surface.
 const VARIANTS = {
   desktop: { w: 1920, h: 1080, name: "boar-no-signal", poster: "poster", webm: true },
   mobile: { w: 1080, h: 1920, name: "boar-no-signal-mobile", poster: "poster-mobile", webm: false },
