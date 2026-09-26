@@ -37,6 +37,16 @@ const cv = document.getElementById("c");
 cv.width = W; cv.height = H;
 const ctx = cv.getContext("2d");
 
+// ---------- brand tokens (swap here for a brand guide; scene illustration palettes live in each scene) ----------
+const BRAND = {
+  font: "Archivo",
+  card: "#fbfaf7",        // answer card surface
+  ink: "#15151b",         // card text, question bubble, OFFLINE pill
+  muted: "#6b6a72",       // secondary card text
+  endAccent: "#ff9a52",   // card edge + glow on the end card
+  endText: "#ffffff",
+};
+
 // ---------- layout ----------
 const F = LAND ? { x: 0.42 * W, y: 0.46 * H } : { x: 0.5 * W, y: 0.36 * H };   // focal point: window, tunnel, sun
 const HY = LAND ? 0.6 * H : 0.46 * H;                                            // sea / city horizon
@@ -98,7 +108,7 @@ function hg(x0, x1, stops) { const g = ctx.createLinearGradient(x0, 0, x1, 0); f
 function rg(x, y, r0, r1, stops) { const g = ctx.createRadialGradient(x, y, r0, x, y, r1); for (const [o, c] of stops) g.addColorStop(o, c); return g; }
 function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
 function big(fill) { ctx.fillStyle = fill; ctx.fillRect(-4 * W, -4 * H, 9 * W, 9 * H); }
-function font(w, px, stretch = "normal") { ctx.font = `${w} ${px}px Archivo`; ctx.fontStretch = stretch; }
+function font(w, px, stretch = "normal") { ctx.font = `${w} ${px}px ${BRAND.font}`; ctx.fontStretch = stretch; }
 // camera: zoom z about (cx, cy), then shift
 function cam(o, cx = F.x, cy = F.y) {
   const z = o.z || 1;
@@ -703,7 +713,7 @@ function bookIcon(x, y, s, col) { ctx.strokeStyle = col; ctx.lineWidth = 1.8 * S
 
 function sceneAt(tau) { let i = 0; for (let k = 0; k < 6; k++) if (tau >= B[k]) i = k; return i; }
 function accentAt(tau) {
-  if (tau >= 13.0 || tau < 0.3) return "#ff9a52";
+  if (tau >= 13.0 || tau < 0.3) return BRAND.endAccent;
   const i = sceneAt(tau);
   if (i === 0) return SC[0].accent;
   return mixHex(SC[i - 1].accent, SC[i].accent, clamp((tau - B[i] + 0.15) / 0.3));
@@ -735,7 +745,7 @@ function drawCardLayerInner(tau) {
   ctx.save();
   ctx.translate(ccx, ccy); ctx.scale(pop, pop); ctx.translate(-ccx, -ccy);
   ctx.shadowColor = "rgba(0,0,0,0.45)"; ctx.shadowBlur = 70 * S; ctx.shadowOffsetY = 26 * S;
-  rr(x, y, w, h, r); ctx.fillStyle = "#fbfaf7"; ctx.fill();
+  rr(x, y, w, h, r); ctx.fillStyle = BRAND.card; ctx.fill();
   ctx.shadowColor = "transparent";
   ctx.save(); rr(x, y, w, h, r); ctx.clip();
   // accent edge
@@ -760,7 +770,7 @@ function drawCardLayerInner(tau) {
   if (tau >= 13.3) tA = eO(inv(13.3, 13.8, tau)); else if (tau < 0.2) tA = 1 - inv(0, 0.2, tau);
   if (tA > 0) {
     const ty = ccy + D / 2 + 96 * S + (1 - tA) * 20 * S;
-    ctx.globalAlpha = tA; ctx.textAlign = "center"; ctx.fillStyle = "#ffffff";
+    ctx.globalAlpha = tA; ctx.textAlign = "center"; ctx.fillStyle = BRAND.endText;
     font(800, (LAND ? 66 : 54) * S, "semi-expanded"); ctx.letterSpacing = `${-1 * S}px`;
     ctx.fillText("Offline means offline.", ccx, ty);
     font(500, (LAND ? 25 : 21) * S); ctx.letterSpacing = `${0.5 * S}px`; ctx.fillStyle = "rgba(255,255,255,0.78)";
@@ -787,7 +797,7 @@ function drawCardLayerInner(tau) {
 }
 
 function drawCardContent(tau, x, y, w) {
-  const P = 30 * S, ink = "#15151b", muted = "#6b6a72";
+  const P = 30 * S, ink = BRAND.ink, muted = BRAND.muted;
   const i = tau >= 13.0 ? 5 : sceneAt(tau);
   const D = SC[i];
   // ---- status bar (constant; only the clock and the network glyph change) ----
@@ -823,7 +833,7 @@ function drawCardContent(tau, x, y, w) {
   const bw = ctx.measureText("BOAR").width; ctx.letterSpacing = "0px";
   font(800, 14 * S); ctx.letterSpacing = `${1.6 * S}px`;
   const ow = ctx.measureText("OFFLINE").width + 22 * S, ox = x + P + 56 * S + bw + 14 * S;
-  rr(ox, hy + 12 * S, ow, 28 * S, 14 * S); ctx.fillStyle = "#15151b"; ctx.fill();
+  rr(ox, hy + 12 * S, ow, 28 * S, 14 * S); ctx.fillStyle = ink; ctx.fill();
   ctx.fillStyle = "#ffffff"; ctx.fillText("OFFLINE", ox + 11 * S, hy + 31 * S); ctx.letterSpacing = "0px";
   font(500, 16 * S); ctx.fillStyle = muted; ctx.textAlign = "right"; ctx.fillText("Qwen2.5-1.5B · on device", x + w - P, hy + 32 * S); ctx.textAlign = "left";
 
@@ -844,7 +854,7 @@ function drawCardContent(tau, x, y, w) {
   const qx = x + w - P - qW, qy = y + 158 * S;
   const pop = eBack(clamp(ct / 0.2));
   ctx.save(); ctx.translate(qx + qW, qy + qH); ctx.scale(pop, pop); ctx.translate(-(qx + qW), -(qy + qH));
-  ctx.beginPath(); ctx.roundRect(qx, qy, qW, qH, [24 * S, 24 * S, 6 * S, 24 * S]); ctx.fillStyle = "#15151b"; ctx.fill();
+  ctx.beginPath(); ctx.roundRect(qx, qy, qW, qH, [24 * S, 24 * S, 6 * S, 24 * S]); ctx.fillStyle = ink; ctx.fill();
   let chars = Math.floor(clamp((ct - 0.04) / 0.34) * D.q.length);
   ctx.fillStyle = "#ffffff";
   qLines.forEach((l, li) => { const s = l.join(" "); const shown = s.slice(0, Math.max(0, chars)); chars -= s.length + 1; ctx.fillText(shown, qx + 22 * S, qy + 13 * S + lh * (li + 1) - 9 * S); });
@@ -904,7 +914,7 @@ window.renderFrame = function (t) {
 
 function loadImage(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
 window.ready = (async () => {
-  await Promise.all([document.fonts.load("800 20px Archivo"), document.fonts.load("450 20px Archivo")]);
+  await Promise.all([document.fonts.load(`800 20px ${BRAND.font}`), document.fonts.load(`450 20px ${BRAND.font}`)]);
   ICON = await loadImage("assets/boar-icon.png");
   renderFrame(+(Q.get("t") || 0));
 })();

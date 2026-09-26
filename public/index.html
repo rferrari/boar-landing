@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -28,6 +28,7 @@
 <link rel="preload" as="image" href="/media/poster-mobile.jpg" media="(max-aspect-ratio: 4/5)">
 <link rel="preload" as="font" type="font/woff2" href="/fonts/Archivo-var.woff2" crossorigin>
 <link rel="stylesheet" href="/styles.css">
+<script>document.documentElement.className = "js";</script>
 </head>
 <body>
 
@@ -48,7 +49,7 @@
     </a>
     <div class="topbar-links">
       <a href="#how">How it works</a>
-      <a href="#film">No signal</a>
+      <a href="#film">Where it matters</a>
       <a href="#receipt">The receipt</a>
       <a href="https://github.com/rferrari/boar-app">GitHub</a>
     </div>
@@ -75,132 +76,245 @@
 </header>
 
 <main>
-  <section class="section section-film" id="film" aria-labelledby="film-title">
-    <div class="wrap">
-      <p class="kicker">No signal, still an answer</p>
-      <h2 id="film-title">One download at setup, then nothing.</h2>
-      <p class="section-lede">No account, no API, no Google Play Services. The film above visits six places where the phone has no network. Each question is from BOAR's evaluation set, and each source is the article BOAR's offline search returned for it on a real phone (2026-09-24). The answers in the film are abridged.</p>
-      <ol class="situations">
-        <li style="--c: #a898ff"><span class="place">In flight</span><span class="q">What is a black hole and how does one form?</span><span class="src">Black hole</span></li>
-        <li style="--c: #3fe8b4"><span class="place">Underground</span><span class="q">Why did the Western Roman Empire fall?</span><span class="src">Fall of the Western Roman Empire</span></li>
-        <li style="--c: #ff7d5e"><span class="place">Above the treeline</span><span class="q">Explain photosynthesis in simple terms.</span><span class="src">Photosynthesis</span></li>
-        <li style="--c: #ffcc1f"><span class="place">Rainforest field camp</span><span class="q">Why is the Amazon rainforest considered important for global climate?</span><span class="src">Amazon rainforest</span></li>
-        <li style="--c: #59a8ff"><span class="place">At sea</span><span class="q">Who proposed the theory of evolution by natural selection?</span><span class="src">Evolution</span></li>
-        <li style="--c: #ffae34"><span class="place">Blackout</span><span class="q">Compare the French Revolution and the Industrial Revolution.</span><span class="src">French Revolution · Industrial Revolution</span></li>
-      </ol>
-    </div>
-  </section>
-
+  <!-- 1. how it works -->
   <section class="section" id="how" aria-labelledby="how-title">
     <div class="wrap">
-      <p class="kicker">How it works</p>
-      <h2 id="how-title">Install it, download once, go somewhere without signal.</h2>
+      <header class="section-head reveal">
+        <p class="kicker">How it works</p>
+        <h2 id="how-title">Download once. Then switch the network off.</h2>
+        <p class="section-lede">BOAR needs the internet one time, to fetch its model. After that, every answer comes from your phone.</p>
+      </header>
       <ol class="steps">
-        <li>
-          <span class="step-n">01</span>
-          <h3>Install the APK</h3>
-          <p>Get <code>boar-v1.0.0-arm64.apk</code> from the release and check it against the published SHA-256. <code>make setup</code> can do the download, checksum and USB install for you.</p>
+        <li class="step reveal" style="--i: 0">
+          <div class="vis vis-download" aria-hidden="true">
+            <div class="dl-row"><span>Qwen2.5-1.5B-Instruct</span><span>0.99 GB</span></div>
+            <div class="dl-bar"><i></i></div>
+            <div class="dl-row"><span>bge-small-en-v1.5 · embeddings</span><span>done</span></div>
+            <div class="dl-bar dl-done"><i></i></div>
+          </div>
+          <p class="step-n">01</p>
+          <h3>Install and download once</h3>
+          <p>Get <code>boar-v1.0.0-arm64.apk</code> from the release and check its SHA-256. On first launch BOAR fetches its default model and a small embedding model: about 1 GB, the only time it needs the network.</p>
         </li>
-        <li>
-          <span class="step-n">02</span>
-          <h3>Download once</h3>
-          <p>On first launch BOAR fetches its default model, Qwen2.5-1.5B, plus a small embedding model: about 1 GB. That's the only time it needs the network.</p>
+        <li class="step reveal" style="--i: 1">
+          <div class="vis vis-toggle" aria-hidden="true">
+            <div class="qs"><span class="qs-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.5c1.2 0 1.6 1.5 1.6 3V9l8.4 5v2.2l-8.4-2.6v4.8l2.4 1.8V22L12 20.8 8 22v-1.8l2.4-1.8v-4.8L2 16.2V14l8.4-5V4.5c0-1.5.4-3 1.6-3z"/></svg></span><span class="qs-label">Airplane mode</span><span class="switch"><i></i></span></div>
+            <div class="qs qs-off"><span class="qs-bars"><i></i><i></i><i></i><i></i></span><span class="qs-label">No Service</span></div>
+          </div>
+          <p class="step-n">02</p>
+          <h3>Go somewhere without signal</h3>
+          <p>Airplane mode on, Wi-Fi off, mobile data off. BOAR searches its offline library with keywords and on-device embeddings, and runs the model locally.</p>
         </li>
-        <li>
-          <span class="step-n">03</span>
-          <h3>Switch on airplane mode</h3>
-          <p>Ask. BOAR searches its offline library (keyword + on-device embeddings), answers with the local model and shows the sources it used.</p>
+        <li class="step reveal" style="--i: 2">
+          <div class="vis vis-answer" aria-hidden="true">
+            <p class="mini-q">How do vaccines work?</p>
+            <p class="mini-a"><i></i><i></i><i class="short"></i></p>
+            <p class="mini-src"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Vaccine</p>
+          </div>
+          <p class="step-n">03</p>
+          <h3>Ask, and see the sources</h3>
+          <p>Every answer lists the offline articles it was built from, so you can check it. And every answer is measured: model, time to first token, speed, memory.</p>
         </li>
       </ol>
       <ul class="facts">
-        <li><strong>Sources on every answer.</strong> Each answer lists the offline articles it was built from.</li>
-        <li><strong>A bigger library, optional.</strong> The Wikipedia Vital Articles pack: 49,832 articles in 164 MB.</li>
-        <li><strong>Bring your own.</strong> Import your .txt, .md, .csv, .json and .pdf files, or search Hugging Face for another GGUF model.</li>
-        <li><strong>Open.</strong> MIT licensed. Code, models, data sources and benchmark results are in the repo.</li>
+        <li class="reveal" style="--i: 0"><strong>49,832 articles, 164 MB</strong><span>The optional Wikipedia Vital Articles pack, on top of the built-in library.</span></li>
+        <li class="reveal" style="--i: 1"><strong>Your own documents</strong><span>Import .txt, .md, .csv, .json and .pdf files as collections you can switch on and off.</span></li>
+        <li class="reveal" style="--i: 2"><strong>Your own model</strong><span>Search Hugging Face for another GGUF model and run it on the phone.</span></li>
+        <li class="reveal" style="--i: 3"><strong>No Google Play Services</strong><span>The release build has no Play Services or Firebase dependency. No account, no API.</span></li>
       </ul>
     </div>
   </section>
 
-  <section class="section section-receipt" id="receipt" aria-labelledby="receipt-title">
+  <!-- 2. where it matters -->
+  <section class="section section-places" id="film" aria-labelledby="film-title">
     <div class="wrap">
-      <p class="kicker">The receipt</p>
-      <h2 id="receipt-title">A model card isn't a benchmark.</h2>
-      <p class="section-lede">Every answer records which model ran, how long until the first word, how fast it generated and how much memory it used. These are the first runs on a real phone, failures included.</p>
+      <header class="section-head reveal">
+        <p class="kicker">Where it matters</p>
+        <h2 id="film-title">No signal. Still an answer.</h2>
+        <p class="section-lede">The six places in the film. Each question is from BOAR's evaluation set, and each source is the article BOAR's offline search returned for it on a real phone on 2026-09-24.</p>
+      </header>
+      <ol class="places">
+        <li class="place-card reveal" style="--c: #a898ff; --i: 0">
+          <img src="/scenes/flight.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <div class="place-body">
+            <p class="place-tag">In flight</p>
+            <p class="bubble">What is a black hole and how does one form?</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Black hole</span></p></div>
+          </div>
+        </li>
+        <li class="place-card reveal" style="--c: #3fe8b4; --i: 1">
+          <img src="/scenes/subway.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <div class="place-body">
+            <p class="place-tag">Underground</p>
+            <p class="bubble">Why did the Western Roman Empire fall?</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Fall of the Western Roman Empire</span></p></div>
+          </div>
+        </li>
+        <li class="place-card reveal" style="--c: #ff7d5e; --i: 2">
+          <img src="/scenes/peak.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <div class="place-body">
+            <p class="place-tag">Above the treeline</p>
+            <p class="bubble">Explain photosynthesis in simple terms.</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Photosynthesis</span></p></div>
+          </div>
+        </li>
+        <li class="place-card reveal" style="--c: #ffcc1f; --i: 3">
+          <img src="/scenes/jungle.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <div class="place-body">
+            <p class="place-tag">Rainforest field camp</p>
+            <p class="bubble">Why is the Amazon rainforest considered important for global climate?</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Amazon rainforest</span></p></div>
+          </div>
+        </li>
+        <li class="place-card reveal" style="--c: #59a8ff; --i: 4">
+          <img src="/scenes/sea.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <div class="place-body">
+            <p class="place-tag">At sea</p>
+            <p class="bubble">Who proposed the theory of evolution by natural selection?</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Evolution</span></p></div>
+          </div>
+        </li>
+        <li class="place-card reveal" style="--c: #ffae34; --i: 5">
+          <img src="/scenes/city.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <div class="place-body">
+            <p class="place-tag">Blackout</p>
+            <p class="bubble">Compare the French Revolution and the Industrial Revolution.</p>
+            <div class="chips"><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>French Revolution</span></p><p class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1 9 .8 3-1.8 6-2.1 9-.8v13c-3-1.3-6-1-9 .8-3-1.8-6-2.1-9-.8zM12 6.3v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Industrial Revolution</span></p></div>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
 
-      <div class="receipt-grid">
-        <article class="receipt" aria-label="Wikipedia Vital Articles pack run">
-          <div class="statusbar" aria-hidden="true"><span>Airplane mode</span><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1.5c1.2 0 1.6 1.5 1.6 3V9l8.4 5v2.2l-8.4-2.6v4.8l2.4 1.8V22L12 20.8 8 22v-1.8l2.4-1.8v-4.8L2 16.2V14l8.4-5V4.5c0-1.5.4-3 1.6-3z"/></svg></div>
-          <header>
-            <img src="/boar-512.png" alt="" width="44" height="44" loading="lazy">
-            <div>
-              <p class="receipt-title">Receipt · Vital Articles pack</p>
-              <p class="receipt-sub">Qwen2.5-1.5B · 6 questions · 2026-09-24</p>
-            </div>
-          </header>
-          <dl>
-            <div><dt>Answered correctly</dt><dd>6 / 6</dd></div>
-            <div><dt>Time to first token</dt><dd>6.4 s <small>avg</small></dd></div>
-            <div><dt>Generation</dt><dd>17.5 tok/s <small>avg</small></dd></div>
-            <div><dt>Whole answer</dt><dd>10.6 s <small>avg</small></dd></div>
-            <div><dt>Peak memory</dt><dd>1.76 GB</dd></div>
-            <div><dt>Library</dt><dd>49,832 articles · 164 MB</dd></div>
-            <div><dt>Network</dt><dd>none</dd></div>
-          </dl>
-          <p class="receipt-foot">Xiaomi 2311DRK48G · Dimensity 8300 · 11.6 GB RAM · Android 16</p>
-        </article>
+  <!-- 3. the receipt -->
+  <section class="section" id="receipt" aria-labelledby="receipt-title">
+    <div class="wrap">
+      <header class="section-head reveal">
+        <p class="kicker">The receipt</p>
+        <h2 id="receipt-title">A model card isn't a benchmark.</h2>
+        <p class="section-lede">Every answer records which model ran, how long until the first word, how fast it generated and how much memory it used. These are the first runs on a real phone, failures included.</p>
+      </header>
 
-        <div class="table-card">
-          <p class="table-title">Five configurations, 17 questions each, same phone <span>2026-09-24</span></p>
+      <article class="data-card reveal" aria-labelledby="pack-title">
+        <div class="data-head">
+          <div>
+            <p class="data-eyebrow">Run 1 · Wikipedia Vital Articles pack</p>
+            <h3 id="pack-title">One average answer, second by second</h3>
+          </div>
+          <p class="data-meta">Qwen2.5-1.5B · 6 questions · 2026-09-24</p>
+        </div>
+        <div class="timeline" role="img" aria-label="Average answer: first token after 6.4 seconds, answer complete after 10.6 seconds.">
+          <div class="tl-bar">
+            <span class="tl-wait" style="--w: 60.4%"><em>Waiting for the first word · 6.4 s avg</em></span>
+            <span class="tl-gen" style="--w: 39.6%"><em>Writing · 17.5 tok/s</em></span>
+          </div>
+          <div class="tl-axis"><span>0 s</span><span style="left: 60.4%">6.4 s</span><span style="left: 100%">10.6 s</span></div>
+          <ul class="tl-legend" aria-hidden="true"><li><i class="k-wait"></i>Time to first token · 6.4 s avg</li><li><i class="k-gen"></i>Writing the answer · 17.5 tok/s avg · done at 10.6 s avg</li></ul>
+        </div>
+        <dl class="stats">
+          <div><dt>Answered correctly</dt><dd>6<small>/6</small></dd></div>
+          <div><dt>First token</dt><dd>6.4<small> s avg</small></dd></div>
+          <div><dt>Generation</dt><dd>17.5<small> tok/s avg</small></dd></div>
+          <div><dt>Whole answer</dt><dd>10.6<small> s avg</small></dd></div>
+          <div><dt>Peak memory</dt><dd>1.76<small> GB</small></dd></div>
+          <div><dt>Network</dt><dd>none</dd></div>
+        </dl>
+      </article>
+
+      <article class="data-card reveal" aria-labelledby="cfg-title">
+        <div class="data-head">
+          <div>
+            <p class="data-eyebrow">Run 2 · five configurations, 17 questions each, same phone</p>
+            <h3 id="cfg-title">Seconds per answer (median)</h3>
+          </div>
+          <p class="data-meta">2026-09-24 · timeout at 120 s</p>
+        </div>
+        <ul class="bars" style="--max: 120">
+          <li style="--v: 21.0"><p class="bar-name">Qwen2.5-1.5B <span>default</span></p><div class="bar"><i></i><b>21.0 s</b></div><p class="bar-note">11.4 tok/s · first token 13.6 s · 17/17, no timeouts</p></li>
+          <li style="--v: 57.3"><p class="bar-name">LFM2.5-8B-A1B <span>MoE</span></p><div class="bar"><i></i><b>57.3 s</b></div><p class="bar-note">14.8 tok/s · first token 27.2 s · only model to solve the RAM question; 4 of 17 ran out of answer budget</p></li>
+          <li style="--v: 73.1"><p class="bar-name">Phi-3.5-mini</p><div class="bar"><i></i><b>73.1 s</b></div><p class="bar-note">4.0 tok/s · first token 44.0 s · 4 timeouts at 120 s</p></li>
+          <li style="--v: 107.1"><p class="bar-name">Qwen2.5-7B</p><div class="bar"><i></i><b>107.1 s</b></div><p class="bar-note">2.7 tok/s · first token 70.5 s · 5 timeouts at 120 s</p></li>
+          <li class="bar-fail"><p class="bar-name">Instella-MoE-16B-A3B</p><div class="bar"><b>didn't load</b></div><p class="bar-note">Architecture not supported yet</p></li>
+        </ul>
+        <details class="as-table">
+          <summary>Show as a table</summary>
           <div class="table-scroll">
             <table>
-              <thead>
-                <tr><th scope="col">Model</th><th scope="col">tok/s</th><th scope="col">First token</th><th scope="col">Per answer</th><th scope="col">What happened</th></tr>
-              </thead>
+              <thead><tr><th scope="col">Model</th><th scope="col">tok/s</th><th scope="col">First token</th><th scope="col">Per answer</th><th scope="col">What happened</th></tr></thead>
               <tbody>
-                <tr><th scope="row">Qwen2.5-1.5B <span>default</span></th><td>11.4</td><td>13.6 s</td><td>21.0 s</td><td>17/17, no timeouts</td></tr>
-                <tr><th scope="row">LFM2.5-8B-A1B <span>MoE</span></th><td>14.8</td><td>27.2 s</td><td>57.3 s</td><td>Only model to solve the RAM question; 4 of 17 ran out of answer budget</td></tr>
+                <tr><th scope="row">Qwen2.5-1.5B (default)</th><td>11.4</td><td>13.6 s</td><td>21.0 s</td><td>17/17, no timeouts</td></tr>
+                <tr><th scope="row">LFM2.5-8B-A1B (MoE)</th><td>14.8</td><td>27.2 s</td><td>57.3 s</td><td>Only model to solve the RAM question; 4 of 17 ran out of answer budget</td></tr>
                 <tr><th scope="row">Phi-3.5-mini</th><td>4.0</td><td>44.0 s</td><td>73.1 s</td><td>4 timeouts at 120 s</td></tr>
                 <tr><th scope="row">Qwen2.5-7B</th><td>2.7</td><td>70.5 s</td><td>107.1 s</td><td>5 timeouts at 120 s</td></tr>
-                <tr class="fail"><th scope="row">Instella-MoE-16B-A3B</th><td>—</td><td>—</td><td>—</td><td>Didn't load: architecture not supported yet</td></tr>
+                <tr><th scope="row">Instella-MoE-16B-A3B</th><td>—</td><td>—</td><td>—</td><td>Didn't load: architecture not supported yet</td></tr>
               </tbody>
             </table>
           </div>
-          <p class="table-foot">Medians. LFM2.5 ran separately with the same 17 questions. Highest peak memory of any run: 5.21 GB, under the 12 GB limit. Raw results: <a href="https://github.com/rferrari/boar-app/tree/main/docs/evidence">docs/evidence</a>.</p>
+        </details>
+        <p class="data-foot">Medians. LFM2.5 ran separately with the same 17 questions. Highest peak memory of any run: 5.21 GB, under the 12 GB limit.</p>
+      </article>
+
+      <div class="provenance reveal">
+        <p><strong>Measured on</strong> Xiaomi 2311DRK48G · MediaTek Dimensity 8300 · 11.6 GB RAM · Android 16. Raw results: <a href="https://github.com/rferrari/boar-app/tree/main/docs/evidence">docs/evidence</a>.</p>
+        <div class="run-it">
+          <p>Numbers look wrong? Run them on your phone and tell us. A result from your device is data nobody else has.</p>
+          <pre><code>npm run eval:device -- --models &lt;model&gt;</code></pre>
         </div>
       </div>
-
-      <div class="run-it">
-        <p>If our numbers look wrong, run them yourself and tell us. A result from your device is data nobody else has.</p>
-        <pre><code>npm run eval:device -- --models &lt;model&gt;</code></pre>
-      </div>
     </div>
   </section>
 
+  <!-- 4. the manifesto, set large -->
+  <section class="manifesto" aria-labelledby="manifesto-title">
+    <div class="wrap">
+      <h2 id="manifesto-title" class="sr-only">From the manifesto</h2>
+      <p class="m-line reveal" style="--i: 0">Offline means <em>offline.</em></p>
+      <p class="m-line reveal" style="--i: 1">Nothing leaves your phone.</p>
+      <p class="m-line m-small reveal" style="--i: 2">No account, no API, no Google Play Services. One download at setup, then nothing. Not “mostly local”, not “offline except when it matters”.</p>
+      <p class="m-cite reveal" style="--i: 3"><a href="https://github.com/rferrari/boar-app/blob/main/MANIFESTO.md">From the BOAR manifesto</a></p>
+    </div>
+  </section>
+
+  <!-- 5. honest + open -->
   <section class="section section-honest" aria-labelledby="honest-title">
-    <div class="wrap two-col">
-      <div>
+    <div class="wrap">
+      <header class="section-head reveal">
         <p class="kicker">Not the dream, and we say so</p>
         <h2 id="honest-title">Useful now beats perfect later.</h2>
-        <p>The model everyone wants on a phone, a huge mixture-of-experts model streaming from storage, doesn't exist yet. BOAR is what works today, measured honestly, with a place ready for that model when it arrives.</p>
-        <p>4–15 tok/s is enough to find out how to treat a blister, what a museum is about, or why the train isn't running, when there's no signal and nobody around to ask.</p>
+        <p class="section-lede">The model everyone wants on a phone, a huge mixture-of-experts model streaming from storage, doesn't exist yet. BOAR is what works today, measured honestly. 4–15 tok/s is enough to find out how to treat a blister, what a museum is about, or why the train isn't running, when there's no signal and nobody around to ask.</p>
+      </header>
+      <div class="strip">
+        <div class="strip-col reveal" style="--i: 0">
+          <p class="strip-label">Open source</p>
+          <p><strong>MIT licensed.</strong> Code, models, data sources and benchmark results are in the repo, and the APK ships with its SHA-256.</p>
+          <a class="text-link" href="https://github.com/rferrari/boar-app">github.com/rferrari/boar-app</a>
+        </div>
+        <div class="strip-col reveal" style="--i: 1">
+          <p class="strip-label">Still open</p>
+          <ul class="open-list">
+            <li><strong>Not measured yet:</strong> a comparison against internet search plus frontier models.</li>
+            <li><strong>Not run yet:</strong> GrapheneOS on real hardware.</li>
+            <li><strong>Weak spots:</strong> synthesis on the 1.5B model, and citation formatting.</li>
+          </ul>
+        </div>
+        <div class="strip-col reveal" style="--i: 2">
+          <p class="strip-label">poidh bounty #31</p>
+          <p>BOAR is claim #124 on <a href="https://poidh.xyz/mainnet/bounty/31">“Build the Best Offline AI Research App for Android”</a>. The bounty is still open.</p>
+        </div>
       </div>
-      <ul class="status-list" aria-label="Open items">
-        <li><span class="dot dot-open"></span><div><strong>Not measured yet:</strong> a comparison against internet search plus frontier models.</div></li>
-        <li><span class="dot dot-open"></span><div><strong>Not run yet:</strong> GrapheneOS on real hardware. The release build has no Google Play Services dependency.</div></li>
-        <li><span class="dot dot-open"></span><div><strong>Known weak spots:</strong> synthesis on the 1.5B model, and citation formatting.</div></li>
-        <li><span class="dot dot-done"></span><div><strong>poidh bounty #31:</strong> BOAR is claim #124 on <a href="https://poidh.xyz/mainnet/bounty/31">"Build the Best Offline AI Research App for Android"</a>. The bounty is still open.</div></li>
-      </ul>
     </div>
   </section>
 
-  <section class="section section-end" aria-labelledby="end-title">
-    <div class="wrap end">
-      <img src="/boar-512.png" alt="BOAR mascot, a boar in a pith helmet" width="120" height="120" loading="lazy">
+  <!-- 6. final call -->
+  <section class="cta-band" aria-labelledby="end-title">
+    <div class="wrap cta-inner reveal">
+      <img src="/boar-512.png" alt="BOAR mascot, a boar in a pith helmet" width="160" height="160" loading="lazy">
       <h2 id="end-title">Keep your phone charged, pack BOAR, and go somewhere without signal.</h2>
-      <div class="ctas ctas-center">
-        <a class="btn btn-primary" href="https://github.com/rferrari/boar-app/releases/tag/v1.0.0">Download the APK</a>
-        <a class="btn btn-ghost" href="https://github.com/rferrari/boar-app/blob/main/MANIFESTO.md">Read the manifesto</a>
+      <div class="ctas">
+        <a class="btn btn-primary" href="https://github.com/rferrari/boar-app/releases/tag/v1.0.0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Download the APK</a>
+        <a class="btn btn-ghost" href="https://github.com/rferrari/boar-app"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.8 9.6.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 2.9.9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.2 10.2 0 0 0 22 12.2C22 6.6 17.5 2 12 2z"/></svg>GitHub</a>
       </div>
+      <p class="cta-note">v1.0.0 · 123 MB · any 64-bit ARM Android phone · MIT · <a href="https://github.com/rferrari/boar-app/blob/main/MANIFESTO.md">Read the manifesto</a></p>
     </div>
   </section>
 </main>

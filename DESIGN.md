@@ -161,3 +161,39 @@ and pipes the PNGs to ffmpeg.
 - `public/media/boar-no-signal-mobile.mp4`: 1080×1920
 - `public/media/poster.jpg`, `poster-mobile.jpg`: the in-flight scene with the
   answer and source on screen (also the reduced-motion image)
+
+## The page below the film
+
+The owner liked the film hero and called the first lower page sloppy, so the lower
+page is designed as a product story with the same care as the film.
+
+- **Rhythm:** six sections, each with one job, alternating surfaces:
+  1. **How it works:** three steps, each with a small drawn UI moment (the one
+     download, the airplane-mode tile over "No Service", an answer with its source
+     chip), then four facts on a ruled grid.
+  2. **Where it matters:** the six places as cards cut from real film frames, each
+     with its scene color, its question as a chat bubble and its source chips.
+  3. **The receipt:** the numbers as a data card, not a table. One average answer
+     on a timeline (first token at 6.4 s, done at 10.6 s, with a legend and direct
+     labels), six stat tiles, then the five configurations as a single-series bar
+     chart of seconds per answer with the 120 s timeout marked. A "Show as a table"
+     disclosure keeps the table view. Device, date and the docs/evidence link sit
+     under it.
+  4. **The manifesto, set large:** "Offline means offline." / "Nothing leaves your
+     phone." on the film's night sky. This band is dark in both color schemes.
+  5. **Not the dream, and we say so:** the honest limits, the MIT/open-source line
+     and the poidh bounty #31 entry, as a restrained three-column strip.
+  6. **Final call:** the mascot, the manifesto's last line, Download the APK and
+     GitHub, then the footer (SOPA logo + sopa.team).
+- **Type scale:** display (h2, 800, semi-expanded), title (20px, 750), body
+  (17px), label (12.5px caps, tracked). Big numbers use the display face with
+  tabular figures.
+- **Motion:** scroll-in reveals (20px rise, 80ms stagger), bars and the timeline
+  grow when their card arrives, the download bar fills and the airplane switch
+  flips when their step arrives, lifts on card hover. Everything is visible
+  without JavaScript, and `prefers-reduced-motion` shows the final state with no
+  movement.
+- **Tokens:** every page color is a CSS custom property in `:root` (light) and
+  the dark block; the film's brand values (font, card surface, ink, end-card
+  accent) are the `BRAND` object at the top of `render/scene.html`. A brand guide
+  can be applied by editing those two places.

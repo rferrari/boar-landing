@@ -28,8 +28,12 @@ for (const [name, vp] of Object.entries(sizes)) for (const theme of ["light", "d
     const v = document.querySelector(".hero-video");
     return v && v.classList.contains("is-playing") && v.currentTime > 2 ? { src: v.currentSrc, t: v.currentTime } : false;
   }, { timeout: 30000 }).then((h) => h.jsonValue()).catch(() => "video did not start");
+  // scroll through once so scroll-in reveals fire, then back to the top
+  await page.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += innerHeight / 2) { scrollTo({ top: y, behavior: "instant" }); await new Promise((r) => setTimeout(r, 150)); } scrollTo({ top: 0, behavior: "instant" }); await new Promise((r) => setTimeout(r, 1500)); });
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   await page.screenshot({ path: path.join(OUT, `${tag}-${name}-${theme}.png`) });
+  // tall captures at 2x repeat content in headless Chrome; take the full page at 1x
+  if (vp.deviceScaleFactor > 1) { await page.setViewport({ ...vp, deviceScaleFactor: 1 }); await new Promise((r) => setTimeout(r, 400)); }
   await page.screenshot({ path: path.join(OUT, `${tag}-${name}-${theme}-full.png`), fullPage: true });
   console.log(name, theme, JSON.stringify(state), "horizontal overflow:", overflow);
   await page.close();
