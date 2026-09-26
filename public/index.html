@@ -26,8 +26,8 @@
 <meta name="twitter:description" content="A small AI and a library that live on your phone. It still answers when the signal is gone, shows its sources and measures every answer. Open source, for Android.">
 <meta name="twitter:image" content="https://boar.sopa.team/og.jpg">
 
-<link rel="preload" as="image" href="/media/poster.jpg" media="(min-aspect-ratio: 4/5)">
-<link rel="preload" as="image" href="/media/poster-mobile.jpg" media="(max-aspect-ratio: 4/5)">
+<link rel="preload" as="image" href="/media/poster.webp" type="image/webp" media="(min-aspect-ratio: 4/5)" fetchpriority="high">
+<link rel="preload" as="image" href="/media/poster-mobile.webp" type="image/webp" media="(max-aspect-ratio: 4/5)" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="/fonts/Archivo-var.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/fonts/Fraunces-italic-var.woff2" crossorigin>
 <link rel="stylesheet" href="/styles.css">
@@ -38,7 +38,9 @@
 <header class="hero" id="top">
   <div class="hero-media" aria-hidden="true">
     <picture>
+      <source media="(max-aspect-ratio: 4/5)" srcset="/media/poster-mobile.webp" type="image/webp">
       <source media="(max-aspect-ratio: 4/5)" srcset="/media/poster-mobile.jpg">
+      <source srcset="/media/poster.webp" type="image/webp">
       <img class="hero-poster" src="/media/poster.jpg" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
     </picture>
     <video class="hero-video" muted loop playsinline preload="none" disablepictureinpicture></video>
@@ -137,7 +139,7 @@
       </header>
       <ol class="places">
         <li class="place-card reveal" style="--c: #f6a96b; --i: 0">
-          <img src="/scenes/flight.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <picture><source srcset="/scenes/flight.webp" type="image/webp"><img src="/scenes/flight.jpg" alt="" width="800" height="600" loading="lazy" decoding="async"></picture>
           <div class="place-body">
             <p class="place-tag">In flight</p>
             <p class="bubble">The man next to me is choking and can’t speak. What do I do?</p>
@@ -146,7 +148,7 @@
           </div>
         </li>
         <li class="place-card reveal" style="--c: #5fd6a4; --i: 1">
-          <img src="/scenes/subway.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <picture><source srcset="/scenes/subway.webp" type="image/webp"><img src="/scenes/subway.jpg" alt="" width="800" height="600" loading="lazy" decoding="async"></picture>
           <div class="place-body">
             <p class="place-tag">Underground</p>
             <p class="bubble">A train leaves at 3:40 pm and the trip takes 2 hours and 35 minutes. What time does it arrive?</p>
@@ -155,7 +157,7 @@
           </div>
         </li>
         <li class="place-card reveal" style="--c: #f2c14e; --i: 2">
-          <img src="/scenes/peak.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <picture><source srcset="/scenes/peak.webp" type="image/webp"><img src="/scenes/peak.jpg" alt="" width="800" height="600" loading="lazy" decoding="async"></picture>
           <div class="place-body">
             <p class="place-tag">Mountain hut</p>
             <p class="bubble">My friend is shivering, clumsy and slurring words. Is it hypothermia?</p>
@@ -164,7 +166,7 @@
           </div>
         </li>
         <li class="place-card reveal" style="--c: #a6d16a; --i: 3">
-          <img src="/scenes/garden.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <picture><source srcset="/scenes/garden.webp" type="image/webp"><img src="/scenes/garden.jpg" alt="" width="800" height="600" loading="lazy" decoding="async"></picture>
           <div class="place-body">
             <p class="place-tag">In the garden</p>
             <p class="bubble">Why plant corn, beans and squash together?</p>
@@ -173,7 +175,7 @@
           </div>
         </li>
         <li class="place-card reveal" style="--c: #7cc3da; --i: 4">
-          <img src="/scenes/sea.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <picture><source srcset="/scenes/sea.webp" type="image/webp"><img src="/scenes/sea.jpg" alt="" width="800" height="600" loading="lazy" decoding="async"></picture>
           <div class="place-body">
             <p class="place-tag">At sea</p>
             <p class="bubble">Thunder came 9 seconds after the flash. How far away is the storm?</p>
@@ -182,7 +184,7 @@
           </div>
         </li>
         <li class="place-card reveal" style="--c: #ec9467; --i: 5">
-          <img src="/scenes/road.jpg" alt="" width="800" height="600" loading="lazy" decoding="async">
+          <picture><source srcset="/scenes/road.webp" type="image/webp"><img src="/scenes/road.jpg" alt="" width="800" height="600" loading="lazy" decoding="async"></picture>
           <div class="place-body">
             <p class="place-tag">Flooded road</p>
             <p class="bubble">Water is running across the road ahead. Can I drive through it?</p>

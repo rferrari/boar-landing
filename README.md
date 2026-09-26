@@ -24,7 +24,7 @@ Needs Google Chrome (or `CHROME_PATH`) and `ffmpeg`.
 |---|---|
 | 1920×1080, 30 fps, 15 s | `boar-no-signal.mp4` (H.264, faststart) and `.webm` (VP9) |
 | 1080×1920 | `boar-no-signal-mobile.mp4` |
-| Posters | `poster.jpg`, `poster-mobile.jpg` |
+| Posters | `poster.jpg`, `poster-mobile.jpg` (+ `.webp` copies, made with Pillow: `Image.save(..., 'WEBP', quality=72)`; the same for `public/scenes`) |
 
 One film serves both color schemes (it's a sequence of places, not a page surface). The page picks it by orientation, shows the poster first, and skips the video for `prefers-reduced-motion` and Save-Data / 2G connections.
 

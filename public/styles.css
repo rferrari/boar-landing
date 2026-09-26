@@ -259,6 +259,7 @@ p { text-wrap: pretty; }
 .section-places { background: var(--grain), var(--bg-2); }
 .places { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .place-card { position: relative; display: flex; flex-direction: column; background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), opacity 0.6s var(--ease); }
+.place-card picture { display: block; overflow: hidden; }
 .place-card img { width: 100%; aspect-ratio: 4 / 3; height: auto; object-fit: cover; transition: transform 0.6s var(--ease); }
 .place-card:hover { transform: translateY(-4px); }
 .place-card:hover img { transform: scale(1.04); }
