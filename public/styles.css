@@ -370,7 +370,7 @@ td { font-variant-numeric: tabular-nums; color: var(--ink-muted); }
 .footer-links { display: flex; flex-wrap: wrap; gap: 18px; }
 .footer-links a { text-decoration: none; } .footer-links a:hover { color: var(--ink); text-decoration: underline; }
 .sopa { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-weight: 700; }
-.sopa img { width: 40px; height: 40px; padding: 3px; border-radius: 50%; background: var(--sopa-chip); transition: transform 0.3s var(--ease); }
+.sopa img { width: 40px; height: 40px; image-rendering: pixelated; transition: transform 0.3s var(--ease); }
 .sopa:hover img { transform: rotate(-8deg); }
 
 /* ---- responsive ---- */
