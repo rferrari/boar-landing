@@ -3,7 +3,6 @@
 Landing page for [BOAR](https://github.com/rferrari/boar-app), the open-source Android app that answers research questions with no signal.
 
 - **Site:** static, in `public/` (HTML + CSS + a few lines of JS). No build step.
-- **Background film:** "No Signal", a 15-second seamless loop through six places where the phone has no network (a night flight, a subway tunnel, a mountain at dawn, a rainforest field camp, a ship at sea, a city blackout). In each one a question from BOAR's evaluation set gets an answer with its offline source. The concept and the rejected directions are in [DESIGN.md](DESIGN.md).
 
 ## The film
 
