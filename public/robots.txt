@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://boar.sopa.team/sitemap.xml
+Sitemap: https://boarapp.com/sitemap.xml

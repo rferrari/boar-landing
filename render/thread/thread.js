@@ -684,8 +684,7 @@ function clip10(t) {
   // the address, on a paper label
   ctx.fillStyle = "rgba(255,250,238,0.97)"; rr(250 * S, 1168 * S, 580 * S, 168 * S, 22 * S); ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = 2.5 * S; ctx.stroke();
   ctx.save(); sans(800, 64 * S); ctx.textAlign = "center"; ctx.fillStyle = INK; ctx.letterSpacing = `${-0.5 * S}px`;
-  ctx.fillText("boar.sopa.team", 540 * S, 1238 * S); ctx.restore();
-  const uw = 470 * S; ctx.fillStyle = SUN; rr(540 * S - uw / 2, 1256 * S, uw, 6 * S, 3 * S); ctx.fill();
+  ctx.fillText("boarapp.com", 540 * S, 1238 * S); const uw = ctx.measureText("boarapp.com").width + 20 * S; ctx.restore(); ctx.fillStyle = SUN; rr(540 * S - uw / 2, 1256 * S, uw, 6 * S, 3 * S); ctx.fill();
   caps("OPEN SOURCE · MIT · FOR ANDROID", 540 * S, 1306 * S, 22 * S, INK_MUTED, { align: "center", ls: 0.16 });
 }
 
