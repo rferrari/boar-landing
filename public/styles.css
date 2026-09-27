@@ -429,6 +429,8 @@ td { font-variant-numeric: tabular-nums; color: var(--ink-muted); }
 .footer p { margin: 0; }
 .footer-links { display: flex; flex-wrap: wrap; gap: 18px; }
 .footer-links a { text-decoration: none; } .footer-links a:hover { color: var(--ink); text-decoration: underline; }
+.footer-origin { flex-basis: 100%; margin: 4px 0 0; font-size: 13px; color: var(--ink-subtle); }
+.footer-origin a { color: inherit; }
 .footer-social { display: flex; align-items: center; gap: 10px; }
 .footer-social a { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-subtle); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; transition: color 0.2s var(--ease), border-color 0.2s var(--ease); }
 .footer-social a:hover { color: var(--ink); border-color: var(--ink-subtle); }

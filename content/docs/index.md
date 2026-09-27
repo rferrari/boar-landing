@@ -23,6 +23,7 @@ These docs cover using it, adding to it, and checking it.
 - **An offline research companion.** Ask it to explain, compare or work something out. It searches its library on the phone and a model on the phone writes the answer.
 - **A library you can check.** The built-in library has about 5,300 short Wikipedia-derived articles, and an optional pack adds the introductions of Wikipedia's ~50,000 Vital Articles. Answers list the articles they used.
 - **Yours.** MIT-licensed, no account, no API, no Google Play Services. Bring [your own documents](your-documents.md), [your own model](models.md) and [your own packs](knowledge-packs.md).
+- **Born from a bounty.** BOAR started as an answer to [poidh bounty #31](https://poidh.xyz/mainnet/bounty/31), "Build the Best Offline AI Research App for Android", after Vitalik Buterin asked for a research tool that works with no signal. It's claim #124; the bounty is still open.
 - **Measured.** Every answer records the model, the time to the first word, the speed and the memory used. The [results](results.md) are published, failures included.
 
 ## What it isn't
