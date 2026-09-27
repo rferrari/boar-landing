@@ -3,6 +3,8 @@
 Landing page for [BOAR](https://github.com/rferrari/boar-app), the open-source Android app that keeps a small AI model and a library of knowledge on your phone, and still answers when there is no signal.
 
 - **Site:** static, in `public/` (HTML + CSS + a few lines of JS). No build step.
+- **Docs:** `boarapp.com/docs`, written in `content/docs/*.md` (front matter: title, description, section, order). `node render/docs.mjs` turns them into `public/docs/<page>/index.html`, the search index and the sitemap; commit the output. Screenshots and clips come from `docs/demo` in the app repo, in `public/docs/media/`.
+- **Voice and claims:** [`brand/playbook.md`](brand/playbook.md). Check its claims ledger before changing copy here, in the docs or in a post.
 
 ## The film
 

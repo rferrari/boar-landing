@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MHH6QGDK9J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MHH6QGDK9J');
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Benchmark your phone · BOAR docs</title>
+<meta name="description" content="Run BOAR's 17-question evaluation on your own Android phone with one command, and get time to first token, tokens per second, peak memory and every answer side by side.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0f1d19">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="canonical" href="https://boarapp.com/docs/benchmark/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://boarapp.com/docs/benchmark/">
+<meta property="og:title" content="Benchmark your phone · BOAR">
+<meta property="og:description" content="Run BOAR's 17-question evaluation on your own Android phone with one command, and get time to first token, tokens per second, peak memory and every answer side by side.">
+<meta property="og:image" content="https://boarapp.com/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@boar_app">
+<meta name="twitter:title" content="Benchmark your phone · BOAR">
+<meta name="twitter:description" content="Run BOAR's 17-question evaluation on your own Android phone with one command, and get time to first token, tokens per second, peak memory and every answer side by side.">
+<meta name="twitter:image" content="https://boarapp.com/og.jpg">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/Archivo-var.woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/docs/docs.css">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Benchmark your phone","description":"Run BOAR's 17-question evaluation on your own Android phone with one command, and get time to first token, tokens per second, peak memory and every answer side by side.","url":"https://boarapp.com/docs/benchmark/","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"BOAR","url":"https://boarapp.com/"},"about":{"@type":"SoftwareApplication","name":"BOAR","operatingSystem":"Android","applicationCategory":"UtilitiesApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},"publisher":{"@type":"Organization","name":"SOPA","url":"https://sopa.team"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"BOAR","item":"https://boarapp.com/"},{"@type":"ListItem","position":2,"name":"Docs","item":"https://boarapp.com/docs/"},{"@type":"ListItem","position":3,"name":"Benchmark your phone","item":"https://boarapp.com/docs/benchmark/"}]}]</script>
+<script>document.documentElement.className = "js";</script>
+</head>
+<body class="page-docs">
+
+<header class="rm-top docs-top" id="top">
+  <nav class="topbar" aria-label="Main">
+    <a class="brand" href="/">
+      <img src="/boar-96.png" alt="" width="40" height="40">
+      <span>BOAR</span>
+    </a>
+    <div class="topbar-links">
+      <a href="/#how">How it works</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a href="/roadmap/">Roadmap</a>
+      <a href="https://github.com/rferrari/boar-app">GitHub</a>
+    </div>
+  </nav>
+  <div class="wrap docs-intro">
+    <p class="docs-crumb"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Models</p>
+    <h1>Benchmark your phone</h1>
+    <p class="docs-lede">Run BOAR's 17-question evaluation on your own Android phone with one command, and get time to first token, tokens per second, peak memory and every answer side by side.</p>
+  </div>
+</header>
+
+<div class="wrap docs-layout">
+  <aside class="docs-nav" aria-label="Docs">
+    <details class="dn-toggle" open>
+      <summary>Docs menu</summary>
+      <form class="dn-search" role="search" onsubmit="return false">
+        <label class="visually-hidden" for="docs-q">Search the docs</label>
+        <input id="docs-q" type="search" placeholder="Search the docs" autocomplete="off">
+        <ul class="dn-results" hidden></ul>
+      </form>
+      <div class="dn-group"><p class="dn-head">Start here</p><ul><li><a href="/docs/">Overview</a></li><li><a href="/docs/install/">Install BOAR</a></li><li><a href="/docs/tour/">See it working</a></li></ul></div><div class="dn-group"><p class="dn-head">Using BOAR</p><ul><li><a href="/docs/asking/">Ask and check</a></li><li><a href="/docs/privacy/">What stays on your phone</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li></ul></div><div class="dn-group"><p class="dn-head">Your knowledge</p><ul><li><a href="/docs/knowledge-packs/">Knowledge packs</a></li><li><a href="/docs/your-documents/">Your documents</a></li></ul></div><div class="dn-group"><p class="dn-head">Models</p><ul><li><a href="/docs/models/">Models</a></li><li><a href="/docs/benchmark/" aria-current="page">Benchmark your phone</a></li></ul></div><div class="dn-group"><p class="dn-head">How it works</p><ul><li><a href="/docs/how-it-works/">How it works</a></li><li><a href="/docs/results/">Results</a></li></ul></div><div class="dn-group"><p class="dn-head">Project</p><ul><li><a href="/docs/faq/">FAQ</a></li><li><a href="/docs/manifesto/">Manifesto</a></li><li><a href="/docs/build-from-source/">Build from source</a></li><li><a href="/docs/contribute/">Contribute</a></li></ul></div>
+    </details>
+  </aside>
+
+  <main class="docs-main" id="content">
+    <article class="prose">
+<p>BOAR can benchmark any installed model on a real phone. It records the same measurements for every answer, straight from the phone: load time, time to the first word, speed, total time, peak memory, and which articles it retrieved.</p>
+<h2 id="on-the-phone"><a class="anchor" href="#on-the-phone" aria-hidden="true" tabindex="-1">#</a>On the phone</h2>
+<p>Menu → <strong>Execution Telemetry</strong> → <strong>Evaluate</strong>. Tick the models (and adaptive routing, if you want it), tap <strong>Run</strong>, and export the results as JSONL or CSV through the share sheet when it&#39;s done.</p>
+<h2 id="from-a-computer-with-one-command"><a class="anchor" href="#from-a-computer-with-one-command" aria-hidden="true" tabindex="-1">#</a>From a computer, with one command</h2>
+<p>The recommended way: the computer checks the phone, starts the run, waits and prints a report. Nothing to tap.</p>
+<div class="code"><pre><code class="language-bash">npm run eval:device -- --models lfm2.5</code></pre><button class="copy" type="button" aria-label="Copy">Copy</button></div>
+<div class="code"><pre><code>✓ device SSYLAQFILNBEKBEQ
+✓ Metro running, adb reverse tcp:8081 set
+  [00:20] 0/17 — model:hf-liquidai-lfm2-5-8b-a1b-… / greeting-1
+  [01:52] 3/17 — model:hf-liquidai-lfm2-5-8b-a1b-… / explanation-1
+  …
+BOAR Device Evaluation (set v1, 17 queries)
+  Queries:    17 ok · 0 failed · 0 cancelled (of 17)
+  TTFT:       avg … · p50 …
+  Tokens/sec: avg … · p50 …
+  Peak RSS:   … GB
+Raw results (authoritative): eval-results/2026-09-24/eval-….jsonl</code></pre><button class="copy" type="button" aria-label="Copy">Copy</button></div>
+<h3 id="set-up-once"><a class="anchor" href="#set-up-once" aria-hidden="true" tabindex="-1">#</a>Set up once</h3>
+<ol>
+<li><strong>On the computer:</strong> Node.js with <code>npm install</code> done in <a href="https://github.com/rferrari/boar-app" rel="noopener">the BOAR repo</a>, and <code>adb</code> on your <code>PATH</code>.</li>
+<li><strong>On the phone:</strong> Developer options → USB debugging on. Connect the cable and allow it. <code>adb devices</code> should list the phone as <code>device</code>.</li>
+<li><strong>A development build of BOAR</strong> on the phone (<code>npx expo run:android</code>, or <code>npm run eval:device -- --install</code>). Release builds can&#39;t be driven this way, on purpose.</li>
+<li><strong>Metro running</strong> in another terminal: <code>make start</code>.</li>
+<li><strong>The models downloaded</strong> in the app. The tool never downloads models.</li>
+</ol>
+<h3 id="commands"><a class="anchor" href="#commands" aria-hidden="true" tabindex="-1">#</a>Commands</h3>
+<div class="code"><pre><code class="language-bash">npm run eval:device                                   # every installed model + adaptive routing
+npm run eval:device -- --models qwen2.5-1.5b,phi-3.5  # some models (id or part of it)
+npm run eval:device -- --queries greeting-1,reasoning # some questions, by id or category
+npm run eval:device -- --dry-run                      # print every adb command, run nothing
+npm run eval:summary -- --answers &lt;file.jsonl&gt;        # answers side by side, for grading</code></pre><button class="copy" type="button" aria-label="Copy">Copy</button></div>
+<p>Results land in <code>eval-results/&lt;date&gt;/</code>: the <code>.jsonl</code> (one row per answer, the source of truth), the answers side by side in <code>.answers.md</code>, and the final status.</p>
+<h2 id="the-17-questions"><a class="anchor" href="#the-17-questions" aria-hidden="true" tabindex="-1">#</a>The 17 questions</h2>
+<p>The set covers what a research companion has to do, including what a small model usually gets wrong: greetings, facts, explanations, comparisons, syntheses, multi-step reasoning, questions grounded in a specific article, and questions the library has nothing on. A few examples:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>reasoning</td>
+<td>A train leaves at 3:40 pm and the trip takes 2 hours and 35 minutes. What time does it arrive?</td>
+</tr>
+<tr>
+<td>synthesis</td>
+<td>How does the immune system&#39;s response to a pathogen relate to how a vaccine works?</td>
+</tr>
+<tr>
+<td>comparison</td>
+<td>Compare the French Revolution and the Industrial Revolution.</td>
+</tr>
+<tr>
+<td>no library content</td>
+<td>Who was Napoleon Bonaparte? (the built-in library only has &quot;Randy Napoleon&quot;, which must not be cited)</td>
+</tr>
+</tbody></table>
+</div>
+<p>The full set, with what a good answer contains, is in <a href="https://github.com/rferrari/boar-app/blob/main/docs/EVAL_QUERIES.md" rel="noopener"><code>docs/EVAL_QUERIES.md</code></a>. There&#39;s no automatic judge: you grade the answers by reading them.</p>
+<h2 id="tips-for-fair-numbers"><a class="anchor" href="#tips-for-fair-numbers" aria-hidden="true" tabindex="-1">#</a>Tips for fair numbers</h2>
+<ul>
+<li><strong>Keep the screen on and BOAR open.</strong> A locked phone sends BOAR to the background.</li>
+<li><strong>Mind the heat.</strong> Speed dropped by about a third over a 66-minute run as the phone warmed up. Compare models from runs in similar conditions.</li>
+<li><strong>Don&#39;t start a run during a model download.</strong> The run reloads the app, and the download would stop.</li>
+<li><strong>Answers vary a little between runs</strong> (temperature 0.7). Timings compare well; for quality, look at more than one run.</li>
+<li><strong>A model that fails to load is recorded, not skipped.</strong> Every question gets a failure with the reason.</li>
+</ul>
+<h2 id="share-your-results"><a class="anchor" href="#share-your-results" aria-hidden="true" tabindex="-1">#</a>Share your results</h2>
+<p>Different phones, different chips, different numbers. Post yours in <a href="https://community.boarapp.com" rel="noopener">the Discord</a> or <a href="https://github.com/rferrari/boar-app/issues" rel="noopener">open an issue</a> with the <code>.jsonl</code> attached.</p>
+
+    </article>
+    <nav class="docs-pager" aria-label="Previous and next page">
+      <a class="pg-prev" href="/docs/models/"><span>Previous</span>Models</a>
+      <a class="pg-next" href="/docs/how-it-works/"><span>Next</span>How it works</a>
+    </nav>
+    <p class="docs-edit"><a href="https://github.com/sopa-agency/boar-landing/edit/main/content/docs/benchmark.md">Edit this page on GitHub</a> · <a href="https://github.com/rferrari/boar-app/issues">Something wrong? Open an issue</a></p>
+  </main>
+
+  <aside class="docs-toc"><nav class="toc" aria-label="On this page"><p class="toc-head">On this page</p><ul><li class="toc-2"><a href="#on-the-phone">On the phone</a></li><li class="toc-2"><a href="#from-a-computer-with-one-command">From a computer, with one command</a></li><li class="toc-3"><a href="#set-up-once">Set up once</a></li><li class="toc-3"><a href="#commands">Commands</a></li><li class="toc-2"><a href="#the-17-questions">The 17 questions</a></li><li class="toc-2"><a href="#tips-for-fair-numbers">Tips for fair numbers</a></li><li class="toc-2"><a href="#share-your-results">Share your results</a></li></ul></nav></aside>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <a class="sopa" href="https://sopa.team"><img src="/sopa.png" alt="SOPA" width="40" height="40"><span>sopa.team</span></a>
+    <p class="footer-links">
+      <a href="/docs/">Docs</a>
+      <a href="https://github.com/rferrari/boar-app">Repo</a>
+      <a href="https://github.com/rferrari/boar-app/tree/main/docs/evidence">Evidence</a>
+      <a href="https://github.com/rferrari/boar-app/tree/main/docs/demo">Demo</a>
+    </p>
+    <p class="footer-social">
+      <a class="social-discord" href="https://community.boarapp.com" rel="me noopener" target="_blank"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52l-.61 1.25a18.3 18.3 0 0 0-5.49 0L8.72 2.85a19.7 19.7 0 0 0-4.89 1.52C.72 9.05-.13 13.58.29 18.06a19.9 19.9 0 0 0 6 3.03l1.23-2a13 13 0 0 1-1.88-.9l.38-.29a14.2 14.2 0 0 0 12.06 0l.37.29c-.6.35-1.23.65-1.88.9l1.23 2a19.8 19.8 0 0 0 6-3.03c.5-5.18-.84-9.67-3.55-13.69ZM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42s.96-2.42 2.16-2.42c1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42s.95-2.42 2.15-2.42c1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42Z"/></svg>Join the Discord</a>
+      <a class="social-icon" href="https://x.com/boar_app" rel="me noopener" target="_blank" aria-label="BOAR on X"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.21-6.82-5.97 6.82H1.68l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z"/></svg></a>
+    </p>
+  </div>
+</footer>
+
+<script src="/docs/docs.js" defer></script>
+</body>
+</html>

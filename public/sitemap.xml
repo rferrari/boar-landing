@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://boarapp.com/</loc><lastmod>2026-09-26</lastmod></url>
-  <url><loc>https://boarapp.com/roadmap/</loc><lastmod>2026-09-26</lastmod></url>
+  <url><loc>https://boarapp.com/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/roadmap/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/install/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/tour/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/asking/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/privacy/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/troubleshooting/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/knowledge-packs/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/your-documents/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/models/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/benchmark/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/how-it-works/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/results/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/faq/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/manifesto/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/build-from-source/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://boarapp.com/docs/contribute/</loc><lastmod>2026-09-27</lastmod></url>
 </urlset>

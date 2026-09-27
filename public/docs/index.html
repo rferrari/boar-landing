@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MHH6QGDK9J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MHH6QGDK9J');
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BOAR docs: offline AI on your phone</title>
+<meta name="description" content="How to install BOAR, ask it questions with no signal, add your own knowledge and models, and check how it performs on your phone.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0f1d19">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="canonical" href="https://boarapp.com/docs/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://boarapp.com/docs/">
+<meta property="og:title" content="BOAR docs · BOAR">
+<meta property="og:description" content="How to install BOAR, ask it questions with no signal, add your own knowledge and models, and check how it performs on your phone.">
+<meta property="og:image" content="https://boarapp.com/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@boar_app">
+<meta name="twitter:title" content="BOAR docs · BOAR">
+<meta name="twitter:description" content="How to install BOAR, ask it questions with no signal, add your own knowledge and models, and check how it performs on your phone.">
+<meta name="twitter:image" content="https://boarapp.com/og.jpg">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/Archivo-var.woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/docs/docs.css">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"BOAR docs","description":"How to install BOAR, ask it questions with no signal, add your own knowledge and models, and check how it performs on your phone.","url":"https://boarapp.com/docs/","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"BOAR","url":"https://boarapp.com/"},"about":{"@type":"SoftwareApplication","name":"BOAR","operatingSystem":"Android","applicationCategory":"UtilitiesApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},"publisher":{"@type":"Organization","name":"SOPA","url":"https://sopa.team"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"BOAR","item":"https://boarapp.com/"},{"@type":"ListItem","position":2,"name":"Docs","item":"https://boarapp.com/docs/"}]}]</script>
+<script>document.documentElement.className = "js";</script>
+</head>
+<body class="page-docs">
+
+<header class="rm-top docs-top" id="top">
+  <nav class="topbar" aria-label="Main">
+    <a class="brand" href="/">
+      <img src="/boar-96.png" alt="" width="40" height="40">
+      <span>BOAR</span>
+    </a>
+    <div class="topbar-links">
+      <a href="/#how">How it works</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a href="/roadmap/">Roadmap</a>
+      <a href="https://github.com/rferrari/boar-app">GitHub</a>
+    </div>
+  </nav>
+  <div class="wrap docs-intro">
+    <p class="docs-crumb"><a href="/docs/">Docs</a></p>
+    <h1>Offline AI on your phone</h1>
+    <p class="docs-lede">How to install BOAR, ask it questions with no signal, add your own knowledge and models, and check how it performs on your phone.</p>
+  </div>
+</header>
+
+<div class="wrap docs-layout">
+  <aside class="docs-nav" aria-label="Docs">
+    <details class="dn-toggle" open>
+      <summary>Docs menu</summary>
+      <form class="dn-search" role="search" onsubmit="return false">
+        <label class="visually-hidden" for="docs-q">Search the docs</label>
+        <input id="docs-q" type="search" placeholder="Search the docs" autocomplete="off">
+        <ul class="dn-results" hidden></ul>
+      </form>
+      <div class="dn-group"><p class="dn-head">Start here</p><ul><li><a href="/docs/" aria-current="page">Overview</a></li><li><a href="/docs/install/">Install BOAR</a></li><li><a href="/docs/tour/">See it working</a></li></ul></div><div class="dn-group"><p class="dn-head">Using BOAR</p><ul><li><a href="/docs/asking/">Ask and check</a></li><li><a href="/docs/privacy/">What stays on your phone</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li></ul></div><div class="dn-group"><p class="dn-head">Your knowledge</p><ul><li><a href="/docs/knowledge-packs/">Knowledge packs</a></li><li><a href="/docs/your-documents/">Your documents</a></li></ul></div><div class="dn-group"><p class="dn-head">Models</p><ul><li><a href="/docs/models/">Models</a></li><li><a href="/docs/benchmark/">Benchmark your phone</a></li></ul></div><div class="dn-group"><p class="dn-head">How it works</p><ul><li><a href="/docs/how-it-works/">How it works</a></li><li><a href="/docs/results/">Results</a></li></ul></div><div class="dn-group"><p class="dn-head">Project</p><ul><li><a href="/docs/faq/">FAQ</a></li><li><a href="/docs/manifesto/">Manifesto</a></li><li><a href="/docs/build-from-source/">Build from source</a></li><li><a href="/docs/contribute/">Contribute</a></li></ul></div>
+    </details>
+  </aside>
+
+  <main class="docs-main" id="content">
+    <article class="prose">
+<p>BOAR is an open-source Android app that keeps a small AI model and a library of knowledge on your phone. After one download at setup, it answers with no signal at all: in flight, underground, on a mountain, at sea. Every answer shows the articles it came from, and every answer is measured.</p>
+<p>These docs cover using it, adding to it, and checking it.</p>
+<ul class="cards">
+  <li><a href="/docs/install/"><b>Install BOAR</b>Get the APK, check its checksum, and do the one-time setup download.</a></li>
+  <li><a href="/docs/tour/"><b>See it working</b>Four short clips and screenshots from a real phone in airplane mode.</a></li>
+  <li><a href="/docs/asking/"><b>Ask and check</b>How BOAR answers, what the sources mean, and when to trust it.</a></li>
+  <li><a href="/docs/privacy/"><b>What stays on your phone</b>The two times BOAR uses the internet, and everything it never sends.</a></li>
+</ul>
+
+<h2 id="what-boar-is"><a class="anchor" href="#what-boar-is" aria-hidden="true" tabindex="-1">#</a>What BOAR is</h2>
+<ul>
+<li><strong>An offline research companion.</strong> Ask it to explain, compare or work something out. It searches its library on the phone and a model on the phone writes the answer.</li>
+<li><strong>A library you can check.</strong> The built-in library has about 5,300 short Wikipedia-derived articles, and an optional pack adds the introductions of Wikipedia&#39;s ~50,000 Vital Articles. Answers list the articles they used.</li>
+<li><strong>Yours.</strong> MIT-licensed, no account, no API, no Google Play Services. Bring <a href="/docs/your-documents/">your own documents</a>, <a href="/docs/models/">your own model</a> and <a href="/docs/knowledge-packs/">your own packs</a>.</li>
+<li><strong>Measured.</strong> Every answer records the model, the time to the first word, the speed and the memory used. The <a href="/docs/results/">results</a> are published, failures included.</li>
+</ul>
+<h2 id="what-it-isn-t"><a class="anchor" href="#what-it-isn-t" aria-hidden="true" tabindex="-1">#</a>What it isn&#39;t</h2>
+<ul>
+<li><strong>Not a frontier model.</strong> The default model has 1.5 billion parameters. It&#39;s good at plain questions and slips on long syntheses; bigger models are slower. See <a href="/docs/models/">Models</a>.</li>
+<li><strong>Not a doctor or a rescue service.</strong> It can tell you what hypothermia looks like. Get real help as soon as you can reach it.</li>
+<li><strong>Not multilingual yet.</strong> The library and search are English. The app&#39;s menus are in English and Portuguese.</li>
+</ul>
+<h2 id="where-to-go-next"><a class="anchor" href="#where-to-go-next" aria-hidden="true" tabindex="-1">#</a>Where to go next</h2>
+<ul>
+<li>New here: <a href="/docs/install/">Install BOAR</a>, then <a href="/docs/asking/">Ask and check</a>.</li>
+<li>Want more knowledge on the phone: <a href="/docs/knowledge-packs/">Knowledge packs</a> and <a href="/docs/your-documents/">Your documents</a>.</li>
+<li>Curious how it works: <a href="/docs/how-it-works/">How it works</a> and <a href="/docs/results/">Results</a>.</li>
+<li>Want to help: <a href="/docs/contribute/">Contribute</a>, or <a href="https://community.boarapp.com" rel="noopener">join the Discord</a>.</li>
+</ul>
+
+    </article>
+    <nav class="docs-pager" aria-label="Previous and next page">
+      <span></span>
+      <a class="pg-next" href="/docs/install/"><span>Next</span>Install BOAR</a>
+    </nav>
+    <p class="docs-edit"><a href="https://github.com/sopa-agency/boar-landing/edit/main/content/docs/index.md">Edit this page on GitHub</a> · <a href="https://github.com/rferrari/boar-app/issues">Something wrong? Open an issue</a></p>
+  </main>
+
+  <aside class="docs-toc"><nav class="toc" aria-label="On this page"><p class="toc-head">On this page</p><ul><li class="toc-2"><a href="#what-boar-is">What BOAR is</a></li><li class="toc-2"><a href="#what-it-isn-t">What it isn't</a></li><li class="toc-2"><a href="#where-to-go-next">Where to go next</a></li></ul></nav></aside>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <a class="sopa" href="https://sopa.team"><img src="/sopa.png" alt="SOPA" width="40" height="40"><span>sopa.team</span></a>
+    <p class="footer-links">
+      <a href="/docs/">Docs</a>
+      <a href="https://github.com/rferrari/boar-app">Repo</a>
+      <a href="https://github.com/rferrari/boar-app/tree/main/docs/evidence">Evidence</a>
+      <a href="https://github.com/rferrari/boar-app/tree/main/docs/demo">Demo</a>
+    </p>
+    <p class="footer-social">
+      <a class="social-discord" href="https://community.boarapp.com" rel="me noopener" target="_blank"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52l-.61 1.25a18.3 18.3 0 0 0-5.49 0L8.72 2.85a19.7 19.7 0 0 0-4.89 1.52C.72 9.05-.13 13.58.29 18.06a19.9 19.9 0 0 0 6 3.03l1.23-2a13 13 0 0 1-1.88-.9l.38-.29a14.2 14.2 0 0 0 12.06 0l.37.29c-.6.35-1.23.65-1.88.9l1.23 2a19.8 19.8 0 0 0 6-3.03c.5-5.18-.84-9.67-3.55-13.69ZM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42s.96-2.42 2.16-2.42c1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42s.95-2.42 2.15-2.42c1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42Z"/></svg>Join the Discord</a>
+      <a class="social-icon" href="https://x.com/boar_app" rel="me noopener" target="_blank" aria-label="BOAR on X"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.21-6.82-5.97 6.82H1.68l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z"/></svg></a>
+    </p>
+  </div>
+</footer>
+
+<script src="/docs/docs.js" defer></script>
+</body>
+</html>

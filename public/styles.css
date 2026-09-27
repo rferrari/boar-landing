@@ -136,6 +136,10 @@ code { font-size: 0.88em; background: var(--accent-bg); padding: 0.08em 0.38em; 
 .topbar-links { display: flex; gap: clamp(14px, 2.4vw, 30px); font-size: 14px; font-weight: 600; letter-spacing: 0.04em; }
 .topbar-links a { text-decoration: none; color: rgba(255, 255, 255, 0.78); }
 .topbar-links a:hover { color: #fff; }
+/* the links sit on the film; a soft shadow keeps them legible when a scene is bright */
+.hero .topbar-links a, .hero .brand span { text-shadow: 0 1px 10px rgba(10, 18, 13, 0.55); }
+/* narrower screens: keep the page links, drop the in-page anchors before they reach the sky */
+@media (max-width: 1240px) { .topbar-links a[href="#film"], .topbar-links a[href="#receipt"] { display: none; } }
 
 .hero-copy {
   padding: clamp(24px, 8vh, 96px) clamp(16px, 4vw, 56px) 40px;
