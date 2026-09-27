@@ -7,7 +7,7 @@ order: 10
 nav: Overview
 ---
 
-BOAR is an open-source Android app that keeps a small AI model and a library of knowledge on your phone. After one download at setup, it answers with no signal at all: in flight, underground, on a mountain, at sea. Every answer shows the articles it came from, and every answer is measured.
+BOAR keeps a small AI model and a library of knowledge on your phone. It's open source, it runs on Android today, and it keeps growing. After one download at setup, it answers with no signal at all: in flight, underground, on a mountain, at sea. Every answer shows the articles it came from, and every answer is measured.
 
 These docs cover using it, adding to it, and checking it.
 

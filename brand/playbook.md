@@ -1,20 +1,36 @@
 # BOAR playbook
 
-How BOAR talks about itself: what it stands on, who it's for, what we can claim, and how it sounds. It governs the landing page, the docs, the blog, social posts and the portal's campaign drafts. When a sentence here and a sentence elsewhere disagree, this file wins, and the other one gets fixed.
+How BOAR talks about itself: what it stands on, who it's for, what we can claim, and how it sounds. It governs the landing page, the docs, the blog, social posts, token posts and the portal's campaign drafts. When a sentence here and a sentence elsewhere disagree, this file wins, and the other one gets fixed.
 
-Last reviewed: 2026-09-27. Sources are listed at the end; the claims ledger (section 5) is the part to check before anything ships.
+**This file is alive.** Whenever we learn something about the idea, its people, its voice or what we can claim, it goes in here the same day, with a line in the changelog at the end. Sources are listed in section 11; the claims ledger (section 5) is the part to check before anything ships.
+
+---
+
+## 0. BOAR is an idea that grows
+
+BOAR isn't a finished app. It's an idea, **knowledge you can carry**: an AI and a library that live with you, answer when the network doesn't, belong to no one, and are measured honestly. The app is the first shape that idea has taken, and it will keep changing.
+
+So in everything we write:
+
+- **Lead with the idea and its values, then the proof.** "AI that works when the network doesn't" first; "v1.0.0 answered 6 of 6 with the Wikipedia pack" as evidence that it's real.
+- **Never describe the current app as the final form.** Say "today", "so far", "the first release", "next". Shipped features are roots, not the whole tree (the roadmap's own image).
+- **Don't define BOAR by a platform.** It runs on Android today and it will run on more. Say "on your phone" in brand, token and pitch copy; name the platform only where people need the fact (install steps, download buttons, test-device specs).
+- **Numbers are snapshots.** Always give their date and conditions, and expect them to change.
+
+The values that stay while everything else changes: offline means offline; no owner, no server between you and your questions; show the sources; measure, don't hype; open and reproducible; it should be fun.
 
 ---
 
 ## 1. One line
 
-**BOAR is an open-source Android app that keeps a small AI and a library of knowledge on your phone, so it still answers when the signal is gone, shows where each answer came from, and measures itself on a real phone.**
+**BOAR keeps a small AI and a library of knowledge on your phone, so it still answers when the signal is gone, shows where each answer came from, and measures itself on a real phone. Open source, and growing in public.**
 
 Short forms, in order of preference:
 
 - Knowledge you can carry.
 - Offline AI on your phone. No signal needed.
 - A small AI and a library that live on your phone.
+- For a 200-character field (the Morpheus subnet, a bio): "Offline AI: a small model and a knowledge library on your phone. Answers with no signal, shows its sources, no account, no server. Open source, growing in public."
 
 ## 2. What we stand on: sanctuary technology
 
@@ -37,7 +53,7 @@ ethereum.org adds the privacy half: privacy should be the default, not a setting
 | Robust when things break | one download at setup, then it works with no network at all | the airplane-mode demo and the on-device benchmarks |
 | People can rely on each other | knowledge packs are plain files anyone can build, share and rebuild on their own phone | `docs/KNOWLEDGE_PACKS.md`, portable collections |
 
-**How to use this idea:** as the *why*, in the manifesto band, the docs, the blog and long posts. Not as a headline. Say what BOAR does ("no server receives your questions"), then let the reader connect it to the bigger idea. Credit Vitalik with the list, never with an endorsement of BOAR.
+**How to use this idea:** as the *why*, in the manifesto band, the docs, the blog and long posts about the app. Not as a headline. Say what BOAR does ("no server receives your questions"), then let the reader connect it to the bigger idea. Credit Vitalik with the list, never with an endorsement. And never in anything about $BOAR (section 9).
 
 ## 3. Who it's for
 
@@ -71,11 +87,15 @@ Read this before anything ships. Left column: what you can say. Right column: wh
 | "a companion when there's no one to ask" | "emergency guidance", "medical advice", "survival tool" | the site's own line: "a companion, not a doctor or a rescue service" |
 | real numbers with their conditions ("17.5 tok/s on a Dimensity 8300, Qwen2.5-1.5B") | "fast", "instant", "blazing", uncited speeds | speed depends on the phone, the model and heat; tokens/s fell about a third over a long run |
 | "the questions a small model gets wrong, and what we measured" | "as good as ChatGPT", "frontier quality" | comparing against internet search plus frontier models is still *not measured* |
-| "Vitalik named local open-weights AI as sanctuary tech" | "backed by", "endorsed by", "Vitalik's app" | he wrote a list; he didn't endorse BOAR |
+| about the app and the idea: "Vitalik named local open-weights AI as sanctuary tech"; "Vitalik asked for a research tool that works with no signal" | "backed by", "endorsed by", "Vitalik's app"; details of his support we haven't made public | cite what he said in public, nothing more |
+| about $BOAR: nothing about Vitalik at all | any Vitalik mention, quote or allusion next to the token | Vitalik supports the app, not the token. Putting his name near $BOAR borrows his reputation to sell it |
 | "claim #124 on poidh bounty #31; the bounty is still open" | "won", "winner", "official" | it hasn't been decided |
 | "English library and search for now; menus in English and Portuguese" | "multilingual" | retrieval uses an English-only embedding model |
 | "voice input where the phone has an offline speech service" | "offline voice" as a shipped feature | it depends on the phone's speech service and doesn't work on GrapheneOS; true offline voice is roadmap |
 | "any 64-bit ARM Android phone"; "tested on a Xiaomi with 11.6 GB RAM" | "runs on any phone", "GrapheneOS-ready" | GrapheneOS on real hardware is not run yet |
+| "on your phone"; "on Android today, more platforms coming" | "an Android app" as what BOAR *is* | BOAR is an idea that will run on more than one platform (section 0) |
+| "the first release", "so far", "next" | "the complete", "finished", "the final version" | the app is the first shape of the idea, not the last |
+| "born from poidh bounty #31; claim #124" | "made for the bounty" as the whole story | the bounty is the origin, not the purpose |
 
 The website isn't the app: boarapp.com uses Google Analytics; the app has no analytics and no telemetry leaves the phone. If someone asks, say both.
 
@@ -129,7 +149,17 @@ Rewrites:
 - **The receipt:** the measurements every answer records (model, time to first token, tokens/s, memory).
 - **Sanctuary technology:** open tools without an owner, built so depending on them can't be turned against you (section 2).
 
-## 9. Search: what the docs and blog go after
+## 9. Token posts ($BOAR)
+
+A post from BOAR's own account about $BOAR (a thesis on fomo, a cast, a reply) makes the case from the project, never from the price:
+
+- **Say:** what BOAR is for, what shipped, what's measured, where it came from, what's next, and why the idea matters (sanctuary technology, the model we're waiting for).
+- **Don't say:** price targets, "moon", "100x", promised returns, or any use for the token we haven't built and announced. Bullish comes from momentum and conviction, not predictions.
+- **Never Vitalik.** He supports the app, not the token. No mention, quote or allusion in anything about $BOAR, including "sanctuary technology" framed as his. The idea can stand on its own words: "AI with no owner and no server".
+- **Keep the idea bigger than the app:** "we're early", "the first release", "what's next". Never a platform.
+- The reference post, 2026-09-27, is in the changelog.
+
+## 10. Search: what the docs and blog go after
 
 The docs answer "how do I…" and "does it…" questions; the blog answers "why" and "what happened". Both link to each other and to the download.
 
@@ -148,7 +178,7 @@ Blog backlog, in order: (1) What happens when you ask a 1.5B model on a phone: t
 
 On-page rules: one page, one question. Title under 60 characters with the searched phrase near the front. A meta description that answers the question in one sentence. Real headings people would search. Link every page to at least two others. Numbers with dates. Every docs page carries TechArticle and breadcrumb data; the FAQ carries FAQPage.
 
-## 10. Sources
+## 11. Sources
 
 1. Vitalik Buterin, "Sanctuary technologies", r/ethereum, 2026-03-03. <https://www.reddit.com/r/ethereum/comments/1rjyqnx/sanctuary_technologies/>
 2. Silke Noa Kumpf, "Blockchain-based Dispute Resolution as Sanctuary Justice? Exit, Voice and the State", SSRN, 2026-09-15 (abstract). <https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7461858>
@@ -157,3 +187,12 @@ On-page rules: one page, one question. Title under 60 characters with the search
 5. Wakoma, "OfflineAI Research" (CC BY-SA 4.0), and the newer Wakoma repos (Lokal, nimble, Disaster-Workshop). <https://github.com/Wakoma/OfflineAI>
 6. "Building Offline AI" (Gamma): couldn't be read; not used.
 7. BOAR's own docs: `MANIFESTO.md`, `ARCHITECTURE.md`, `docs/COMPLIANCE.md`, `docs/MODELS.md`, `docs/evidence` in <https://github.com/rferrari/boar-app>.
+
+## 12. Changelog
+
+- **2026-09-27** · First version: sanctuary technology as the why, audiences, five pillars, claims ledger, objections, voice, vocabulary, search plan. From five sources (section 11) and the app repo.
+- **2026-09-27** · Origin made explicit: BOAR was born from poidh bounty #31 (claim #124, still open). Now on the home page ("Where it started") and in every footer.
+- **2026-09-27** · Short description for 200-character fields (the Morpheus subnet BOAR is creating), in section 1.
+- **2026-09-27** · Token posts rules (section 9), from the first $BOAR thesis written for fomo, the social trading app where a "thesis" is a post about a project.
+- **2026-09-27** · Vitalik supports the app, not the token. Token posts never mention him (section 9); the ledger splits what's fine about the app from what's never fine next to $BOAR.
+- **2026-09-27** · Section 0: BOAR is an idea that grows, not a finished app, and it isn't defined by a platform ("we will expand"). Brand copy on the site and in the portal's voice now says "on your phone", not "Android app".
