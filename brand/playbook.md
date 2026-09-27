@@ -157,7 +157,16 @@ A post from BOAR's own account about $BOAR (a thesis on fomo, a cast, a reply) m
 - **Don't say:** price targets, "moon", "100x", promised returns, or any use for the token we haven't built and announced. Bullish comes from momentum and conviction, not predictions.
 - **Never Vitalik.** He supports the app, not the token. No mention, quote or allusion in anything about $BOAR, including "sanctuary technology" framed as his. The idea can stand on its own words: "AI with no owner and no server".
 - **Keep the idea bigger than the app:** "we're early", "the first release", "what's next". Never a platform.
-- The reference post, 2026-09-27, is in the changelog.
+- **The token:** boar (`$boar`, lowercase), deployed on Base through Clanker on 2026-09-26 by @vaipraonde, contract `0x0cbf291Ba052174879d90bf781dF1A5F2BC5Bb07`. Say "the community token of the BOAR project" and nothing more until a use is built and announced.
+- **Reference text for token pages** (clanker.world, fomo), 2026-09-27:
+
+  > BOAR is knowledge you can carry: an AI and a library that live on your phone, answer with no signal, belong to no one, and show where every answer came from. No account, no server, nothing between you and your questions.
+  >
+  > It's open source and built in public. The first release already answers in airplane mode, and we publish its benchmarks from a real phone, failures included. Born from poidh bounty #31. Next: more platforms, offline voice, and knowledge packs people make and share.
+  >
+  > $boar is the community token of the BOAR project. We're early. 🐗
+
+  Short (under 280): "BOAR is knowledge you can carry: an AI and a library on your phone that answer with no signal. No account, no server, open source, built in public. $boar is the community token of the BOAR project. We're early. 🐗"
 
 ## 10. Search: what the docs and blog go after
 
@@ -194,5 +203,6 @@ On-page rules: one page, one question. Title under 60 characters with the search
 - **2026-09-27** · Origin made explicit: BOAR was born from poidh bounty #31 (claim #124, still open). Now on the home page ("Where it started") and in every footer.
 - **2026-09-27** · Short description for 200-character fields (the Morpheus subnet BOAR is creating), in section 1.
 - **2026-09-27** · Token posts rules (section 9), from the first $BOAR thesis written for fomo, the social trading app where a "thesis" is a post about a project.
+- **2026-09-27** · Token facts and the reference token-page description (clanker.world) in section 9.
 - **2026-09-27** · Vitalik supports the app, not the token. Token posts never mention him (section 9); the ledger splits what's fine about the app from what's never fine next to $BOAR.
 - **2026-09-27** · Section 0: BOAR is an idea that grows, not a finished app, and it isn't defined by a platform ("we will expand"). Brand copy on the site and in the portal's voice now says "on your phone", not "Android app".
