@@ -147,6 +147,8 @@ Rewrites:
 - **Knowledge pack:** one file that adds articles, a keyword index and embeddings. Anyone can build and share one.
 - **Sources:** the articles an answer used, shown under it.
 - **The receipt:** the measurements every answer records (model, time to first token, tokens/s, memory).
+- **Packs by use:** the next onboarding asks what you'll use BOAR for (Travel, Emergencies, Study and curiosity, Ethereum and crypto) and turns the answer into a pack; Travel adds a city's places (restaurants, pharmacies, hospitals, from OpenStreetMap). Talk about what you'll need, not about models: the first download stays around 1 GB, and a more precise assistant is an optional upgrade later.
+- **Look:** Fogueira (ember orange #FF7A3D and gold #FFC15E on dark brown #17110D; Baloo 2 for display, Lexend for text, JetBrains Mono for numbers) is the identity the product screens use.
 - **Sanctuary technology:** open tools without an owner, built so depending on them can't be turned against you (section 2).
 
 ## 9. Token posts ($BOAR)
@@ -203,6 +205,7 @@ On-page rules: one page, one question. Title under 60 characters with the search
 - **2026-09-27** · Origin made explicit: BOAR was born from poidh bounty #31 (claim #124, still open). Now on the home page ("Where it started") and in every footer.
 - **2026-09-27** · Short description for 200-character fields (the Morpheus subnet BOAR is creating), in section 1.
 - **2026-09-27** · Token posts rules (section 9), from the first $BOAR thesis written for fomo, the social trading app where a "thesis" is a post about a project.
+- **2026-09-27** · From the new onboarding mockups: packs chosen by use, city packs, a ~1 GB first download with no model choice, and Fogueira as the product look (section 8). First iPhone promo video uses them, in English, ending "Coming to iPhone".
 - **2026-09-27** · Token facts and the reference token-page description (clanker.world) in section 9.
 - **2026-09-27** · Vitalik supports the app, not the token. Token posts never mention him (section 9); the ledger splits what's fine about the app from what's never fine next to $BOAR.
 - **2026-09-27** · Section 0: BOAR is an idea that grows, not a finished app, and it isn't defined by a platform ("we will expand"). Brand copy on the site and in the portal's voice now says "on your phone", not "Android app".
