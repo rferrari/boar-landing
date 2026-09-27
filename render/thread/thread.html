@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>BOAR thread clips (scene)</title>
+<style>
+  @font-face { font-family: "Archivo"; src: url("../../public/fonts/Archivo-var.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; }
+  @font-face { font-family: "Fraunces"; font-style: italic; src: url("../../public/fonts/Fraunces-italic-var.woff2") format("woff2"); font-weight: 300 700; }
+  @font-face { font-family: "Roboto"; src: url("../fonts/Roboto-var.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Noto Sans Mono"; src: url("../fonts/NotoSansMono-var.woff2") format("woff2"); font-weight: 100 900; }
+  html, body { margin: 0; background: #000; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+/*
+ * Ten short clips for the "use cases" X thread, one per tweet, 1080x1350 (4:5).
+ * Same drawing code as the film (world.js is copied from ../scene.html), same
+ * phone and app screen, same answers and sources as the landing's cards.
+ * ?clip=1..10&t=seconds. Every pixel is a pure function of t.
+ */
+const Q = new URLSearchParams(location.search);
+const W = +(Q.get("w") || 1080), H = +(Q.get("h") || 1350);
+const CLIP = +(Q.get("clip") || 1);
+const LAND = false;
+const S = W / 1080;
+const TAU = Math.PI * 2;
+const cv = document.getElementById("c");
+cv.width = W; cv.height = H;
+const ctx = cv.getContext("2d");
+const BRAND = {
+  font: "Archivo", serif: "Fraunces",
+  sun: "#f2b13e", leaf: "#8cc063", soil: "#c46a3c", sky: "#7cc3da",
+  dawnTop: "#0d1c1e", dawnMid: "#15302b", dawnLow: "#3a3a2c",
+  endText: "#fff8ea", night: "#0f1d19", paper: "#f6f0e4", ink: "#1d2419",
+};
+// Each clip gets its own focal point for the film's scenes (where the window, hut, sign or squash sits).
+const FOCAL = { 2: [250, 760], 3: [360, 720], 4: [330, 730], 6: [220, 660] };
+const F = FOCAL[CLIP] ? { x: FOCAL[CLIP][0] * S, y: FOCAL[CLIP][1] * S } : { x: 0.5 * W, y: 0.4 * H };
+const HY = (CLIP === 4 ? 0.54 : 0.46) * H;
+// the end-card sky's warm glow is centred on (CCX, CCY - 70 K)
+const GLOW = { 1: [540, 250], 5: [540, 600], 8: [540, 700], 10: [540, 560] };
+const K = 1;
+const CCX = (GLOW[CLIP] || [540, 500])[0] * S, CCY = (GLOW[CLIP] || [540, 500])[1] * S + 70 * S;
+const T = 8;          // clip length; the end-card sky's stars twinkle with this period
+let U = 1;            // app px -> canvas px for the phone being drawn
+const u = (v) => v * U;
+</script>
+<script src="world.js"></script>
+<script src="thread.js"></script>
+</body>
+</html>
