@@ -6,7 +6,7 @@ Landing page for [BOAR](https://github.com/rferrari/boar-app), the open-source A
 
 ## The film
 
-`render/scene.html` is a canvas where every pixel is a pure function of `t`: six places with no signal (in flight, a tunnel, a mountain hut, a garden, a storm at sea, a flooded road), one question in each, answered inside the BOAR chat screen. Scenes live only inside their own time window, and the end card that spans the loop point is periodic over 15 s, so the first and last frames match exactly. Brand colours and the end line live in the `BRAND` object at the top.
+`render/scene.html` is a canvas where every pixel is a pure function of `t`: six places with no signal (in flight, a tunnel, a mountain hut, a garden, a storm at sea, a flooded road), one question in each, answered inside the BOAR chat screen. Scenes live only inside their own time window, and the end card that spans the loop point is periodic over 15 s, so the first and last frames match exactly. Brand colours and the end line live in the `BRAND` object at the top. The six places are drawn in `render/world.js` and the foliage frame (ink-outlined leaves, vines, ferns, flowers, clouds, lit by daylight or moonlight, no glows) in `render/nature.js`; the film, the thread clips and the page's leaf sprites all use the same two files.
 
 ```bash
 npm install
@@ -16,6 +16,9 @@ node render/render.mjs --encode-only                      # re-encode from the s
 npm run preview                                           # scene at /render/scene.html?t=8.1 (&w=1080&h=1920 for vertical)
 node render/thumbs.mjs                                    # the page's scene thumbnails -> public/scenes
 node render/shot.mjs [url]                                # page screenshots, desktop + phone, light + dark
+node render/thread/render.mjs [--only 2,5] [--stills 0,5.4] # the ten X-thread clips -> public/thread
+node render/foliage.mjs                                   # the page's leaf sprites -> public/nature
+node render/og.mjs                                        # share images -> public/og.jpg, og-roadmap.jpg
 ```
 
 Needs Google Chrome (or `CHROME_PATH`) and `ffmpeg`.

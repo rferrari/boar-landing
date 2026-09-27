@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>BOAR foliage sprites</title>
+<style>html, body { margin: 0; background: transparent; } canvas { display: block; }</style></head>
+<body>
+<canvas id="c"></canvas>
+<script>
+/*
+ * The landing's foliage (public/nature/*.png), drawn with the same kit as the film and the
+ * thread clips (render/nature.js) so the page, the film and the clips share one hand.
+ * ?sprite=corner-r|corner-l|divider|wreath|meadow &night=1, transparent background.
+ */
+const Q = new URLSearchParams(location.search);
+const SPRITE = Q.get("sprite") || "corner-r", NIGHT = Q.has("night");
+const SIZES = { "corner-r": [900, 620], "corner-l": [900, 620], divider: [1600, 150], wreath: [1000, 520], meadow: [1600, 150] };
+const [W, H] = SIZES[SPRITE];
+const S = 1, T = 1, LAND = true, TAU = Math.PI * 2;
+const F = { x: W / 2, y: H / 2 }, HY = H / 2, K = 1, CCX = W / 2, CCY = H / 2;
+let U = 1; const u = (v) => v * U;
+const BRAND = { font: "Archivo", serif: "Fraunces", sun: "#f2b13e", ink: "#1d2419", endText: "#fff8ea" };
+const cv = document.getElementById("c"); cv.width = W; cv.height = H;
+const ctx = cv.getContext("2d");
+</script>
+<script src="world.js"></script>
+<script src="nature.js"></script>
+<script>
+const P = NIGHT ? PAL.night : PAL.day;
+function cornerRight() {
+  // hanging from the top-right corner: a branch, a fan of leaves, three vines
+  hangingVine(W - 40, -10, 520, 0, 8, P, { flowers: 0.2, trail: NIGHT ? "#a9b1dc" : "#c9b5f0" });
+  hangingVine(W - 150, -10, 330, 0, 4, P, { flowers: 0.2 });
+  hangingVine(W - 250, -10, 220, 0, 12, P, { flowers: 0.25, trail: NIGHT ? "#c9a9c8" : "#f5a8bd" });
+  branch(W + 30, 40, Math.PI + 0.1, 520, 0, 3, P, { bend: -0.3, w: 20, leafLen: 96, leaves: 6 });
+  leafFan(W + 10, -10, Math.PI * 0.72, 1.3, 8, 170, 0, 11, P, { ratio: 0.3 });
+}
+const SPRITES = {
+  "corner-r": cornerRight,
+  "corner-l": () => { ctx.translate(W, 0); ctx.scale(-1, 1); cornerRight(); },
+  divider: () => {
+    // a garland: one vine running across, leaves and a few flowers
+    const pts = []; for (let i = 0; i <= 40; i++) { const f = i / 40; pts.push([lerp(20, W - 20, f), 70 + Math.sin(f * TAU * 2.5) * 22]); }
+    inkStroke(pts, 4, P.l4, P);
+    const R = rng(9);
+    pts.forEach(([x, y], i) => { if (i === 0 || i === 40) return; const s = 30 + R() * 16, up = i % 2 ? -1 : 1; inkLeaf(x, y, s, s * 0.5, (up < 0 ? -Math.PI / 2 : Math.PI / 2) + (R() - 0.5) * 0.9, i % 3 ? P.l2 : P.l1, P.l3, P, "heart", 2); if (i % 7 === 3) flower(x, y + up * 6, 13, P.petals[(i / 7 | 0) % 4], P, R() * TAU); });
+    flower(W / 2, 70 + Math.sin(0.5 * TAU * 2.5) * 22, 17, P.petals[3], P, 0.4);
+  },
+  wreath: () => {
+    // two sprays that frame a round badge in the middle, open at the top
+    for (const sd of [-1, 1]) {
+      ctx.save(); ctx.translate(W / 2, H); ctx.scale(sd, 1);
+      fern(300, 0, 400, -1.3, 0, 21, P, { curl: -0.5, dir: 1 });
+      leafFan(360, 10, -1.75, 1.5, 8, 250, 0, 22 + (sd > 0 ? 1 : 0), P, { ratio: 0.3 });
+      leafFan(250, 10, -1.2, 0.8, 4, 170, 0, 30, P, { ratio: 0.36, kind: "round" });
+      leafFan(440, 10, -2.0, 0.9, 5, 200, 0, 31, P, { ratio: 0.3 });
+      flower(240, -150, 18, P.petals[1], P, 0.3); flower(300, -70, 15, P.petals[3], P, 1); flower(420, -250, 13, P.petals[0], P, 2); flower(470, -120, 16, P.petals[2], P, 0.6);
+      ctx.restore();
+    }
+  },
+  meadow: () => meadow(0, W, H - 30, 0, 17, P, { h: 90, flowers: 22 }),
+};
+window.ready = (async () => {
+  await document.fonts.ready;
+  ctx.clearRect(0, 0, W, H); SPRITES[SPRITE]();
+})();
+</script>
+</body>
+</html>

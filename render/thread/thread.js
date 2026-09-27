@@ -2,6 +2,7 @@
 // Copy rules: only true things; roadmap items say so on screen; the medical scenes say "not a doctor".
 
 const CREAM = BRAND.endText, SUN = BRAND.sun, ACC_I = "#f6c46a";
+const INK = BRAND.ink, TERRA = "#9c4220", INK_MUTED = "#3d4636";
 
 // ---------- the landing's cards (public/index.html), word for word ----------
 const CARDS = {
@@ -28,9 +29,8 @@ function sans(w, px) { ctx.font = `${w} ${px}px ${BRAND.font}`; ctx.fontStretch 
 function serif(px, w = 560) { ctx.font = `italic ${w} ${px}px ${BRAND.serif}`; ctx.fontStretch = "normal"; }
 // A headline: lines of [text, "s" | "i"] segments; "i" is the Fraunces italic accent.
 function headline(lines, x, y, px, o = {}) {
-  const align = o.align || "left", col = o.color || CREAM, accent = o.accent || ACC_I, lh = px * (o.lh || 1.1);
+  const align = o.align || "left", col = o.color || INK, accent = o.accent || TERRA, lh = px * (o.lh || 1.1);
   ctx.save(); ctx.textAlign = "left"; ctx.letterSpacing = `${-0.012 * px}px`;
-  if (o.shadow !== false) { ctx.shadowColor = o.shadowColor || "rgba(0,0,0,0.45)"; ctx.shadowBlur = px * 0.35; ctx.shadowOffsetY = px * 0.04; }
   lines.forEach((segs, li) => {
     const setF = (st) => (st === "i" ? serif(px * 1.06) : sans(o.weight || 760, px));
     const widths = segs.map(([t, st]) => { setF(st); return ctx.measureText(t).width; });
@@ -53,25 +53,33 @@ function pill(label, x, y, col, o = {}) {
   const px = o.align === "center" ? x - pw / 2 : x;
   rr(px, y, pw, ph, ph / 2);
   if (o.outline) { ctx.strokeStyle = col; ctx.lineWidth = 2.5 * S; ctx.stroke(); ctx.fillStyle = rgba("#000000", 0.35); ctx.fill(); }
-  else { ctx.fillStyle = col; ctx.fill(); }
+  else { ctx.fillStyle = col; ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = 2.5 * S; ctx.stroke(); }
   const ink = o.outline ? col : (lum(col) > 0.35 ? "#0c0c12" : "#ffffff");
   ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(px + 24 * S, y + ph / 2, 6 * S, 0, TAU); ctx.fill();
   ctx.fillText(label.toUpperCase(), px + 40 * S, y + ph / 2 + 9.5 * S);
   ctx.restore();
   return pw;
 }
-function scrimTop(h, a = 0.7) { ctx.fillStyle = vg(0, h, [[0, `rgba(6,12,10,${a})`], [0.6, `rgba(6,12,10,${a * 0.55})`], [1, "rgba(6,12,10,0)"]]); ctx.fillRect(0, 0, W, h); }
-function scrimBottom(h, a = 0.7) { ctx.fillStyle = vg(H - h, H, [[0, "rgba(6,12,10,0)"], [1, `rgba(6,12,10,${a})`]]); ctx.fillRect(0, H - h, W, h); }
-function vignette(a = 0.4) { const m = Math.max(W, H); ctx.fillStyle = rg(W * 0.5, H * 0.5, m * 0.3, m * 0.85, [[0, "rgba(0,0,8,0)"], [1, `rgba(0,0,8,${a})`]]); ctx.fillRect(0, 0, W, H); }
+// a band of daylight haze behind the headline: paper-toned, flat, so ink type reads on any sky
+function hazeTop(h, a = 0.9) { ctx.fillStyle = vg(0, h, [[0, `rgba(250,246,236,${a})`], [0.55, `rgba(250,246,236,${a * 0.78})`], [1, "rgba(250,246,236,0)"]]); ctx.fillRect(0, 0, W, h); }
+// a paper label with an ink edge, for the lines at the foot of a clip
+function paperLabel(lines, x, y, px = 30, o = {}) {
+  ctx.save(); sans(o.weight || 600, px * S);
+  const lh = px * 1.36 * S, pad = 22 * S, w = Math.max(...lines.map((l) => ctx.measureText(l).width)) + pad * 2, h = lines.length * lh + pad * 1.35;
+  const bx = o.align === "center" ? x - w / 2 : x - pad;
+  rr(bx, y, w, h, 18 * S); ctx.fillStyle = o.fill || "rgba(255,250,238,0.96)"; ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = 2.5 * S; ctx.stroke();
+  ctx.fillStyle = o.color || INK; ctx.textAlign = o.align === "center" ? "center" : "left";
+  lines.forEach((l, i) => ctx.fillText(l, o.align === "center" ? x : bx + pad, y + pad * 0.7 + lh * (i + 0.72)));
+  ctx.restore();
+  return { x: bx, y, w, h };
+}
 
 // the mascot badge from the film's end card
 function badge(cx, cy, d, a = 1) {
   ctx.save(); ctx.globalAlpha *= a;
-  ctx.fillStyle = rg(cx, cy, 0, d * 1.6, [[0, rgba(SUN, 0.28)], [1, rgba(SUN, 0)]]); ctx.fillRect(cx - d * 2, cy - d * 2, d * 4, d * 4);
-  ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 40 * S; ctx.shadowOffsetY = 14 * S;
+  ctx.beginPath(); ctx.arc(cx, cy, d / 2 + 5 * S, 0, TAU); ctx.fillStyle = INK; ctx.fill();
   ctx.beginPath(); ctx.arc(cx, cy, d / 2, 0, TAU); ctx.fillStyle = APP.header; ctx.fill();
-  ctx.shadowColor = "transparent";
-  ctx.strokeStyle = rgba(SUN, 0.9); ctx.lineWidth = 3 * S; ctx.stroke();
+  ctx.strokeStyle = SUN; ctx.lineWidth = 3 * S; ctx.stroke();
   if (ICON) { const s = d * 0.84, bb = [138, 198, 690, 606], k = s / 690; ctx.drawImage(ICON, bb[0], bb[1], bb[2], bb[3], cx - bb[2] * k / 2, cy - bb[3] * k / 2 + 4 * S, bb[2] * k, bb[3] * k); }
   ctx.restore();
 }
@@ -87,11 +95,10 @@ function netLabel(n) { return n === "air" ? "Airplane mode" : n === "wifi" ? "Wi
 function phone(x, y, w, h, o) {
   const acc = o.acc || SUN, r = 46 * S * (w / 640);
   ctx.save();
-  ctx.fillStyle = rg(x + w / 2, y + h / 2, 0, Math.max(w, h) * 0.85, [[0, rgba(acc, 0.22)], [1, rgba(acc, 0)]]);
-  ctx.fillRect(x - w, y - h, w * 3, h * 3);
-  ctx.shadowColor = "rgba(0,0,0,0.55)"; ctx.shadowBlur = 70 * S; ctx.shadowOffsetY = 26 * S;
-  rr(x, y, w, h, r); ctx.fillStyle = "#0a0b0f"; ctx.fill();
+  ctx.shadowColor = "rgba(30,40,24,0.32)"; ctx.shadowBlur = 36 * S; ctx.shadowOffsetY = 18 * S;
+  rr(x - 3 * S, y - 3 * S, w + 6 * S, h + 6 * S, r + 3 * S); ctx.fillStyle = INK; ctx.fill();
   ctx.shadowColor = "transparent";
+  rr(x, y, w, h, r); ctx.fillStyle = "#0a0b0f"; ctx.fill();
   rr(x, y, w, h, r); ctx.strokeStyle = rgba(acc, 0.85); ctx.lineWidth = 2.5 * S; ctx.stroke();
   rr(x + 2.5 * S, y + 2.5 * S, w - 5 * S, h - 5 * S, r - 2.5 * S); ctx.strokeStyle = "rgba(255,255,255,0.10)"; ctx.lineWidth = 1.2 * S; ctx.stroke();
   const b = 10 * S, X = x + b, Y = y + b, SW = w - 2 * b, SH = h - 2 * b;
@@ -275,6 +282,13 @@ function estimateA(SW, D, p, srcP) {
   return pad + u(20) + Math.max(1, shown) * alh + (p < 1 ? u(22) : 0) + srcBlock * srcP + u(36) + pad - u(4);
 }
 
+// ---------- the foliage frame every clip shares (render/nature.js) ----------
+// Leaves hang in from the top-right corner, a climber runs up the left edge, ferns fill the
+// bottom-left; the headline, the phone and the labels sit in the open middle, drawn on top.
+const FRAME = {
+  scene: { top: "right", vines: [[0.905, 250, 4], [0.955, 330, 8, { trail: "#c9b5f0" }], [0.99, 400, 12]], left: true, leftTop: 0.36, corners: ["bl", "br"], bottom: true, bottomFlowers: 7 },
+  centre: { top: "both", reach: 0.8, reachL: 0.8, vines: [[0.04, 360, 5, { trail: "#c9b5f0" }], [0.1, 230, 9], [0.9, 250, 6], [0.965, 380, 14, { trail: "#f5a8bd" }]], corners: ["bl", "br"], bottom: true },
+};
 // ---------- scene clips (2, 3, 4, 6): one place, one continuous move, one exchange ----------
 const PH = { x: 432 * S, y: 380 * S, w: 612 * S, h: 930 * S };
 const TM = { type0: 0.2, type1: 1.45, send: 1.6, a0: 1.95, a1: 4.4 };
@@ -285,21 +299,22 @@ function sceneClip(t, drawPlace, D, head, foot, o = {}) {
   ctx.translate(F.x, F.y); ctx.scale(z, z); ctx.translate(-F.x, -F.y);
   drawPlace(t + (o.lt0 || 0));
   ctx.restore();
-  vignette(0.35);
-  scrimTop(440 * S, 0.72);
-  scrimBottom(360 * S, 0.55);
+  hazeTop(430 * S, 0.9);
+  foliageFrame(t, o.frame || FRAME.scene);
   const ex = exchange(t, D, TM);
   phone(PH.x, PH.y, PH.w, PH.h, { acc: D.accent, net: D.net, clock: D.clock, body: ex.body, input: ex.input });
   pill(D.tag, 64 * S, 60 * S, D.accent);
   headline(head, 64 * S, 205 * S, 76 * S);
-  if (foot) foot.forEach((l, i) => { ctx.save(); sans(600, 30 * S); ctx.fillStyle = "rgba(255,248,234,0.92)"; ctx.shadowColor = "rgba(0,0,0,0.6)"; ctx.shadowBlur = 14 * S; ctx.fillText(l, 64 * S, (1190 + i * 42) * S); ctx.restore(); });
+  if (foot) paperLabel(foot, 64 * S, (o.footY || 1062) * S, 28);
 }
 
 // ---------- the clips ----------
 const CLIPS = {
   // 1 · opener: the pig, the question of the thread, the phone
   1: { poster: 4.2, draw(t) {
-    drawEndSky(t);
+    drawEndSky(t, { hy: 0.9 });
+    hazeTop(640 * S, 0.8);
+    foliageFrame(t, FRAME.centre);
     const rise = eO(clamp(t / T));
     const qs = [CARDS.flight.q, CARDS.peak.q, CARDS.road.q, CARDS.garden.q];
     const at = [-1, 1.4, 2.9, 4.4];
@@ -313,10 +328,9 @@ const CLIPS = {
       let cy = top + u(12) - scroll;
       qs.forEach((q, i) => { if (t < at[i]) return; const pp = i === 0 ? 1 : eBack(clamp((t - at[i]) / 0.2)); cy += userBubble(X, SW, cy, q, pp) + u(14); });
     } });
-    scrimBottom(260 * S, 0.5);
     badge(540 * S, 150 * S, 170 * S);
     headline([[["What do you need to know", "s"]], [["when there’s no signal?", "i"]]], 540 * S, 350 * S, 66 * S, { align: "center" });
-    caps("OPEN SOURCE · ON YOUR PHONE · FOR ANDROID", 540 * S, 548 * S, 23 * S, "rgba(255,248,234,0.78)", { align: "center", ls: 0.14 });
+    caps("OPEN SOURCE · ON YOUR PHONE · FOR ANDROID", 540 * S, 548 * S, 23 * S, INK_MUTED, { align: "center", ls: 0.14 });
   } },
   // 2 · on a flight, choking
   2: { poster: 5.4, draw(t) {
@@ -328,7 +342,7 @@ const CLIPS = {
   3: { poster: 5.4, draw(t) {
     HIKER_X = 250 * S; sceneClip(t, (lt) => drawPeak(lt + 0.9), CARDS.peak,
       [[["Shivering, slurring.", "s"]], [["Is it hypothermia?", "i"]]],
-      ["Check the source,", "don’t just trust it.", "Not a doctor."]);
+      ["Check the source,", "don’t just trust it.", "Not a doctor."], { footY: 1150 });
   } },
   // 4 · flooded road
   4: { poster: 5.4, draw(t) {
@@ -352,7 +366,9 @@ const CLIPS = {
 
 // ---------- 5 · privacy ----------
 function clip5(t) {
-  drawEndSky(t);
+  // a moonlit night: cool ambient light, no halo; the frame is the same garden after dark
+  drawEndSky(t, { night: true, hy: 0.9, moon: [0.86, 0.36], clouds: [[0.12, 0.1, 0.7], [0.62, 0.05, 0.6]] });
+  foliageFrame(t, { ...FRAME.scene, night: true, vines: [[0.93, 200, 4], [0.975, 300, 8, { trail: "#a9b1dc" }]], leftTop: 0.28, corners: ["bl", "br"], bottom: true });
   const D = { q: "How do I talk to my kid about money?", a: "", src: [] };
   const tm = { type0: 0.15, type1: 1.2, send: 1.3 };
   const px = 150 * S, py = 400 * S, pw = 540 * S, ph = 800 * S;
@@ -371,10 +387,10 @@ function clip5(t) {
     ctx.strokeStyle = rgba(SUN, 0.9 * fade);
     ctx.beginPath(); for (let k = 0; k <= 80; k++) { const s2 = (k / 80) * pe; const [x, y] = path(s2); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
     ctx.setLineDash([]);
-    if (pl < 1) { const [x, y] = path(pe); ctx.fillStyle = rg(x, y, 0, 60 * S, [[0, "rgba(255,244,214,1)"], [0.18, "rgba(255,226,160,0.9)"], [0.45, rgba(SUN, 0.35)], [1, rgba(SUN, 0)]]); ctx.fillRect(x - 60 * S, y - 60 * S, 120 * S, 120 * S); }
+    if (pl < 1) { const [x, y] = path(pe); ctx.beginPath(); ctx.arc(x, y, 15 * S, 0, TAU); ctx.fillStyle = "#fff4d6"; ctx.fill(); ctx.strokeStyle = "#08120f"; ctx.lineWidth = 3 * S; ctx.stroke(); }
     // the note at the far end of the loop
     const na = clamp((t - 2.0) / 0.4) * (t > 5.2 ? 1 : 1);
-    ctx.save(); ctx.globalAlpha = na; serif(40 * S, 480); ctx.fillStyle = "rgba(255,248,234,0.85)"; ctx.textAlign = "center";
+    ctx.save(); ctx.globalAlpha = na; serif(40 * S, 480); ctx.fillStyle = "rgba(255,248,234,0.92)"; ctx.textAlign = "center";
     ctx.fillText("nowhere", px + pw + 200 * S, py + 280 * S); ctx.fillText("to send it", px + pw + 200 * S, py + 326 * S); ctx.restore();
     ctx.restore();
   }
@@ -390,9 +406,11 @@ function clip5(t) {
   // a soft pulse on the phone when the loop lands back in it
   const pulse = clamp(1 - Math.abs(t - L1) / 0.35);
   if (pulse > 0) { rr(px, py, pw, ph, 46 * S * pw / 640); ctx.strokeStyle = rgba(SUN, pulse); ctx.lineWidth = 6 * S; ctx.stroke(); }
-  headline([[["Nothing leaves", "s"]], [["the phone.", "i"]]], 540 * S, 170 * S, 92 * S, { align: "center" });
-  caps("NO ACCOUNT  ·  NO API  ·  NO GOOGLE PLAY SERVICES", 540 * S, 1262 * S, 25 * S, "rgba(255,248,234,0.88)", { align: "center", ls: 0.1 });
-  ctx.save(); sans(500, 25 * S); ctx.fillStyle = "rgba(255,248,234,0.62)"; ctx.textAlign = "center"; ctx.fillText("Nobody logs it, because nothing is sent.", 540 * S, 1308 * S); ctx.restore();
+  headline([[["Nothing leaves", "s"]], [["the phone.", "i"]]], 540 * S, 170 * S, 92 * S, { align: "center", color: CREAM, accent: ACC_I });
+  // the two lines at the foot sit on a band of night so the grass never runs through them
+  ctx.fillStyle = "rgba(9,20,26,0.9)"; rr(90 * S, 1222 * S, 900 * S, 110 * S, 22 * S); ctx.fill(); ctx.strokeStyle = "#08120f"; ctx.lineWidth = 2.5 * S; ctx.stroke();
+  caps("NO ACCOUNT  ·  NO API  ·  NO GOOGLE PLAY SERVICES", 540 * S, 1266 * S, 25 * S, "rgba(255,248,234,0.92)", { align: "center", ls: 0.1 });
+  ctx.save(); sans(500, 25 * S); ctx.fillStyle = "rgba(255,248,234,0.72)"; ctx.textAlign = "center"; ctx.fillText("Nobody logs it, because nothing is sent.", 540 * S, 1308 * S); ctx.restore();
 }
 
 // ---------- 7 · your own documents ----------
@@ -419,10 +437,7 @@ function docCard(x, y, w, f, a = 1, rot = 0) {
 function clip7(t) {
   // warm paper, the landing's light theme
   ctx.fillStyle = BRAND.paper; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = rg(0.85 * W, 0.1 * H, 0, 900 * S, [[0, "rgba(238,170,60,0.28)"], [1, "rgba(238,170,60,0)"]]); ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = rg(0.1 * W, 0.95 * H, 0, 700 * S, [[0, "rgba(88,140,70,0.18)"], [1, "rgba(88,140,70,0)"]]); ctx.fillRect(0, 0, W, H);
-  const sw = Math.sin(t * 1.3) * 0.04;
-  for (const [x, y, l, a] of [[1110, 1370, 330, -2.3], [1090, 1330, 250, -2.0]]) leaf(x * S, y * S, l * S, l * 0.26 * S, a + sw, "rgba(61,115,64,0.55)", "rgba(246,240,228,0.4)");
+  foliageFrame(t, { top: "right", reach: 0.55, vines: [[0.955, 250, 8, { trail: "#c9b5f0" }], [0.99, 400, 12]], left: true, leftTop: 0.66, corners: ["bl", "br"], bottom: true });
   // phone: the collection first, then the chat
   const px = 432 * S, py = 380 * S, pw = 612 * S, ph = 930 * S;
   const SWITCH = 3.5;
@@ -474,29 +489,40 @@ function clip7(t) {
   headline([[["Your own documents,", "s"]], [["on your phone.", "i"]]], 64 * S, 150 * S, 74 * S, { color: BRAND.ink, accent: "#9c4220", shadow: false });
   caps(".TXT · .MD · .CSV · .JSON", 64 * S, 318 * S, 26 * S, "#3d7340", { ls: 0.1, weight: 800 });
   const la = clamp((t - SWITCH - 0.3) / 0.4);
-  ctx.save(); ctx.globalAlpha = la; sans(600, 30 * S); ctx.fillStyle = "#1d2419";
-  ["A knowledge base", "only you can read."].forEach((l, i) => ctx.fillText(l, 64 * S, (1215 + i * 42) * S)); ctx.restore();
+  ctx.save(); ctx.globalAlpha = la; paperLabel(["A knowledge base", "only you can read."], 64 * S, 1062 * S, 28); ctx.restore();
 }
 
 // ---------- 8 · place packs (roadmap) ----------
-function skyline(t, baseY, col, winCol, seed, sc, pf) {
+// a city by day: pale facades, rooftop gardens and solar panels, ink outlined
+function skyline(t, baseY, seed, sc, pf, P, cols) {
   const R = rng(seed); let x = -200 * S + (-t * 14 * pf) * S;
-  ctx.fillStyle = col;
   const bs = [];
-  while (x < W + 200 * S) { const w = (60 + R() * 90) * S * sc, h = (120 + R() * 360) * S * sc; bs.push([x, w, h, R()]); x += w + 6 * S; }
-  for (const [bx, w, h, r] of bs) {
-    ctx.fillStyle = col; ctx.fillRect(bx, baseY - h, w, h + 400 * S);
-    if (r > 0.7) { ctx.fillRect(bx + w * 0.4, baseY - h - 40 * S * sc, 6 * S, 40 * S * sc); }
-    if (winCol) { const W2 = rng(Math.floor(r * 1e6)); for (let yy = baseY - h + 18 * S; yy < baseY - 10 * S; yy += 26 * S * sc) for (let xx = bx + 10 * S; xx < bx + w - 14 * S; xx += 22 * S * sc) if (W2() > 0.62) { ctx.fillStyle = winCol; ctx.fillRect(xx, yy, 9 * S * sc, 12 * S * sc); } }
+  while (x < W + 200 * S) { const w = (70 + R() * 90) * S * sc, h = (120 + R() * 340) * S * sc; bs.push([x, w, h, R(), R()]); x += w + 10 * S; }
+  for (const [bx, w, h, r, r2] of bs) {
+    const top = baseY - h;
+    ctx.fillStyle = cols[Math.floor(r * cols.length)]; ctx.fillRect(bx, top, w, h + 400 * S);
+    ctx.save(); ctx.beginPath(); ctx.rect(bx, top, w, h + 400 * S); ctx.clip(); ctx.fillStyle = "rgba(40,50,40,0.12)"; ctx.fillRect(bx + w * 0.62, top, w, h + 400 * S); ctx.restore();
+    ctx.strokeStyle = P.ink; ctx.lineWidth = lwS(2.2); ctx.strokeRect(bx, top, w, h + 400 * S);
+    for (let yy = top + 18 * S; yy < baseY - 14 * S; yy += 30 * S * sc) for (let xx = bx + 12 * S; xx < bx + w - 18 * S; xx += 24 * S * sc) { ctx.fillStyle = "#9cc6e2"; ctx.fillRect(xx, yy, 11 * S * sc, 15 * S * sc); ctx.strokeStyle = rgba(P.ink, 0.55); ctx.lineWidth = lwS(1.2); ctx.strokeRect(xx, yy, 11 * S * sc, 15 * S * sc); }
+    if (r2 > 0.5) { // solar panels on the roof
+      ctx.save(); ctx.translate(bx + w * 0.15, top); ctx.transform(1, 0, -0.35, 1, 0, 0);
+      const pw = w * 0.55, ph2 = 16 * S * sc; ctx.fillStyle = "#3d6fb8"; ctx.fillRect(0, -ph2, pw, ph2); ctx.strokeStyle = P.ink; ctx.lineWidth = lwS(1.6); ctx.strokeRect(0, -ph2, pw, ph2);
+      ctx.strokeStyle = "rgba(200,225,255,0.7)"; ctx.lineWidth = lwS(1); for (let q = 1; q < 4; q++) { ctx.beginPath(); ctx.moveTo(pw * q / 4, -ph2); ctx.lineTo(pw * q / 4, 0); ctx.stroke(); }
+      ctx.restore();
+    } else { // a roof garden spilling over the edge
+      for (let q = 0; q < 3; q++) inkCanopy(bx + w * (0.22 + q * 0.28), top - 8 * S * sc, 16 * S * sc, P, P.l2, P.l3, 1.8);
+      hangingVine(bx + w * 0.8, top, 60 * S * sc + r * 60 * S, t, Math.floor(r * 999), P, { size: 18 * sc, amp: 6, stemW: 2 });
+    }
   }
 }
 function clip8(t) {
-  drawEndSky(t);
-  ctx.fillStyle = vg(0.45 * H, H, [[0, "rgba(242,150,70,0)"], [1, "rgba(242,150,70,0.25)"]]); ctx.fillRect(0, 0, W, H);
-  skyline(t, 1080 * S, "#1b2a26", "rgba(246,196,106,0.55)", 5, 1.0, 1);
-  skyline(t, 1220 * S, "#101915", "rgba(246,196,106,0.8)", 9, 1.3, 2.2);
-  scrimTop(460 * S, 0.6);
-  scrimBottom(420 * S, 0.7);
+  const P = PAL.day;
+  drawEndSky(t, { hy: 0.62, clouds: [[0.2, 0.08, 0.8], [0.78, 0.14, 0.7], [0.5, 0.26, 0.5]] });
+  skyline(t, 1080 * S, 5, 1.0, 1, P, ["#e9dcc6", "#d8e2e0", "#efd3bf", "#dfe8d0"]);
+  for (let i = 0; i < 9; i++) tree((i * 0.13 + 0.02) * W - t * 20 * S, 1110 * S, (110 + (i % 3) * 30) * S, P, 60 + i);
+  skyline(t, 1240 * S, 9, 1.3, 2.2, P, ["#d7c6a8", "#c3d0cf", "#e2bfa6", "#cad8b8"]);
+  hazeTop(440 * S, 0.9);
+  foliageFrame(t, { ...FRAME.scene, leftTop: 0.5 });
   const DL0 = 0.3, DL1 = 3.0, OFF = 3.5;
   const prog = eIO(clamp((t - DL0) / (DL1 - DL0)));
   const px = 432 * S, py = 380 * S, pw = 612 * S, ph = 930 * S;
@@ -533,7 +559,8 @@ function clip8(t) {
   headline([[["Download a city", "s"]], [["before the trip.", "i"]]], 64 * S, 205 * S, 76 * S);
   const la = eO(clamp((t - OFF - 0.2) / 0.5));
   ctx.save(); ctx.globalAlpha = la; ctx.translate(0, (1 - la) * 14 * S);
-  headline([[["Use it with", "s"]], [["no roaming.", "i"]]], 64 * S, 1180 * S, 44 * S);
+  ctx.fillStyle = "rgba(255,250,238,0.96)"; rr(42 * S, 1062 * S, 330 * S, 132 * S, 18 * S); ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = 2.5 * S; ctx.stroke();
+  headline([[["Use it with", "s"]], [["no roaming.", "i"]]], 64 * S, 1116 * S, 44 * S);
   ctx.restore();
 }
 
@@ -542,7 +569,7 @@ const PACKS = [["🩹", "First aid", "#ec9467"], ["🌊", "Disaster response", "
 function packTile(x, y, w, h, p, a = 1, s = 1, dashed = false) {
   ctx.save(); ctx.globalAlpha *= a; ctx.translate(x, y); ctx.scale(s, s);
   if (!dashed) { ctx.shadowColor = "rgba(0,0,0,0.45)"; ctx.shadowBlur = 20 * S; ctx.shadowOffsetY = 8 * S; }
-  rr(-w / 2, -h / 2, w, h, h * 0.28); ctx.fillStyle = dashed ? "rgba(14,26,22,0.35)" : "#0e1a16"; ctx.fill(); ctx.shadowColor = "transparent";
+  rr(-w / 2, -h / 2, w, h, h * 0.28); ctx.fillStyle = dashed ? "rgba(14,26,22,0.82)" : "#0e1a16"; ctx.fill(); ctx.shadowColor = "transparent";
   if (dashed) ctx.setLineDash([8 * S, 7 * S]);
   ctx.strokeStyle = p[2]; ctx.lineWidth = 2.5 * S; ctx.stroke(); ctx.setLineDash([]);
   let tx = -w / 2 + h * 0.3;
@@ -553,10 +580,10 @@ function packTile(x, y, w, h, p, a = 1, s = 1, dashed = false) {
 function miniPhone(x, y, w, acc, glow, rows = []) {
   const h = w * 1.9;
   ctx.save();
-  if (glow > 0) { ctx.fillStyle = rg(x, y, 0, w * 1.4, [[0, rgba(acc, 0.35 * glow)], [1, rgba(acc, 0)]]); ctx.fillRect(x - w * 2, y - w * 2, w * 4, w * 4); }
-  ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 30 * S; ctx.shadowOffsetY = 12 * S;
-  rr(x - w / 2, y - h / 2, w, h, w * 0.14); ctx.fillStyle = "#0a0b0f"; ctx.fill(); ctx.shadowColor = "transparent";
-  ctx.strokeStyle = rgba(acc, 0.85); ctx.lineWidth = 2 * S; ctx.stroke();
+  ctx.shadowColor = "rgba(30,40,24,0.3)"; ctx.shadowBlur = 22 * S; ctx.shadowOffsetY = 10 * S;
+  rr(x - w / 2 - 3 * S, y - h / 2 - 3 * S, w + 6 * S, h + 6 * S, w * 0.14 + 3 * S); ctx.fillStyle = INK; ctx.fill(); ctx.shadowColor = "transparent";
+  rr(x - w / 2, y - h / 2, w, h, w * 0.14); ctx.fillStyle = "#0a0b0f"; ctx.fill();
+  ctx.strokeStyle = rgba(acc, 0.85 + 0.15 * glow); ctx.lineWidth = (2 + 3 * glow) * S; ctx.stroke();
   rr(x - w / 2 + 6 * S, y - h / 2 + 6 * S, w - 12 * S, h - 12 * S, w * 0.11); ctx.fillStyle = APP.chat; ctx.fill();
   ctx.fillStyle = APP.header; ctx.fillRect(x - w / 2 + 6 * S, y - h / 2 + 20 * S, w - 12 * S, w * 0.22);
   if (ICON) { const s = w * 0.16 / 690; ctx.drawImage(ICON, 138, 198, 690, 606, x - w / 2 + 14 * S, y - h / 2 + 24 * S, 690 * s, 606 * s); }
@@ -569,10 +596,11 @@ function miniPhone(x, y, w, acc, glow, rows = []) {
 }
 function clip9(t) {
   // the garden from the film, out of focus, as the place where packs get written
-  ctx.save(); ctx.filter = `blur(${10 * S}px) brightness(0.55) saturate(1.1)`; drawGarden(3 + t * 0.4); ctx.restore();
+  ctx.save(); ctx.filter = `blur(${9 * S}px) saturate(1.05)`; drawGarden(3 + t * 0.4); ctx.restore();
   ctx.filter = "none";
-  vignette(0.5);
-  scrimTop(460 * S, 0.55);
+  ctx.fillStyle = "rgba(250,246,236,0.35)"; ctx.fillRect(0, 0, W, H);
+  hazeTop(430 * S, 0.9);
+  foliageFrame(t, { ...FRAME.centre, vines: [[0.9, 230, 6], [0.965, 330, 14, { trail: "#f5a8bd" }]], top: "right", corners: ["bl", "br"], bottom: false });
   // three phones; packs travel between them
   const P = [[210, 640], [540, 690], [870, 640]].map(([x, y]) => [x * S, y * S]);
   const accs = ["#ec9467", "#8cc063", "#7cc3da"];
@@ -590,7 +618,9 @@ function clip9(t) {
   });
   // the library grows: each pack that has been passed on lands on the shelf, then one slot waits for yours
   const shelfY = 930 * S, cw = (W - 128 * S - 20 * S) / 2, chh = 70 * S;
-  caps("A GROWING LIBRARY", 64 * S, shelfY - 14 * S, 22 * S, "rgba(255,248,234,0.75)", { ls: 0.16 });
+  { ctx.save(); sans(700, 22 * S); ctx.letterSpacing = `${0.16 * 22 * S}px`; const lw = ctx.measureText("A GROWING LIBRARY").width; ctx.restore();
+    ctx.fillStyle = "rgba(255,250,238,0.96)"; rr(48 * S, shelfY - 44 * S, lw + 34 * S, 44 * S, 12 * S); ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = 2 * S; ctx.stroke(); }
+  caps("A GROWING LIBRARY", 64 * S, shelfY - 14 * S, 22 * S, INK, { ls: 0.16 });
   const slots = [...PACKS.map((p, k) => ({ p, t0: k === 0 ? -1 : hops[k][2] + 0.8 })), { p: ["", "+ Your pack", SUN], t0: 4.6, dashed: true }];
   slots.forEach((L, k) => {
     const a = L.t0 < 0 ? 1 : eO(clamp((t - L.t0) / 0.35)); if (a <= 0) return;
@@ -599,9 +629,7 @@ function clip9(t) {
   });
   pill("On the roadmap", 64 * S, 60 * S, "#8cc063");
   headline([[["Packs people", "s"]], [["build and share.", "i"]]], 64 * S, 205 * S, 80 * S);
-  ctx.save(); sans(600, 30 * S); ctx.fillStyle = "rgba(255,248,234,0.9)"; ctx.shadowColor = "rgba(0,0,0,0.6)"; ctx.shadowBlur = 14 * S;
-  ctx.fillText("Written by a community, not by us.", 64 * S, 1275 * S);
-  ctx.fillStyle = "rgba(255,248,234,0.65)"; ctx.fillText("Open source · MIT", 64 * S, 1316 * S); ctx.restore();
+  paperLabel(["Written by a community, not by us.", "Open source · MIT"], 64 * S, 1218 * S, 28);
 }
 
 // ---------- 10 · try it in airplane mode ----------
@@ -617,7 +645,9 @@ function qsTile(x, y, w, h, icon, label, sub, on, dim) {
   ctx.restore();
 }
 function clip10(t) {
-  drawEndSky(t);
+  drawEndSky(t, { hy: 0.9 });
+  hazeTop(480 * S, 0.8);
+  foliageFrame(t, { ...FRAME.centre, vines: [[0.04, 300, 5, { trail: "#c9b5f0" }], [0.1, 200, 9], [0.975, 240, 14, { trail: "#f5a8bd" }]] });
   const ON = 1.0, on = eIO(clamp((t - ON) / 0.3));
   // the phone: Android quick settings, airplane mode goes on
   const px = 250 * S, py = 540 * S, pw = 580 * S, ph = 600 * S;
@@ -650,12 +680,13 @@ function clip10(t) {
   } });
   badge(540 * S, 140 * S, 150 * S);
   headline([[["Try it", "s"], [" in airplane mode.", "i"]]], 540 * S, 330 * S, 70 * S, { align: "center" });
-  ctx.save(); sans(500, 30 * S); ctx.fillStyle = "rgba(255,248,234,0.8)"; ctx.textAlign = "center"; ctx.fillText("Ask it something that matters.", 540 * S, 410 * S); ctx.restore();
-  // the address
-  ctx.save(); sans(800, 64 * S); ctx.textAlign = "center"; ctx.fillStyle = CREAM; ctx.letterSpacing = `${-0.5 * S}px`;
-  ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 20 * S; ctx.fillText("boar.sopa.team", 540 * S, 1232 * S); ctx.restore();
-  const uw = 470 * S; ctx.fillStyle = SUN; rr(540 * S - uw / 2, 1252 * S, uw, 5 * S, 3 * S); ctx.fill();
-  caps("OPEN SOURCE · MIT · FOR ANDROID", 540 * S, 1310 * S, 22 * S, "rgba(255,248,234,0.7)", { align: "center", ls: 0.16 });
+  ctx.save(); sans(500, 30 * S); ctx.fillStyle = INK_MUTED; ctx.textAlign = "center"; ctx.fillText("Ask it something that matters.", 540 * S, 410 * S); ctx.restore();
+  // the address, on a paper label
+  ctx.fillStyle = "rgba(255,250,238,0.97)"; rr(250 * S, 1168 * S, 580 * S, 168 * S, 22 * S); ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = 2.5 * S; ctx.stroke();
+  ctx.save(); sans(800, 64 * S); ctx.textAlign = "center"; ctx.fillStyle = INK; ctx.letterSpacing = `${-0.5 * S}px`;
+  ctx.fillText("boar.sopa.team", 540 * S, 1238 * S); ctx.restore();
+  const uw = 470 * S; ctx.fillStyle = SUN; rr(540 * S - uw / 2, 1256 * S, uw, 6 * S, 3 * S); ctx.fill();
+  caps("OPEN SOURCE · MIT · FOR ANDROID", 540 * S, 1306 * S, 22 * S, INK_MUTED, { align: "center", ls: 0.16 });
 }
 
 // ---------- frame ----------

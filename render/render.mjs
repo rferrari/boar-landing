@@ -81,16 +81,17 @@ async function main() {
 
       // 2) web deliverables
       const mp4 = path.join(MEDIA, `${v.name}.mp4`);
-      ff(["-i", master, "-c:v", "libx264", "-preset", "veryslow", "-crf", v.w > v.h ? "20" : "22", "-tune", "animation",
+      ff(["-i", master, "-c:v", "libx264", "-preset", "veryslow", "-crf", v.w > v.h ? "29" : "30", "-tune", "animation",
         "-profile:v", "high", "-level", "4.1", "-pix_fmt", "yuv420p", "-g", String(FPS * 5), "-an", "-movflags", "+faststart", mp4]);
       if (v.webm) {
         const webm = path.join(MEDIA, `${v.name}.webm`);
-        ff(["-i", master, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "32", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2",
+        ff(["-i", master, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "46", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2",
           "-pix_fmt", "yuv420p", "-g", String(FPS * 5), "-an", webm]);
       }
       const poster = path.join(MEDIA, `${v.poster}.jpg`);
       await writeFile(path.join(OUT, "poster.png"), await grab(POSTER_T));
-      ff(["-i", path.join(OUT, "poster.png"), "-q:v", "4", poster]);
+      ff(["-i", path.join(OUT, "poster.png"), "-q:v", "6", poster]);
+      execFileSync("cwebp", ["-quiet", "-q", "74", path.join(OUT, "poster.png"), "-o", path.join(MEDIA, `${v.poster}.webp`)]);
       rmSync(path.join(OUT, "poster.png"));
       await page.close();
     }

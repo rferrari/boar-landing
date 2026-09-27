@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8"><style>@font-face { font-family: "Archivo"; src: url("../public/fonts/Archivo-var.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; }
+@font-face { font-family: "Fraunces"; font-style: italic; src: url("../public/fonts/Fraunces-italic-var.woff2") format("woff2"); font-weight: 300 700; }
+html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+body { position: relative; font-family: Archivo, sans-serif; color: #1d2419; }
+.brand { display: flex; align-items: center; gap: 12px; font: 800 30px/1 Archivo; font-stretch: 115%; letter-spacing: .08em; }
+.brand img { width: 58px; height: 58px; }
+h1 { font: 800 76px/0.95 Archivo; font-stretch: 112%; letter-spacing: -0.035em; margin: 0; }
+h1 em { font: italic 560 1.04em/1 Fraunces; letter-spacing: -0.02em; }
+
+body { color: #fff8ea; background:
+  url("../public/nature/corner-r-night.webp") right top / 560px auto no-repeat,
+  url("../public/nature/corner-l-night.webp") left top / 300px auto no-repeat,
+  url("../public/nature/meadow-night.webp") center bottom / 1300px auto repeat-x,
+  radial-gradient(1.4px 1.4px at 46% 10%, rgba(255,248,226,.6), transparent), radial-gradient(1.2px 1.2px at 64% 18%, rgba(255,248,226,.5), transparent),
+  #0f1d19; }
+.brand { position: absolute; left: 76px; top: 70px; }
+.tag { position: absolute; left: 76px; top: 150px; font: 800 17px/1 Archivo; letter-spacing: .16em; color: #f6c14f; }
+h1 { position: absolute; left: 76px; top: 184px; font-size: 84px; } h1 em { color: #f6c14f; }
+ol { position: absolute; left: 70px; right: 70px; top: 370px; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); }
+ol::before { content: ""; position: absolute; left: 12.5%; right: 12.5%; top: 42px; border-top: 2px dashed rgba(255,248,234,.35); }
+li { position: relative; display: grid; justify-items: center; gap: 6px; text-align: center; }
+.m { width: 84px; height: 84px; padding: 16px; box-sizing: border-box; border-radius: 50%; background: #182a22; border: 2px solid #08120f; color: #b9dca0; --g-fill: rgba(185,220,160,.25); }
+.m svg { width: 100%; height: 100%; display: block; }
+li.now .m { background: #eeaa3c; color: #1d2419; --g-fill: rgba(255,250,235,.55); border-color: #1d2419; }
+b { font: italic 560 30px/1.1 Fraunces; margin-top: 8px; }
+small { font: 800 13px/1 Archivo; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,248,234,.62); }
+li.now small { color: #b9dca0; }
+</style></head><body>
+<div class="brand"><img src="../public/boar-96.png" alt="">BOAR</div>
+<p class="tag">ROADMAP</p>
+<h1>First the roots.<br>Then what <em>grows.</em></h1>
+<ol><li class="now"><span class="m"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 38c10-3 26-3 36 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 36c-5-2-7-7-5-12 4 1 7 4 7 9M24 36c1-6 5-10 11-10-1 5-5 9-11 10" fill="var(--g-fill)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M24 38v5M18 40l-2 4M30 40l2 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><b>Roots</b><small>Here today</small></li><li class=""><span class="m"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 40c10-3 26-3 36 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 39V20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 24c-8 0-12-5-12-11 7 0 12 4 12 11zM24 20c1-7 6-11 13-11 0 7-5 11-13 11z" fill="var(--g-fill)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span><b>First shoots</b><small>Next</small></li><li class=""><span class="m"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 42c10-3 26-3 36 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 41V12M24 30l-8-7M24 22l8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 23c-6 1-10-2-11-7 5-1 10 2 11 7zM32 16c2-6 7-8 11-7-1 5-6 8-11 7zM24 12c-3-4-2-8 0-10 2 2 3 6 0 10z" fill="var(--g-fill)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span><b>Branches</b><small>After that</small></li><li class=""><span class="m"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M3 43c12-3 30-3 42 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="17" r="11" fill="var(--g-fill)" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="27" r="6" fill="var(--g-fill)" stroke="currentColor" stroke-width="2"/><circle cx="38" cy="27" r="6" fill="var(--g-fill)" stroke="currentColor" stroke-width="2"/><path d="M24 42V24M10 42v-9M38 42v-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><b>Grove</b><small>Further out</small></li></ol>
+</body></html>
