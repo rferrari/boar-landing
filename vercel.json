@@ -45,6 +45,17 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "community.boarapp.com"
+        }
+      ],
+      "destination": "https://discord.gg/rp73vxBN7B",
+      "permanent": false
+    },
+    {
       "source": "/:path*",
       "has": [
         {
