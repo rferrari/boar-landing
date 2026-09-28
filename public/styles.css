@@ -152,6 +152,15 @@ code { font-size: 0.88em; background: var(--accent-bg); padding: 0.08em 0.38em; 
   background: rgba(255, 255, 255, 0.1); color: #fff;
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
+/* the $boar contract address, between the nav and the eyebrow */
+.ca { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; margin: 0 0 16px; padding: 5px 5px 5px 12px; border-radius: 999px; background: rgba(10, 18, 13, 0.45); border: 1px solid rgba(255, 255, 255, 0.14); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-size: 13px; }
+.ca-tag { flex: none; font-weight: 700; letter-spacing: 0.04em; color: #f6c14f; }
+.ca-addr { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 12.5px/1 var(--mono); color: rgba(255, 255, 255, 0.86); text-decoration: none; }
+.ca-addr:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.ca-short { display: none; }
+@media (max-width: 600px) { .ca-full { display: none; } .ca-short { display: inline; } }
+.ca-copy { flex: none; border: 0; border-radius: 999px; padding: 6px 11px; background: rgba(255, 255, 255, 0.12); color: #fff; font: 700 12px/1 var(--sans); cursor: pointer; }
+.ca-copy:hover { background: rgba(255, 255, 255, 0.22); }
 .eyebrow::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #f6c14f; box-shadow: 0 0 0 2px #1d2419; }
 h1 {
   font: 800 clamp(50px, 7.2vw, 108px)/0.94 var(--sans); font-stretch: 112%;
@@ -190,6 +199,7 @@ h1 em { font: italic 560 1.04em/1 var(--serif); letter-spacing: -0.02em; color: 
   .hero-media::after { content: ""; position: absolute; inset: 0 0 auto; height: 24%; background: linear-gradient(180deg, #0f1a14 0%, rgba(15, 26, 20, 0.55) 40%, rgba(15, 26, 20, 0) 100%); }
   .hero-scrim { display: none; }
   .topbar-links a:not(:last-child) { display: none; }
+  .ca { margin-bottom: 10px; font-size: 12px; } .ca-addr { font-size: 11.5px; }
   .eyebrow { margin-bottom: 14px; font-size: 10.5px; letter-spacing: 0.08em; padding: 7px 11px; }
   h1 { margin-bottom: 14px; font-size: clamp(42px, 12vw, 64px); }
   .lede { margin-bottom: 20px; font-size: 16px; line-height: 1.5; }

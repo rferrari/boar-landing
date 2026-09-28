@@ -45,3 +45,15 @@
   }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
   els.forEach((el) => io.observe(el));
 })();
+
+// Copy the $boar contract address.
+(() => {
+  const box = document.querySelector(".ca");
+  const btn = box?.querySelector(".ca-copy");
+  if (!btn) return;
+  btn.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(box.dataset.ca); btn.textContent = "Copied"; }
+    catch { btn.textContent = "Select it"; }
+    setTimeout(() => (btn.textContent = "Copy"), 1600);
+  });
+})();
