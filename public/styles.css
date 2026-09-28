@@ -422,7 +422,7 @@ td { font-variant-numeric: tabular-nums; color: var(--ink-muted); }
 .section-swap .section-head { text-align: center; }
 .section-swap .section-head .section-lede { margin-left: auto; margin-right: auto; }
 .swap-frame { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: var(--shadow); padding: clamp(18px, 2.4vw, 28px); max-width: 536px; margin: 40px auto 0; }
-.swap-frame iframe { min-height: 420px; }
+.swap-frame iframe { min-height: 420px; border-radius: 14px; }
 
 /* ---- 8. final call ---- */
 .cta-band { position: relative; overflow: hidden; isolation: isolate; padding: clamp(84px, 11vw, 144px) 0; background: var(--grain), var(--bg-2); text-align: center; border-top: 1px solid var(--rule); }

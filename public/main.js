@@ -70,7 +70,7 @@
   const css = getComputedStyle(document.documentElement);
   const v = (name) => css.getPropertyValue(name).trim();
 
-  frame.addEventListener("load", () => {
+  const sendTheme = () => {
     frame.contentWindow?.postMessage(
       {
         type: "swapspro:style",
@@ -95,10 +95,19 @@
       },
       origin,
     );
-  });
+  };
+
+  // `load` fires on the raw iframe document, which can beat the SPA inside it
+  // hydrating far enough to attach its own message listener — a theme posted
+  // into that gap is gone, not queued, and the widget was stuck on its
+  // default light look no matter what we sent. Kept as a fast path for a warm
+  // load; `swapspro:ready` (posted once the widget's listener genuinely
+  // exists) is what actually guarantees delivery.
+  frame.addEventListener("load", sendTheme);
 
   addEventListener("message", (e) => {
-    if (e.origin !== origin || e.data?.type !== "swapspro:height") return;
-    frame.style.height = `${e.data.height}px`;
+    if (e.origin !== origin) return;
+    if (e.data?.type === "swapspro:ready") return sendTheme();
+    if (e.data?.type === "swapspro:height") frame.style.height = `${e.data.height}px`;
   });
 })();
