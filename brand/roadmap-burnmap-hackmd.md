@@ -1,27 +1,25 @@
 ---
 title: "BOAR roadmap: Ship to Burn"
 tags: boar, roadmap, burn-map, boar-token, offline-ai
-description: 20% of every reward the BOAR multisig receives goes into the Burn Pot. Every milestone that ships burns the whole pot. What counts as a reward, what counts as shipped, and how each burn is done.
+description: 20% of every $boar reward the BOAR multisig receives goes into the Burn Pot. Every milestone that ships burns the whole pot. What counts as a reward, what counts as shipped, and how each burn is done.
 ---
 
 # BOAR roadmap: Ship to Burn
 
-*20% of every reward goes into the Burn Pot. Every time we ship, the whole pot burns. The work comes first; the burn is the receipt.*
+*20% of every $boar reward goes into the Burn Pot. Every time we ship, the whole pot burns. The work comes first; the burn is the receipt.*
 
 [TOC]
 
 :::info
-**The idea in one line.** The $boar token earns creator fees. **20% of every reward the BOAR multisig receives goes into the Burn Pot.** When a milestone on this map is **publicly shipped and anyone can check it**, the **entire pot burns**, in transactions everyone can see. Then the pot starts filling again for the next one.
+**The idea in one line.** The $boar token earns creator fees. **20% of every $boar reward the BOAR multisig receives goes into the Burn Pot.** When a milestone on this map is **publicly shipped and anyone can check it**, the **entire pot burns**, in transactions everyone can see. Then the pot starts filling again for the next one.
 :::
 
 ## How it works
 
-1. **Rewards come in.** The creator fees $boar earns on Clanker are sent to the BOAR Treasury multisig, in $boar and in WETH.
-2. **20% goes into the Burn Pot.** From every reward transfer, 20% is set aside for burning. It stays in the multisig, counted on this page, and is never spent on anything else. The other 80% funds the project.
+1. **Rewards come in.** The creator fees $boar earns on Clanker are sent to the BOAR Treasury multisig. They arrive in $boar and in WETH.
+2. **20% of the $boar goes into the Burn Pot.** From every $boar reward transfer, 20% is set aside for burning. It stays in the multisig, counted on this page, and is never spent on anything else. The other 80% of the $boar, and all of the WETH, fund the project. Only $boar burns.
 3. **A milestone ships.** "Shipped" means a public, checkable artifact: a live store listing, a tagged release, a page anyone can open. Not a demo, not "almost".
-4. **The whole pot burns.**
-   - **$boar in the pot** goes straight to `0x000000000000000000000000000000000000dEaD`.
-   - **WETH in the pot** buys $boar on the market, and that $boar goes to the same dead address.
+4. **The whole pot burns.** Every $boar in the pot goes to `0x000000000000000000000000000000000000dEaD`, in one transaction.
 5. **We post it.** "Shipped X, burned Y $boar", with the proof link and the burn transactions, in the Discord, on X and in the burn log below. The pot is back at zero and starts filling for the next milestone.
 
 The pot fills with every reward, whether we're between releases or not. The longer the work takes, the bigger the burn when it lands.
@@ -32,10 +30,9 @@ No dates: this is a direction, not a schedule. A milestone burns when it ships, 
 
 Read on-chain on 2026-09-28:
 
-| | Rewards received by the multisig | Burn Pot (20%) |
-|---|---|---|
-| $boar | 3,464,331,159 $boar | **692,866,232 $boar** |
-| WETH | 23.7422 WETH | **4.7484 WETH** (to buy and burn $boar) |
+| $boar rewards received by the multisig | Burn Pot (20%) |
+|---|---|
+| 3,464,331,159 $boar | **692,866,232 $boar** |
 
 If the iOS release shipped today, that's what would burn.
 
@@ -80,15 +77,16 @@ These came before Ship to Burn and don't burn: v1.0.0 for Android, the offline e
 ## Rules
 
 - **No ship, no burn.** A burn only follows a public, checkable artifact. Announcements, demos and screenshots don't count.
-- **The pot is only for burning.** The 20% set aside is never spent, lent or moved anywhere except the dead address (or the market, for the WETH share, to buy $boar to burn).
-- **Every burn is on-chain and linked here.** Treasury Safe → dead address, plus the buy transaction for the WETH share, with hashes posted.
+- **The pot is only for burning.** The 20% set aside is never spent, lent or moved anywhere except the dead address.
+- **Only $boar burns.** WETH rewards are not burned and not used to buy $boar; they fund the project.
+- **Every burn is on-chain and linked here.** Treasury Safe → dead address, transaction hash posted.
 - **The burn follows the work, never leads it.** We don't burn ahead of a release.
 - **This page changes in public.** Adding, removing or reordering a milestone, or changing the 20%, is written here with the date and the reason.
 - **No promises about price.** Burning reduces the supply; what the market does with that is the market's business. This page doesn't predict it.
 
 ## Burn log
 
-| Date | Milestone | Proof | Pot burned ($boar · WETH) | Transactions |
+| Date | Milestone | Proof | Pot burned ($boar) | Transaction |
 |---|---|---|---|---|
 | | | | | |
 
