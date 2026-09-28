@@ -57,3 +57,48 @@
     setTimeout(() => (btn.textContent = "Copy"), 1600);
   });
 })();
+
+// The $boar swap embed: pass our own palette in (so it reads as one more
+// card on this page, not a foreign box) and let it tell us its real height
+// (a fixed guess either clips the card or leaves dead space under it).
+// Scoped entirely to this iframe — wallet connect lives inside it and
+// touches nothing else on the page.
+(() => {
+  const frame = document.getElementById("boar-swap");
+  if (!frame) return;
+  const origin = new URL(frame.src).origin;
+  const css = getComputedStyle(document.documentElement);
+  const v = (name) => css.getPropertyValue(name).trim();
+
+  frame.addEventListener("load", () => {
+    frame.contentWindow?.postMessage(
+      {
+        type: "swapspro:style",
+        theme: {
+          colors: {
+            canvas: v("--surface"),
+            surface: v("--surface"),
+            surfaceRaised: v("--surface-2"),
+            surfaceSunken: v("--bg-2"),
+            borderSubtle: v("--rule"),
+            borderStrong: v("--rule"),
+            text: v("--ink"),
+            textMuted: v("--ink-muted"),
+            textSubtle: v("--ink-subtle"),
+            accent: v("--accent-fill"),
+            accentText: "#1d1a0e",
+            accentSoft: v("--accent-bg"),
+          },
+          fontFamily: "Archivo, system-ui, sans-serif",
+          shape: { borderRadius: 22, borderRadiusSecondary: 14 },
+        },
+      },
+      origin,
+    );
+  });
+
+  addEventListener("message", (e) => {
+    if (e.origin !== origin || e.data?.type !== "swapspro:height") return;
+    frame.style.height = `${e.data.height}px`;
+  });
+})();

@@ -418,7 +418,13 @@ td { font-variant-numeric: tabular-nums; color: var(--ink-muted); }
 .phase-now .phase-when span { color: var(--leaf); }
 .phase h3 { font: italic 560 30px/1.05 var(--serif); letter-spacing: -0.01em; margin: 0 0 16px; }
 
-/* ---- 7. final call ---- */
+/* ---- 7. get $boar ---- */
+.section-swap .section-head { text-align: center; }
+.section-swap .section-head .section-lede { margin-left: auto; margin-right: auto; }
+.swap-frame { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: var(--shadow); padding: clamp(18px, 2.4vw, 28px); max-width: 536px; margin: 40px auto 0; }
+.swap-frame iframe { min-height: 420px; }
+
+/* ---- 8. final call ---- */
 .cta-band { position: relative; overflow: hidden; isolation: isolate; padding: clamp(84px, 11vw, 144px) 0; background: var(--grain), var(--bg-2); text-align: center; border-top: 1px solid var(--rule); }
 /* the pig sits in a spray of leaves and flowers, open at the top */
 .cta-band::before { content: ""; position: absolute; z-index: -1; left: 50%; top: calc(clamp(84px, 11vw, 144px) + 168px); width: min(560px, 118vw); aspect-ratio: 1000 / 520; transform: translate(-50%, -100%);
