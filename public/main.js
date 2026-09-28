@@ -46,6 +46,23 @@
   els.forEach((el) => io.observe(el));
 })();
 
+// A shared link's #anchor (e.g. #swap, for pointing straight at the trade
+// section) races the browser's own jump against everything above it still
+// settling into its final layout — the hero poster, web fonts, the reveal
+// fade-ins above. `scroll-behavior: smooth` (styles.css) makes it worse: an
+// animated scroll started toward a target that then moves can end short,
+// long, or not move at all. Re-aiming once, after `load` (every image and
+// font already sized), corrects the final position without touching the
+// browser's own first attempt.
+(() => {
+  if (!location.hash) return;
+  const target = document.getElementById(location.hash.slice(1));
+  if (!target) return;
+  const land = () => target.scrollIntoView({ behavior: "instant", block: "start" });
+  if (document.readyState === "complete") land();
+  else addEventListener("load", land, { once: true });
+})();
+
 // Copy the $boar contract address.
 (() => {
   const box = document.querySelector(".ca");
