@@ -212,6 +212,7 @@ On-page rules: one page, one question. Title under 60 characters with the search
 - **2026-09-27** · Origin made explicit: BOAR was born from poidh bounty #31 (claim #124, still open). Now on the home page ("Where it started") and in every footer.
 - **2026-09-27** · Short description for 200-character fields (the Morpheus subnet BOAR is creating), in section 1.
 - **2026-09-27** · Token posts rules (section 9), from the first $BOAR thesis written for fomo, the social trading app where a "thesis" is a post about a project.
+- **2026-09-28** · Published on HackMD: the manifesto <https://hackmd.io/SkFmK8dqGl> and the burn-map roadmap <https://hackmd.io/Sk2Xt8u9zg> (1% of $boar supply burned from the BOAR Treasury per shipped milestone; the treasury held 3.46% on 2026-09-28, enough for three 1% burns). Sources in `brand/`.
 - **2026-09-28** · BOAR manifesto for HackMD (`brand/manifesto-hackmd.md`): P2P as a commons, solarpunk ("a garden, not a tower") and the right to think without asking permission added to section 2, with their limits.
 - **2026-09-28** · The team's first thesis on fomo (boar_app, Team badge): pillars privacy, AI, accessibility; token utility through in-app usage and a flywheel as a stated plan (section 9). Announcement video made from it.
 - **2026-09-27** · The $boar contract address is on the home page hero, linked to its fomo page; fomo is the token's link everywhere (section 9).
