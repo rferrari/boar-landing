@@ -119,7 +119,14 @@
             textMuted: v("--ink-muted"),
             textSubtle: v("--ink-subtle"),
             accent: v("--accent-fill"),
-            accentText: "#1d1a0e",
+            // The accent colour used AS TEXT (a quote's route line, "link
+            // copied") — reads directly on this card's own dark background,
+            // never on a solid accent fill, so it wants the gold itself, not
+            // an on-fill ink. That was the bug: this used to carry a dark
+            // ink meant for ctaFill/ctaText, which made every one of those
+            // lines dark-on-dark (fixed in swapspro's embed/theme.ts, whose
+            // own comment on this key now says so).
+            accentText: v("--accent-fill"),
             accentSoft: v("--accent-bg"),
             // Buttons, inputs and the wallet-connect dialog read a newer
             // material the keys above never touched — this was the actual
