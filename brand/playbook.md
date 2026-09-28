@@ -55,6 +55,12 @@ ethereum.org adds the privacy half: privacy should be the default, not a setting
 
 **How to use this idea:** as the *why*, in the manifesto band, the docs, the blog and long posts about the app. Not as a headline. Say what BOAR does ("no server receives your questions"), then let the reader connect it to the bigger idea. Credit Vitalik with the list, never with an endorsement. And never in anything about $BOAR (section 9).
 
+**Three more threads of the same idea** (from the BOAR manifesto, `brand/manifesto-hackmd.md`, 2026-09-28):
+
+- **Knowledge that moves person to person (P2P).** Packs are files anyone can build, check and pass on: a commons, not a catalog someone owns. Today: export a collection as a plain JSON pack and send it any way the phone sends a file. Next: sharing between phones nearby (Bluetooth, local Wi-Fi) and a community pack library. Never say phone-to-phone sharing is shipped.
+- **A garden, not a tower (solarpunk).** Tools that work in daylight and in the field, that you can repair and run where you are, owned by the people who use them. Resilience is a neighbor who knows things, not a bunker. Abundance over extraction: a pack copied is not a pack lost.
+- **The right to think without asking permission.** When AI lives only on remote servers, whoever runs them holds a switch (off, reprice, filter, watch, compel). None of that needs a villain; it's what concentration does. The answer isn't to fight any company or government but to make sure no single party is the only door. Never name or attack a company or a government; never sound conspiratorial or partisan. "This isn't about hiding. It's about not having to ask."
+
 ## 3. Who it's for
 
 We look for the people for whom BOAR is exactly the right tool and a cloud service can't be:
@@ -206,6 +212,7 @@ On-page rules: one page, one question. Title under 60 characters with the search
 - **2026-09-27** · Origin made explicit: BOAR was born from poidh bounty #31 (claim #124, still open). Now on the home page ("Where it started") and in every footer.
 - **2026-09-27** · Short description for 200-character fields (the Morpheus subnet BOAR is creating), in section 1.
 - **2026-09-27** · Token posts rules (section 9), from the first $BOAR thesis written for fomo, the social trading app where a "thesis" is a post about a project.
+- **2026-09-28** · BOAR manifesto for HackMD (`brand/manifesto-hackmd.md`): P2P as a commons, solarpunk ("a garden, not a tower") and the right to think without asking permission added to section 2, with their limits.
 - **2026-09-28** · The team's first thesis on fomo (boar_app, Team badge): pillars privacy, AI, accessibility; token utility through in-app usage and a flywheel as a stated plan (section 9). Announcement video made from it.
 - **2026-09-27** · The $boar contract address is on the home page hero, linked to its fomo page; fomo is the token's link everywhere (section 9).
 - **2026-09-27** · From the new onboarding mockups: packs chosen by use, city packs, a ~1 GB first download with no model choice, and Fogueira as the product look (section 8). First iPhone promo video uses them, in English, ending "Coming to iPhone".
