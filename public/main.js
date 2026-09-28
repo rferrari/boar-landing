@@ -69,11 +69,27 @@
   const origin = new URL(frame.src).origin;
   const css = getComputedStyle(document.documentElement);
   const v = (name) => css.getPropertyValue(name).trim();
+  // boar's own palette is a `#rrggbb` literal per var, always — turned into an
+  // rgba() string here because the glass surfaces below want a translucency
+  // none of boar's own tokens carry.
+  const rgba = (hex, alpha) => {
+    const h = hex.replace("#", "");
+    const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
 
   const sendTheme = () => {
+    // Which half of boar's OWN palette just got read above — `prefers-color-
+    // scheme` is exactly what styles.css itself branches on. Posted alongside
+    // the palette so the widget's light/dark CLASS (which a couple of its own
+    // rules, like the wallet-connect backdrop, still key off directly) tracks
+    // the visitor's actual scheme instead of the `?theme=` the iframe's src
+    // was built with once, at write time.
+    const isDark = matchMedia("(prefers-color-scheme: dark)").matches;
     frame.contentWindow?.postMessage(
       {
         type: "swapspro:style",
+        style: { theme: isDark ? "dark" : "light" },
         theme: {
           colors: {
             canvas: v("--surface"),
@@ -96,6 +112,16 @@
             buttonBorder: v("--rule"),
             fieldFill: v("--bg-2"),
             panelFill: v("--surface"),
+            // The wallet-connect dialog and the swap card's OWN backgrounds
+            // are these — a plain CSS class overrides anything the recipe
+            // token above computes to (fixed in swapspro's embed/theme.ts,
+            // 2026-09-28) — without these the dialog kept its literal
+            // light-mode gradient no matter what the rest of this object said.
+            panelTop: rgba(v("--surface"), 0.85),
+            panelBot: rgba(v("--bg-2"), 0.9),
+            panelRim: v("--rule"),
+            panelSheen: "rgba(255, 255, 255, 0.06)",
+            rowFill: rgba(v("--surface"), 0.78),
             ctaFill: v("--accent-fill"),
             ctaText: "#1d1a0e",
             // A disabled control (the quick-amount row before a wallet is
