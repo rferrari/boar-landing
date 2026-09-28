@@ -159,7 +159,7 @@ A post from BOAR's own account about $BOAR (a thesis on fomo, a cast, a reply) m
 - **Don't say:** price targets, "moon", "100x", promised returns, or any use for the token we haven't built and announced. Bullish comes from momentum and conviction, not predictions.
 - **Never Vitalik.** He supports the app, not the token. No mention, quote or allusion in anything about $BOAR, including "sanctuary technology" framed as his. The idea can stand on its own words: "AI with no owner and no server".
 - **Keep the idea bigger than the app:** "we're early", "the first release", "what's next". Never a platform.
-- **The token:** boar (`$boar`, lowercase), deployed on Base through Clanker on 2026-09-26 by @vaipraonde, contract `0x0cbf291Ba052174879d90bf781dF1A5F2BC5Bb07`. Say "the community token of the BOAR project" and nothing more until a use is built and announced.
+- **The token:** boar (`$boar`, lowercase), deployed on Base through Clanker on 2026-09-26 by @vaipraonde, contract `0x0cbf291Ba052174879d90bf781dF1A5F2BC5Bb07`. Say "the community token of the BOAR project" and nothing more until a use is built and announced. Where it trades: fomo, <https://fomo.family/tokens/base/0x0cbf291Ba052174879d90bf781dF1A5F2BC5Bb07>; that's the link to use wherever the address appears (the home page hero shows it).
 - **Reference text for token pages** (clanker.world, fomo), 2026-09-27:
 
   > BOAR is knowledge you can carry: an AI and a library that live on your phone, answer with no signal, belong to no one, and show where every answer came from. No account, no server, nothing between you and your questions.
@@ -205,6 +205,7 @@ On-page rules: one page, one question. Title under 60 characters with the search
 - **2026-09-27** · Origin made explicit: BOAR was born from poidh bounty #31 (claim #124, still open). Now on the home page ("Where it started") and in every footer.
 - **2026-09-27** · Short description for 200-character fields (the Morpheus subnet BOAR is creating), in section 1.
 - **2026-09-27** · Token posts rules (section 9), from the first $BOAR thesis written for fomo, the social trading app where a "thesis" is a post about a project.
+- **2026-09-27** · The $boar contract address is on the home page hero, linked to its fomo page; fomo is the token's link everywhere (section 9).
 - **2026-09-27** · From the new onboarding mockups: packs chosen by use, city packs, a ~1 GB first download with no model choice, and Fogueira as the product look (section 8). First iPhone promo video uses them, in English, ending "Coming to iPhone".
 - **2026-09-27** · Token facts and the reference token-page description (clanker.world) in section 9.
 - **2026-09-27** · Vitalik supports the app, not the token. Token posts never mention him (section 9); the ledger splits what's fine about the app from what's never fine next to $BOAR.
