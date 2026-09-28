@@ -88,6 +88,22 @@
             accent: v("--accent-fill"),
             accentText: "#1d1a0e",
             accentSoft: v("--accent-bg"),
+            // Buttons, inputs and the wallet-connect dialog read a newer
+            // material the keys above never touched — this was the actual
+            // "still white" bug, not a card-background miss (fixed in
+            // swapspro's own embed/theme.ts, 2026-09-28).
+            buttonFill: v("--surface-2"),
+            buttonBorder: v("--rule"),
+            fieldFill: v("--bg-2"),
+            panelFill: v("--surface"),
+            ctaFill: v("--accent-fill"),
+            ctaText: "#1d1a0e",
+            // A disabled control (the quick-amount row before a wallet is
+            // connected — the first thing most visitors see) is a plain
+            // app-owned variable outside Chakra's token system, not covered
+            // by any of the above either.
+            disabledFill: v("--bg-2"),
+            disabledText: v("--ink-subtle"),
           },
           fontFamily: "Archivo, system-ui, sans-serif",
           shape: { borderRadius: 22, borderRadiusSecondary: 14 },
