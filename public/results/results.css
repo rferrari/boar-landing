@@ -1,0 +1,121 @@
+/* Community results: the docs header, then a sortable table on paper. Colours come from styles.css. */
+.results { padding-top: clamp(28px, 4vw, 48px); padding-bottom: clamp(48px, 7vw, 96px); }
+
+.results-controls { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 16px; }
+.results-field { display: grid; gap: 6px; flex: 1 1 220px; max-width: 420px; }
+.results-field span { font: 700 12px/1 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); }
+.results-field input,
+.results-field select {
+  font: 500 16px/1.2 var(--sans);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 11px 14px;
+  min-height: 44px;
+  width: 100%;
+}
+.results-field input:focus-visible,
+.results-field select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.results-status { margin: 0 0 14px; color: var(--ink-muted); font-size: 15px; }
+
+/* The table scrolls sideways inside its box on narrow screens; the page itself never does. */
+.results-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.results-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.results-table { width: 100%; border-collapse: collapse; font-size: 14.5px; white-space: nowrap; }
+.results-table th,
+.results-table td { padding: 12px 11px; text-align: left; border-bottom: 1px solid var(--rule); }
+.results-table tbody tr:last-child td { border-bottom: 0; }
+.results-table tbody tr:hover { background: var(--accent-bg); }
+.results-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.results-table .model { font-weight: 700; white-space: normal; min-width: 12em; }
+.results-table .phone { white-space: normal; min-width: 15em; }
+.results-table .phone span { display: block; }
+.results-table .phone .hw { margin-top: 2px; font-size: 13px; color: var(--ink-subtle); }
+
+.results-table thead th { position: sticky; top: 0; background: var(--surface); padding: 0; }
+.results-table thead button {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 12px 11px;
+  cursor: pointer;
+  white-space: normal;
+  font: 700 12px/1.2 var(--sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-subtle);
+}
+.results-table thead th.num button { text-align: right; }
+.results-table thead button:hover { color: var(--ink); }
+.results-table thead button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.results-table th[aria-sort="ascending"] button,
+.results-table th[aria-sort="descending"] button { color: var(--accent); }
+.results-table th[aria-sort="ascending"] button::after { content: " ↑"; }
+.results-table th[aria-sort="descending"] button::after { content: " ↓"; }
+
+/* The score as a number over a thin bar of the same length. */
+.results-table td.score { font-weight: 800; color: var(--ok); position: relative; }
+.results-table td.score::after {
+  content: "";
+  position: absolute;
+  right: 11px;
+  bottom: 7px;
+  height: 3px;
+  width: calc(var(--pct) * 0.5);
+  max-width: 50px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.45;
+}
+
+.results-notes { margin-top: clamp(32px, 5vw, 56px); max-width: 46em; color: var(--ink-muted); line-height: 1.6; }
+.results-notes h2 { font: 700 20px/1.2 var(--sans); color: var(--ink); margin: 0 0 10px; }
+.results-notes a { color: var(--accent); }
+
+/* Narrow screens: each result is a card, every value next to its label, so the phone and chipset
+   stay in view instead of sitting off to the side of a wide table. Sorting uses the select above. */
+@media (max-width: 1100px) {
+  .results-scroll { overflow: visible; border: 0; background: none; box-shadow: none; border-radius: 0; }
+  .results-table { white-space: normal; font-size: 15px; width: 100%; min-width: 0; }
+  .results-table thead { display: none; }
+  .results-table,
+  .results-table tbody { display: block; }
+  .results-table tbody { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); width: 100%; }
+  .results-table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .results-table tbody tr:hover { background: var(--surface); }
+  .results-table tbody tr,
+  .results-table td { min-width: 0; }
+  .results-table td { display: grid; gap: 2px; padding: 0; border: 0; text-align: left; overflow-wrap: anywhere; }
+  .results-table td::before {
+    content: attr(data-label);
+    font: 700 11px/1.2 var(--sans);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-subtle);
+  }
+  .results-table .num { text-align: left; }
+  .results-table .model,
+  .results-table .wide { grid-column: 1 / -1; min-width: 0; }
+  .results-table .model { font-size: 17px; }
+  .results-table td.score { font-size: 22px; }
+  .results-table td.score::after { left: 0; right: auto; bottom: -6px; }
+}

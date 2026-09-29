@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Community results · BOAR</title>
+<!-- Not linked or listed yet (no sitemap entry, noindex here and in vercel.json). -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="How local AI models run on real phones: evaluations shared from the BOAR app, by chipset, CPU and memory.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f6f0e4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111710" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/Archivo-var.woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/docs/docs.css">
+<link rel="stylesheet" href="/results/results.css">
+<script>document.documentElement.className = "js";</script>
+</head>
+<body class="page-docs">
+
+<header class="rm-top docs-top" id="top">
+  <nav class="topbar" aria-label="Main">
+    <a class="brand" href="/">
+      <img src="/boar-96.png" alt="" width="40" height="40">
+      <span>BOAR</span>
+    </a>
+    <div class="topbar-links">
+      <a href="/#how">How it works</a>
+      <a href="/docs/">Docs</a>
+      <a href="/roadmap/">Roadmap</a>
+      <a href="https://github.com/rferrari/boar-app">GitHub</a>
+    </div>
+  </nav>
+  <div class="wrap docs-intro">
+    <p class="docs-crumb">Community results</p>
+    <h1>Models on real phones</h1>
+    <p class="docs-lede">Evaluations people ran in the BOAR app and chose to share: each model's score, speed and memory, with the phone's chipset and CPU. Find phones like yours and see which models run best on them.</p>
+  </div>
+</header>
+
+<main class="wrap results">
+  <section class="results-controls" aria-label="Filter and sort">
+    <label class="results-field">
+      <span>Search</span>
+      <input id="q" type="search" placeholder="Chipset, phone or model" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="results-field">
+      <span>Sort by</span>
+      <select id="sort">
+        <option value="score:desc">Score, best first</option>
+        <option value="tok:desc">Tokens per second, fastest first</option>
+        <option value="ttft:asc">Time to first token, quickest first</option>
+        <option value="total:asc">Total time, quickest first</option>
+        <option value="peak:asc">Peak RAM, lowest first</option>
+        <option value="ram:desc">Phone RAM, most first</option>
+        <option value="date:desc">Newest first</option>
+      </select>
+    </label>
+  </section>
+
+  <p id="status" class="results-status" role="status">Loading shared results…</p>
+
+  <div class="results-scroll" tabindex="0" aria-label="Shared results table, scrolls sideways">
+    <table id="table" class="results-table" hidden>
+      <thead>
+        <tr>
+          <th scope="col" data-key="model">Model</th>
+          <th scope="col" data-key="score" class="num">Score</th>
+          <th scope="col" data-key="tok" class="num">Tokens/s</th>
+          <th scope="col" data-key="ttft" class="num">First token</th>
+          <th scope="col" data-key="total" class="num">Total</th>
+          <th scope="col" data-key="peak" class="num">Peak RAM</th>
+          <th scope="col" data-key="done" class="num">Completed</th>
+          <th scope="col" data-key="sources" class="num">Sources</th>
+          <th scope="col" data-key="phone">Phone</th>
+          <th scope="col" data-key="date">Shared</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <section class="results-notes" aria-label="About these numbers">
+    <h2>About the score</h2>
+    <p>Score v1, from 0 to 100: <strong>60% speed</strong> (median tokens per second on completed answers of 16 tokens or more, full marks at 20), <strong>25% answers completed</strong> and <strong>15% expected sources found</strong>. A model that completes fewer than half its answers scores 0. It measures speed and reliability, not whether answers are correct.</p>
+    <p>The server computes every score from the answers themselves; the app can't send its own. Shared runs carry the phone's model, chipset, cores and CPU features, RAM and app version, never chats, documents, names or location. <a href="https://github.com/rferrari/boar-app/blob/main/docs/RESULTS_SCORE.md">How the score works</a>.</p>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-row">
+    <a class="sopa" href="https://sopa.team"><img src="/sopa.png" alt="SOPA" width="40" height="40"><span>sopa.team</span></a>
+    <p class="footer-links">
+      <a href="/docs/">Docs</a>
+      <a href="https://github.com/rferrari/boar-app">Repo</a>
+      <a href="/docs/benchmark/">Benchmark your phone</a>
+    </p>
+  </div>
+</footer>
+
+<script src="/results/results.js" defer></script>
+</body>
+</html>
